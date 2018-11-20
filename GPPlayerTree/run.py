@@ -18,8 +18,33 @@ gc = bc.GameController()
 
 
 
-
 ''' Need to generate the 5 trees '''
+topTree = createBasicTopTree()
+harvestTree = createBasicHarvestTree()
+attackTree = createBasicAttackTree()
+moveTree = createBasicMoveTree()
+buildTree = createBasicBuildTree()
+researchTree = createBasicResearchTree()
 
+player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, researchTree)
 
-player = DecisionTreePlayer()
+while True:
+    
+    print('pyround:', gc.round(), 'time left:', gc.get_time_left_ms(), 'ms')
+    try:
+        print("Money: " + str(gc.karbonite()))
+
+        #ALL the money really happens in here 
+        player.excecute(bc)
+
+    except Exception as e:
+        print('Error:', e)
+        # use this to show where the error was
+        traceback.print_exc()
+
+    # send the actions we've performed, and wait for our next turn.
+    gc.next_turn()
+
+    # these lines are not strictly necessary, but it helps make the logs make more sense.
+    # it forces everything we've written this turn to be written to the manager.
+    sys.stdout.flush()

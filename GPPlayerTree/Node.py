@@ -15,8 +15,14 @@ class IfNode(Node):
     def __init__(self, firstChild, secondChild, thirdChild):
         super().__init__(firstChild, secondChild, thirdChild)
 
-    def follow(boardController) -> Node:
-        if firstChild.evaluate(boardController):
+    def follow(boardController, params = []) -> Node:
+        allparams = params
+        nextNode = firstChild
+        while type(nextNode) is InformationNode:
+            allparams.append(firstChild.evaluate())
+            nextNode = nextNode.follow()
+
+        if nextNode.evaluate(boardController, *allparams):
             return secondChild
         else:
             return thirdChild
@@ -24,27 +30,40 @@ class IfNode(Node):
 
 class BooleanNode(Node):
 
-    def __init__(self, function, params = [], operation = None, firstChild = None, secondChild = None):
+    def __init__(self, function, params = [], operation = None, firstChild = None, secondChild = None, isGCFunction = True):
         super().__init__(firstChild, secondChild)
         self.function = function;
         self.isFunction = function != None
+        self.params = params
         self.operation = operation
 
 
-    def evaluate(boardController) -> bool:
+    def evaluate(boardController, moreParams = []) -> bool:
         if isFunction:
             try:
+                totalParams = params + moreParams
                 gc = boardController.GameController() #TODO, we probably want eveything passing the bc and things that need to can grab the gc
-                gc.function(*params) #no params?
+                if (isGCFunction):
+                    return gc.function(*totalParams) #no params?
+                else: 
+                    return function(boardController, *totalParams)
             except:
-                function()
+                return function()
         else:
             # we have operators and boolean expressions
             # TODO: How to represent boolean expressions
 
             ''' The operator, is this node, and the kids are the numbers/operands '''
+            if firstChild is OperandNode:
+                leftOperand = firstChild.evaluate();
+            elif firstChild is InformationNode:
+                leftOperand = firstChild.evaluate(boardController);
+            if secondChild is OperandNode:
+                rightOperand = secondChild.evaluate();
+            elif secondChild is InformationNode:
+                rightOperand = secondChild.evaluate(boardController);
 
-            return True
+            return operation(leftOperand, rightOperand)
 
 
 class OperandNode(Node):
@@ -56,6 +75,19 @@ class OperandNode(Node):
         return self.value
 
 
+class InformationNode(Node):
+    def __init__(self, function, firstChild = None):
+        super.__init__(firstChild)
+        self.function = function
+
+    def evaluate(self, boardController, params = None):
+        if params:
+            return self.function(boardController, *params)
+        else:
+            return self.function(boardController)
+
+    def follow(self):
+        return self.firstChild
 
 
 
