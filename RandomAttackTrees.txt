@@ -1,0 +1,53 @@
+[earth:blue]  Printing Trees
+[earth:blue] Attack Tree 1:
+[earth:blue] At If Node
+[earth:blue] 	At Boolean Node with function: isHealer
+[earth:blue] 		Params are []
+[earth:blue] 	At Decision Node with action: healer_action
+[earth:blue] 	At If Node
+[earth:blue] 		At Boolean Node with function: isKnight
+[earth:blue] 			Params are []
+[earth:blue] 		At Decision Node with action: unitAttackClosestPossibleEnemy
+[earth:blue] 		At If Node
+[earth:blue] 			At Boolean Node with function: isRanger
+[earth:blue] 				Params are []
+[earth:blue] 			At Decision Node with action: unitAttackRandomPossibleEnemy
+[earth:blue] 			At Decision Node with action: unitAttackRandomPossibleEnemy
+[earth:blue] 	At Info Node with function: selectUnitDealingMostDamageThatCanAttack
+[earth:blue] 
+[earth:blue] Attack Tree 2:
+[earth:blue] At If Node
+[earth:blue] 	At Boolean Node with function: isHealer
+[earth:blue] 		Params are []
+[earth:blue] 	At Decision Node with action: healer_action
+[earth:blue] 	At Decision Node with action: unitAttackRandomPossibleEnemy
+[earth:blue] 	At Info Node with function: selectUnitWithLeastLifeThatCanAttack
+[earth:blue] 
+[earth:blue] Attack Tree 3:
+[earth:blue] At If Node
+[earth:blue] 	At Boolean Node with function: isHealer
+[earth:blue] 		Params are []
+[earth:blue] 	At Decision Node with action: healer_action
+[earth:blue] 	At If Node
+[earth:blue] 		At Boolean Node with function: isKnight
+[earth:blue] 			Params are []
+[earth:blue] 		At Decision Node with action: unitAttackClosestPossibleEnemy
+[earth:blue] 		At If Node
+[earth:blue] 			At Boolean Node with function: isRanger
+[earth:blue] 				Params are []
+[earth:blue] 			At Decision Node with action: unitAttackClosestPossibleEnemy
+[earth:blue] 			At Decision Node with action: unitAttackRandomPossibleEnemy
+[earth:blue] 	At Info Node with function: selectUnitWithLeastLifeThatCanAttack
+[earth:blue] 
+[earth:blue] Attack Tree 4:
+[earth:blue] At If Node
+[earth:blue] 	At Boolean Node with function: isHealer
+[earth:blue] 		Params are []
+[earth:blue] 	At Decision Node with action: healer_action
+[earth:blue] 	At If Node
+[earth:blue] 		At Boolean Node with function: isKnight
+[earth:blue] 			Params are []
+[earth:blue] 		At Decision Node with action: unitAttackClosestPossibleEnemy
+[earth:blue] 		At Decision Node with action: unitAttackClosestPossibleEnemy
+[earth:blue] 	At Info Node with function: selectRandomUnitThatCanAttack
+[earth:blue] 

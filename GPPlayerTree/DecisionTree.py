@@ -8,23 +8,29 @@ class DecisionTree:
         self.id = id
 
 
-    def isLegal() -> bool:
+    def isLegal(self) -> bool:
         return True #TODO
 
-    def execute(boardController):
+    def printTree(self):
+        self.root.printNode("")
+
+
+    def execute(self, battleCode, gameController):
+        print("Executing a decision Tree")
         currNode = self.root
-        #parameters = []
+        ifParams = []
         permanantParams = []
         while(type(currNode) is not DecisionNode):
 
+            print("At a node of type", type(currNode));
             if type(currNode) is IfNode:
                 ifNode = currNode #IfNode(currNode)
-                currNode = ifNode.follow(boardController, parameters)
+                currNode, ifParams = ifNode.follow(battleCode, gameController, permanantParams, ifParams)
 
-            if type(currNode) is InformationNode: 
+            elif type(currNode) is InformationNode: 
                 #Information nodes not imediately under ifNodes' first children have their information stored
                 # This is useful for say, selecting a unit
-                paramters.append(currNode.evaluate(boardController))
+                permanantParams.append(currNode.evaluate(battleCode, gameController))
                 currNode = currNode.follow()
 
             elif type(currNode) is BooleanNode:
@@ -32,11 +38,12 @@ class DecisionTree:
                 print("ERROR: Decision Tree execute is at a BooleanNode")
 
             else:
-                print ("ERROR: Decision Tree execute at curreNode of None, Node, or DecisionNode")
+                print ("ERROR: Decision Tree execute at currNode of type", type(currNode))
                 print ("    This should only get to ifNodes and then finish at a DecisionNode, but not in this loop")
+                return
         # Now currNode is a DecisionNode.
         if type(currNode) is DecisionNode:
-            result = currNode.execute(boardController, paramters)
+            result = currNode.execute(battleCode, gameController, permanantParams + ifParams)
             return result #None if this executed an action, number otherwise indicating which action tree to use
             # 1 = Harvest
             # 2 = Attack
