@@ -15,6 +15,10 @@ class DecisionTree:
         self.root.printNode("")
 
 
+    def getWriteString(self):
+        return self.root.getWriteString("")
+
+
     def execute(self, battleCode, gameController):
         print("Executing a decision Tree")
         currNode = self.root
@@ -30,6 +34,7 @@ class DecisionTree:
             elif type(currNode) is InformationNode: 
                 #Information nodes not imediately under ifNodes' first children have their information stored
                 # This is useful for say, selecting a unit
+                print("Appending to permanantParams")
                 permanantParams.append(currNode.evaluate(battleCode, gameController))
                 currNode = currNode.follow()
 

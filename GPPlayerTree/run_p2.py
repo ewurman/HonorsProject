@@ -1995,67 +1995,16 @@ def Selection():
 
 
 
-"""
-print("Starting player program")
-
-
-gc = bc.GameController()
-
-
-''' Need to generate the 5 trees '''
-topTree = createBasicTopTree()
-harvestTree = createBasicHarvestTree()
-attackTree = createRandomAttackTree()
-moveTree = createBasicMoveTree()
-buildTree = createBasicBuildTree()
-researchTree = createBasicResearchTree()
-
-"""
-
-'''
-
-moveTree = createRandomMoveTree()
-buildTree2 = createRandomMoveTree()
-buildTree3 = createRandomMoveTree()
-buildTree4 = createRandomMoveTree()
-
-print("\n Printing Trees")
-print("Move Tree 1:")
-moveTree.printTree()
-print()
-print("Build Tree 2:")
-buildTree2.printTree()
-print()
-print("Build Tree 3:")
-buildTree3.printTree()
-print()
-print("Build Tree 4:")
-buildTree4.printTree()
-print()
-'''
-
-
-player = createRandomDecisionTreePlayer()
-
-path = os.getcwd() + "/Player1/"
+path = os.getcwd() + "/Player/"
 print(path)
 
-player.writeToFiles(path)
 
 player2 = DecisionTreePlayer(None, None, None, None, None, None)
-print("----- Reading from File -----")
 player2 = player2.readFromFiles(path, allFunctionSets)
 
-print("Player 2 move tree:")
-player2.movementTree.printTree()
-
-print("**** END *****")
-"""
 
 
-player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, researchTree)
-
-print("Ready to make a move")
+print("GPTestBot2: Ready to make a move")
 sys.stdout.flush()
 sys.stderr.flush()
 
@@ -2070,7 +2019,7 @@ while True:
         sys.stderr.flush()
 
         #ALL the money really happens in here 
-        player.execute(bc, gc)
+        player2.execute(bc, gc)
 
     except Exception as e:
         print('Error:', e)
@@ -2086,4 +2035,4 @@ while True:
     sys.stderr.flush()
 
 
-"""
+

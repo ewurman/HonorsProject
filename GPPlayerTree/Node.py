@@ -28,6 +28,16 @@ class Node:
         if self.thirdChild:
             self.thirdChild.printNode(indent + "\t")
 
+    def getWriteString(self, indent):
+        s = ""
+        if self.firstChild:
+            s += self.firstChild.getWriteString(indent + "\t")
+        if self.secondChild:
+            s += self.secondChild.getWriteString(indent + "\t")
+        if self.thirdChild:
+            s += self.thirdChild.getWriteString(indent + "\t")
+        return s
+
 
 
 class IfNode(Node):
@@ -36,6 +46,12 @@ class IfNode(Node):
     def __init__(self, firstChild, secondChild, thirdChild, infoChild = None):
         super().__init__(firstChild, secondChild, thirdChild)
         self.infoChild = infoChild 
+        if firstChild == None:
+            print("Creating if node with None firstChild")
+        if secondChild == None:
+            print("Creating if node with None secondChild")
+        if thirdChild == None:
+            print("Creating if node with None thirdChild")
 
 
     def swap(self, node):
@@ -45,10 +61,23 @@ class IfNode(Node):
         node.infoChild = temp1
 
     def printNode(self, indent):
-        print(indent + "At If Node")
+        ending = ""
+        if self.infoChild:
+            ending = "WithInfo"
+        print(indent + "At If Node" + ending)
         super().printNode(indent)
         if self.infoChild:
             self.infoChild.printNode(indent + '\t')
+
+    def getWriteString(self, indent) -> str:
+        ending = ""
+        if self.infoChild:
+            ending = "WithInfo"
+        s = indent + "IfNode " + ending + "\n"
+        s += super().getWriteString(indent)
+        if self.infoChild:
+            s += self.infoChild.getWriteString(indent + '\t')
+        return s
 
 
     def follow(self, boardController, gc, permparams = [], ifparams = []) -> (Node, list):
@@ -60,12 +89,14 @@ class IfNode(Node):
                 newparams = self.infoChild.evaluate(boardController, gc, permparams)
             except:
                 newparams = self.infoChild.evaluate(boardController, gc, permparams)
-            ifparams.append(newparams)
+            ifparams.append(newparams) #if newparams is not None else None)
+            
 
         nextNode = self.firstChild
         boolParams = []
         while type(nextNode) is InformationNode:
-            boolParams.append(nextNode.evaluate(boardController, gc))
+            res = nextNode.evaluate(boardController, gc)
+            boolParams.append(res) #if res is not None else None) 
             nextNode = nextNode.follow()
 
         allparams += ifparams
@@ -89,7 +120,7 @@ class BooleanNode(Node):
         temp1 = self.function
         temp2 = self.params
         temp3 = self.operation
-        temp4 = isGCFunction
+        temp4 = self.isGCFunction
         self.function = node.function
         node.function = temp1
         self.params = node.params
@@ -114,6 +145,16 @@ class BooleanNode(Node):
             super().printNode(indent)
 
 
+    def getWriteString(self, indent) -> str:
+        s = ""
+        if (self.isFunction):
+            s += indent + "BooleanNode function: " + self.function.__name__ + "\n"
+        else:
+            if self.operation:
+                s += indent + "BooleanNode operation: " + self.operation.__name__ + "\n"
+        s += super().getWriteString(indent)
+        return s
+
 
     def evaluate(self, battleCode, gc, moreParams = []) -> bool:
         if moreParams != []:
@@ -136,14 +177,24 @@ class BooleanNode(Node):
             # TODO: How to represent boolean expressions
 
             ''' The operator, is this node, and the kids are the numbers/operands '''
+            leftOperand = 0
+            rightOperand = 0
             if self.firstChild is OperandNode:
                 leftOperand = self.firstChild.evaluate();
             elif self.firstChild is InformationNode:
                 leftOperand = self.firstChild.evaluate(battleCode, gc);
+            elif self.firstChild is BooleanNode:
+                leftOperand = self.firstChild.evaluate(battleCode, gc, moreParams)
+            else:
+                print("leftOperand defaulted to 0")
             if self.secondChild is OperandNode:
                 rightOperand = self.secondChild.evaluate();
             elif self.secondChild is InformationNode:
                 rightOperand = self.secondChild.evaluate(battleCode, gc);
+            elif self.firstChild is BooleanNode:
+                rightOperand = self.secondChild.evaluate(battleCode, gc, moreParams)
+            else:
+                print("rightOperand defaulted to 0")
 
             return self.operation(leftOperand, rightOperand)
 
@@ -162,6 +213,11 @@ class OperandNode(Node):
     def printNode(self, indent):
         print(indent + "At Operand Node with value: "+ str(self.value))
         super().printNode(indent)
+
+    def getWriteString(self, indent) -> str:
+        s = indent + "OperandNode Value: " + str(self.value) + "\n"
+        s += super().getWriteString(indent)
+        return s
 
     def evaluate(self):
         return self.value
@@ -182,6 +238,11 @@ class InformationNode(Node):
     def printNode(self, indent):
         print(indent + "At Info Node with function: " + self.function.__name__ )
         super().printNode(indent)
+
+    def getWriteString(self, indent) -> str:
+        s = indent + "InformationNode function: " + self.function.__name__ + "\n"
+        s += super().getWriteString(indent)
+        return s
 
     def evaluate(self, battleCode, gameController, params = []):
         if params != []:
@@ -232,6 +293,13 @@ class DecisionNode(Node):
             print(indent + "type of action is " + self.typeOfActionToMake)
         super().printNode(indent)
 
+    def getWriteString(self, indent) -> str:
+        if self.action:
+            s = indent + "DecisionNode action: " + self.action.__name__ + "\n"
+        else:
+            s = indent + "DecisionNode typeOfActionToMake: " + str(int(self.typeOfActionToMake)) + "\n"
+        s += super().getWriteString(indent)
+        return s
 
     def execute(self, battleCode, gameController, params):
 

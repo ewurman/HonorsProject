@@ -5,6 +5,9 @@ import DecisionTree
 import operator
 
 
+
+
+
 # Helper Functions for creating a tree
 def createRandomTopTreeDecisionNode():
     actionType = random.choice(list(ActionType))
@@ -32,14 +35,15 @@ def createBasicTopTree() -> DecisionTree:
     harvestNode = DecisionNode(None, ActionType.Harvest)
     moveNode = DecisionNode(None, ActionType.Move)
     buildNode = DecisionNode(None, ActionType.Build)
-    randomProbNode = BooleanNode(randomChance, [0.25])
+    randomProbNode1 = BooleanNode(randomChance, [0.25])
+    randomProbNode2 = BooleanNode(randomChance, [0.25])
+    randomProbNode3 = BooleanNode(randomChance, [0.25])
 
-    lastIf = IfNode(randomProbNode, moveNode, attackNode)
-    secondIf = IfNode(randomProbNode, buildNode, lastIf)
-    firstIf = IfNode(randomProbNode, harvestNode, secondIf)
+    lastIf = IfNode(randomProbNode3, moveNode, attackNode)
+    secondIf = IfNode(randomProbNode2, buildNode, lastIf)
+    firstIf = IfNode(randomProbNode1, harvestNode, secondIf)
     topTree = DecisionTree(firstIf)
     return topTree
-
 
 def createBasicHarvestTree() -> DecisionTree:
     harvestNode = DecisionNode(workerHarvestBehavior)
@@ -157,24 +161,81 @@ def selectRandomRobotForAttack(battleCode, gc):
 
 def selectUnitTypesThatCanAttack(bc, gc):
     x = "placeholder" #TODO
+    #Not in all_functions
 
 def selectRandomUnitThatCanAttack(bc, gc):
-    x = "placeholder" #TODO
+    nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+    can_attack = []
+    my_team = gc.team()
+    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+    for unit in attackReady:
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        for other in nearby:
+            if other.team != my_team:
+                if gc.can_attack(unit.id, other.id):
+                    can_attack.append(unit)
+                    break
+
+    if len(can_attack) != 0:
+        return random.choice(can_attack)
+    else:
+        return selectRandomRobotForAttack(bc,gc)
+
 
 def selectUnitDealingMostDamageThatCanAttack(bc, gc):
     x = "placeholder" #TODO
+    return selectRandomUnitThatCanAttack(bc, gc)
 
 def selectUnitWithLeastLifeThatCanAttack(bc, gc):
     x = "placeholder" #TODO
+    return selectRandomUnitThatCanAttack(bc, gc)
 
 def selectRandomUnitThatCanMove(bc, gc):
     x = "placeholder" #TODO
+    movables = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    movables = [x for x in movables if x.unit_type != bc.UnitType.Rocket]
+    moveReady = [x for x in movables if gc.is_move_ready(unit.id)]
+    can_move = []
+    for unit in moveReady:
+        random_directions = list(bc.Direction)
+        # Iterate through each direction
+        for direct1 in random_directions:
+            if gc.can_move(unit.id, direct1):
+                can_move.append(unit)
+                break
+    if len(can_move) != 0:
+        return random.choice(can_move)
+    else:
+        return selectRandomMoveableUnit(bc, gc)
+
 
 def selectUnitThatCanAttackToMove(bc, gc):
     x = "placeholder" #TODO
+    x = "placeholder" #TODO
+    movables = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    movables = [x for x in movables if x.unit_type != bc.UnitType.Rocket]
+    moveReady = [x for x in movables if gc.is_move_ready(unit.id)]
+    moveAttackReady = [x for x in moveReady if gc.is_attack_ready(unit.id)]
+    can_move = []
+    for unit in moveAttackReady:
+        random_directions = list(bc.Direction)
+        # Iterate through each direction
+        for direct1 in random_directions:
+            if gc.can_move(unit.id, direct1):
+                can_move.append(unit)
+                break
+    if len(can_move) != 0:
+        return random.choice(can_move)
+    else:
+        return selectRandomUnitThatCanMove(bc, gc)
+
 
 def selectWorkerToMoveTowardHarvesting(bc, gc):
     x = "placeholder" #TODO
+    return selectRandomWorker(bc, gc)
 
 
 
@@ -245,7 +306,7 @@ def workerCantHarvestBehavior(bc, gc, unit):
         directToGo = random_directions[0]
         bestKarbonite = 0
         for direct1 in random_directions:
-            if not bc.can_move(unit.id, direct1):
+            if not gc.can_move(unit.id, direct1):
                 continue
             totalKarbonite = 0
             for direct2 in random_directions:
@@ -253,7 +314,7 @@ def workerCantHarvestBehavior(bc, gc, unit):
             if totalKarbonite > bestKarbonite:
                 directToGo = direct1
 
-        if gc.is_move_ready(unit.id) and bc.can_move(unit.id, directToGo):
+        if gc.is_move_ready(unit.id) and gc.can_move(unit.id, directToGo):
             bc.move_robot(unit.id, directToGo)
     return None
 
@@ -627,7 +688,10 @@ def get_direction_of_closest_enemy(bc, gc, unit):
                     closest_enemy_id = other.id;
                     if closest_enemy_id:
                         direction = unit.location.map_location().direction_to(other.location.map_location())
-        return direction
+        if direction:                
+            return direction
+        else:
+            return random.choice(list(bc.Direction))
     return random.choice(list(bc.Direction))
 
 def get_direction_of_closest_ally(bc, gc, unit):
@@ -859,10 +923,28 @@ game_number_info_functions = [
     getKarbonite
 ]
 
+random_chance_function = [
+    randomChance
+]
+
+is_unit_type_functions = [
+    isHealer,
+    isKnight,
+    isWorker,
+    isRanger,
+    isMage,
+    isFactory,
+    isRocket
+]
+
+
 allFunctionSets = [
     select_factory_functions,
     factory_produce_functions,
     select_worker_functions,
+    select_worker_build_functions,
+    worker_harvest_functions,
+    worker_build_functions,
     worker_behavior_functions,
     select_knight_functions,
     knight_action_functions,
@@ -873,11 +955,15 @@ allFunctionSets = [
     select_healer_functions,
     healer_action_functions,
     select_attacker_functions,
+    select_moveable_unit_functions,
     unit_attack_functions,
     unit_heal_functions,
-    worker_harvest_functions,
+    unit_move_functions,
     worker_can_harvest_functions,
-    worker_cant_harvest_functions
+    worker_cant_harvest_functions,
+    game_number_info_functions,
+    random_chance_function,
+    is_unit_type_functions
 ]
 
 
@@ -1100,7 +1186,7 @@ def recursiveRandomMoveSubtree(maxRecursion, currentRecursion, percentRecurse):
 
     if currentRecursion == maxRecursion:
         #force Decision Node both
-        selectUnitNode = InformationNode(select_moveable_unit_functions)
+        selectUnitNode = InformationNode(random.choice(select_moveable_unit_functions))
 
         lChildFunction = random.choice(unit_move_functions)
         lChildNode = DecisionNode(lChildFunction)
