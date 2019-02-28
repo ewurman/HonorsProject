@@ -160,8 +160,28 @@ def selectRandomRobotForAttack(battleCode, gc):
 
 
 def selectUnitTypesThatCanAttack(bc, gc):
-    x = "placeholder" #TODO
-    #Not in all_functions
+    
+    #TODO: Not in all_functions\
+    nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+    can_attack = []
+    my_team = gc.team()
+    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+    for unit in attackReady:
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        for other in nearby:
+            if other.team != my_team:
+                if gc.can_attack(unit.id, other.id):
+                    can_attack.append(unit)
+                    break
+    types = set()
+    for u in can_attack:
+        types.add(u.UnitType)
+    return list(types)
+
+
 
 def selectRandomUnitThatCanAttack(bc, gc):
     nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
@@ -186,15 +206,65 @@ def selectRandomUnitThatCanAttack(bc, gc):
 
 
 def selectUnitDealingMostDamageThatCanAttack(bc, gc):
-    x = "placeholder" #TODO
-    return selectRandomUnitThatCanAttack(bc, gc)
+    nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+
+    can_attack = []
+    my_team = gc.team()
+    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+    for unit in attackReady:
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        for other in nearby:
+            if other.team != my_team:
+                if gc.can_attack(unit.id, other.id):
+                    can_attack.append(unit)
+                    break
+
+    random.shuffle(can_attack)
+    bestUnit = None
+    for u in can_attack:
+        if bestUnit == None:
+            bestUnit = u
+        if u.damage() > bestUnit.damage():
+            bestUnit = u
+
+    return bestUnit
+
 
 def selectUnitWithLeastLifeThatCanAttack(bc, gc):
-    x = "placeholder" #TODO
-    return selectRandomUnitThatCanAttack(bc, gc)
+    nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+
+    can_attack = []
+    my_team = gc.team()
+    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+    for unit in attackReady:
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        for other in nearby:
+            if other.team != my_team:
+                if gc.can_attack(unit.id, other.id):
+                    can_attack.append(unit)
+                    break
+
+    random.shuffle(can_attack)
+    leastLife = None
+    for u in can_attack:
+        if leastLife == None:
+            leastLife = u
+        if u.health < leastLife.health:
+            leastLife = u
+
+    return leastLife
+
+
+
+
 
 def selectRandomUnitThatCanMove(bc, gc):
-    x = "placeholder" #TODO
     movables = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     movables = [x for x in movables if x.unit_type != bc.UnitType.Rocket]
     moveReady = [x for x in movables if gc.is_move_ready(unit.id)]
@@ -213,8 +283,6 @@ def selectRandomUnitThatCanMove(bc, gc):
 
 
 def selectUnitThatCanAttackToMove(bc, gc):
-    x = "placeholder" #TODO
-    x = "placeholder" #TODO
     movables = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     movables = [x for x in movables if x.unit_type != bc.UnitType.Rocket]
     moveReady = [x for x in movables if gc.is_move_ready(unit.id)]
@@ -234,8 +302,8 @@ def selectUnitThatCanAttackToMove(bc, gc):
 
 
 def selectWorkerToMoveTowardHarvesting(bc, gc):
-    x = "placeholder" #TODO
-    return selectRandomWorker(bc, gc)
+    movables = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
+    return random.choice(movables)
 
 
 
@@ -315,7 +383,7 @@ def workerCantHarvestBehavior(bc, gc, unit):
                 directToGo = direct1
 
         if gc.is_move_ready(unit.id) and gc.can_move(unit.id, directToGo):
-            bc.move_robot(unit.id, directToGo)
+            gc.move_robot(unit.id, directToGo)
     return None
 
 
@@ -594,7 +662,7 @@ def mage_action(bc, gc, unit):
                     #print('Knight attacked a thing!')
                     gc.attack(unit.id, other.id)
                     return #we only want to attack
-
+        
         if bot_occupiable and gc.is_move_ready(unit.id) and gc.can_move(unit.id, bot_occupiable):
                 direction = get_direction_of_closest_enemy(bc, gc, unit)
                 if direction:
@@ -718,34 +786,35 @@ def randomChance(bc, gc, chanceTrue = 0.25) -> bool:
     return roll <= chanceTrue
 
 
-
 def unitAttackRandomPossibleEnemy(bc, gc, unit):
-    my_team = gc.team()
-    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
-    nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
-    enemies_in_range = []
-    for other in nearby:
-        if other.team != my_team:
-            if gc.can_attack(unit.id, other.id):
-                enemies_in_range.append(other)
-    enemy = random.choice(enemies_in_range)
-    gc.attack(unit.id, enemy.id)
+    if unit:
+        my_team = gc.team()
+        enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        enemies_in_range = []
+        for other in nearby:
+            if other.team != my_team:
+                if gc.can_attack(unit.id, other.id):
+                    enemies_in_range.append(other)
+        enemy = random.choice(enemies_in_range)
+        gc.attack(unit.id, enemy.id)
     return None #we attacked
 
 
 def unitAttackClosestPossibleEnemy(bc, gc, unit):
-    my_team = gc.team()
-    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
-    closest_enemy_dist = 99999
-    closest_enemy_id = None
-    nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
-    for other in nearby:
-        if other.team != my_team:
-            distance = unit.location.map_location().distance_squared_to(other.location.map_location())
-            if distance < closest_enemy_dist:
-                closest_enemy_dist = distance
-                closest_enemy_id = other.id;
-    gc.attack(unit.id, closest_enemy_id)
+    if unit:
+        my_team = gc.team()
+        enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+        closest_enemy_dist = 99999
+        closest_enemy_id = None
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        for other in nearby:
+            if other.team != my_team:
+                distance = unit.location.map_location().distance_squared_to(other.location.map_location())
+                if distance < closest_enemy_dist:
+                    closest_enemy_dist = distance
+                    closest_enemy_id = other.id;
+        gc.attack(unit.id, closest_enemy_id)
     return None #we attacked
 
 
@@ -1242,7 +1311,76 @@ def recursiveRandomMoveSubtree(maxRecursion, currentRecursion, percentRecurse):
 
 
 
+def createRandomTopTree():
+    #TODO, look at phases and how many things we have
+    firstCheckFunction = random.choice(game_number_info_functions)
+    firstChildLeftNode = InformationNode(firstCheckFunction)
+    if firstCheckFunction is getRoundNumber or firstCheckFunction is getKarbonite:
+        firstChildRightNode = OperandNode(random.randint(0,999))
+    else:
+        firstChildRightNode = createRandomValOperandNode(5,2)
+    firstCheckBoolNode = BooleanNode(None, operation = operator.lt, firstChild = firstChildLeftNode, secondChild = firstChildRightNode, isGCFunction = False)
 
+    # Now we recurse
+    leftSubtree = recursiveRandomTopSubtree(4, 0, 0.9)
+    rightSubtree = recursiveRandomTopSubtree(4, 0, 0.9)
+
+    root = IfNode(firstCheckBoolNode, leftSubtree, rightSubtree)
+    return DecisionTree(root)
+
+
+
+def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse): #TODO, remove build specifics
+    #TODO, look at phases and how many things we have
+    firstCheckFunction = random.choice(game_number_info_functions)
+    firstChildLeftNode = InformationNode(firstCheckFunction)
+    if firstCheckFunction is getRoundNumber:
+        firstChildRightNode = OperandNode(random.randint(0,999))
+        # TODO money caps at 400 if not gathering it
+    elif: firstCheckFunction is getKarbonite:
+        firstChildRightNode = OperandNode(random.randint(0,400))
+    else:
+        firstChildRightNode = createRandomValOperandNode(5,2)
+    firstCheckBoolNode = BooleanNode(None, operation = operator.lt, firstChild = firstChildLeftNode, secondChild = firstChildRightNode, isGCFunction = False)
+
+    if currentRecursion == maxRecursion:
+        #force Decision Node both
+        lChildNode = createRandomTopTreeDecisionNode()
+        rChildNode = createRandomTopTreeDecisionNode()
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+        return junctionNode
+
+
+    if percentRecurse < random.random():
+        #force Decision node left:
+        if percentRecurse < random.random():
+            #Also force Decision node right:
+            lChildNode = createRandomTopTreeDecisionNode()
+            rChildNode = createRandomTopTreeDecisionNode()
+            junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+            return junctionNode
+
+        else:
+            #only the left is Decision
+            lChildNode = createRandomTopTreeDecisionNode()
+            rChildNode = recursiveRandomTopSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+            junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+            return junctionNode
+
+
+    elif percentRecurse < random.random():
+        #force ONLY Decision node right:
+        rChildNode = createRandomTopTreeDecisionNode()
+        lChildNode = recursiveRandomTopSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+        return junctionNode
+
+    else:
+        #recurse
+        lChildNode = recursiveRandomTopSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        rChildNode = recursiveRandomTopSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+        return junctionNode
 
 
 

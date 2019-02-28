@@ -364,7 +364,7 @@ while True:
 '''
 
 #TODO: call startGame on our default GPTestBot
-defaultOptions = {'time_pool': 10000, 'player_cpu': 100, 'use_viewer': 1, 'dir_p1': 'GPTestBot1', 'map': 'orgo.bc18t', 
+defaultOptions = {'time_pool': 10000, 'player_cpu': 100, 'use_viewer': 1, 'dir_p1': 'GPTestBot1', 'map': 'moo.bc18t', 
     'replay_filename': 'replay.bc18', 'time_additional': 50, 'dir_p2': 'GPTestBot2', 'player_memory': 512}
 start_game_no_gui(defaultOptions)
 print("WINNER is " + str(WINNER))

@@ -288,9 +288,10 @@ class DecisionNode(Node):
         node.typeOfActionToMake = temp2
 
     def printNode(self, indent):
-        print(indent + "At Decision Node with action: "+ self.action.__name__)
+        if self.action:
+            print(indent + "At Decision Node with action: "+ self.action.__name__)
         if self.typeOfActionToMake != 0:
-            print(indent + "type of action is " + self.typeOfActionToMake)
+            print(indent + "At Decision Node with type of action is " + self.typeOfActionToMake)
         super().printNode(indent)
 
     def getWriteString(self, indent) -> str:
