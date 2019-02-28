@@ -33,5 +33,13 @@ export NODOCKER=1
 mtput setaf 5
 echo "$ python3 $DIR/battlecode-manager/runGPGame.py"
 mtput sgr0
+
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+echo "running on mac"
 python3 $DIR/battlecode-manager/runGPGame.py
+exit 1
+else 
+timeout 30000000 python3 $DIR/battlecode-manager/runGPGame.py
+fi
 

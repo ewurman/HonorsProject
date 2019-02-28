@@ -1,62 +1,57 @@
 IfNode 
 	BooleanNode operation: lt
-		InformationNode function: getNumberOfWorkers
+		InformationNode function: getNumberOfKnights
 		OperandNode Value: 4
 	IfNode 
 		BooleanNode operation: lt
-			InformationNode function: getNumberOfMages
-			OperandNode Value: 3
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 5
 		IfNode 
 			BooleanNode operation: lt
-				InformationNode function: getNumberOfHealers
+				InformationNode function: getNumberOfMages
 				OperandNode Value: 7
 			IfNode 
 				BooleanNode operation: lt
-					InformationNode function: getNumberOfMages
-					OperandNode Value: 2
+					InformationNode function: getKarbonite
+					OperandNode Value: 925
 				IfNode WithInfo
 					BooleanNode operation: lt
-						InformationNode function: getRoundNumber
-						OperandNode Value: 833
+						InformationNode function: getNumberOfFactories
+						OperandNode Value: 4
+					DecisionNode action: factory_produce_ranger
 					DecisionNode action: factory_produce_worker
-					DecisionNode action: factory_produce_knight
 					InformationNode function: selectRandomFactory
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getKarbonite
-						OperandNode Value: 500
-					DecisionNode action: factory_produce_mage
-					DecisionNode action: factory_produce_random
-					InformationNode function: selectRandomFactory
+				InformationNode function: selectRandomWorker
+					DecisionNode action: workerBuildRocket
 			IfNode 
 				BooleanNode operation: lt
-					InformationNode function: getNumberOfWorkers
+					InformationNode function: getRoundNumber
+					OperandNode Value: 641
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfWorkers
+						OperandNode Value: 7
+					DecisionNode action: factory_produce_mage
+					DecisionNode action: factory_produce_ranger
+					InformationNode function: selectRandomFactory
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfFactories
+						OperandNode Value: 5
+					DecisionNode action: workerBuildRocket
+					DecisionNode action: workerBuildBehavior
+					InformationNode function: selectRandomWorker
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getKarbonite
+				OperandNode Value: 841
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
 					OperandNode Value: 0
 				IfNode WithInfo
 					BooleanNode operation: lt
-						InformationNode function: getNumberOfWorkers
-						OperandNode Value: 3
-					DecisionNode action: factory_produce_healer
-					DecisionNode action: factory_produce_knight
-					InformationNode function: selectRandomFactory
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getKarbonite
-						OperandNode Value: 825
-					DecisionNode action: factory_produce_worker
-					DecisionNode action: factory_produce_knight
-					InformationNode function: selectRandomFactory
-		IfNode 
-			BooleanNode operation: lt
-				InformationNode function: getRoundNumber
-				OperandNode Value: 805
-			IfNode 
-				BooleanNode operation: lt
-					InformationNode function: getNumberOfRangers
-					OperandNode Value: 5
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getNumberOfWorkers
+						InformationNode function: getNumberOfHealers
 						OperandNode Value: 4
 					DecisionNode action: workerBuildRocket
 					DecisionNode action: workerBuildBehavior
@@ -66,102 +61,70 @@ IfNode
 						InformationNode function: getNumberOfHealers
 						OperandNode Value: 7
 					DecisionNode action: factory_produce_random
-					DecisionNode action: factory_produce_random
+					DecisionNode action: factory_produce_ranger
 					InformationNode function: selectRandomFactory
+			InformationNode function: selectRandomWorker
+				DecisionNode action: workerBuildRocket
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 194
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 5
+			InformationNode function: selectRandomWorker
+				DecisionNode action: workerBuildRocket
 			IfNode 
 				BooleanNode operation: lt
-					InformationNode function: getNumberOfKnights
-					OperandNode Value: 4
+					InformationNode function: getNumberOfRockets
+					OperandNode Value: 2
 				IfNode WithInfo
 					BooleanNode operation: lt
-						InformationNode function: getNumberOfKnights
+						InformationNode function: getNumberOfMages
 						OperandNode Value: 6
 					DecisionNode action: workerBuildBehavior
 					DecisionNode action: workerBuildRocket
 					InformationNode function: selectRandomWorker
 				IfNode WithInfo
 					BooleanNode operation: lt
-						InformationNode function: getNumberOfMages
+						InformationNode function: getNumberOfRockets
 						OperandNode Value: 1
-					DecisionNode action: factory_produce_ranger
-					DecisionNode action: factory_produce_mage
-					InformationNode function: selectRandomFactory
-	IfNode 
-		BooleanNode operation: lt
-			InformationNode function: getNumberOfRangers
-			OperandNode Value: 5
+					DecisionNode action: workerBuildRocket
+					DecisionNode action: workerBuildBehavior
+					InformationNode function: selectRandomWorker
 		IfNode 
 			BooleanNode operation: lt
-				InformationNode function: getNumberOfRangers
-				OperandNode Value: 6
+				InformationNode function: getKarbonite
+				OperandNode Value: 580
 			IfNode 
 				BooleanNode operation: lt
 					InformationNode function: getNumberOfRockets
-					OperandNode Value: 6
-				InformationNode function: selectRandomWorker
-					DecisionNode action: workerBuildRocket
+					OperandNode Value: 2
 				IfNode WithInfo
 					BooleanNode operation: lt
-						InformationNode function: getNumberOfMages
-						OperandNode Value: 3
-					DecisionNode action: workerBuildBehavior
+						InformationNode function: getNumberOfHealers
+						OperandNode Value: 5
+					DecisionNode action: workerBuildRocket
 					DecisionNode action: workerBuildRocket
 					InformationNode function: selectRandomWorker
-			IfNode 
-				BooleanNode operation: lt
-					InformationNode function: getNumberOfKnights
-					OperandNode Value: 3
 				IfNode WithInfo
 					BooleanNode operation: lt
 						InformationNode function: getNumberOfKnights
 						OperandNode Value: 5
+					DecisionNode action: factory_produce_healer
 					DecisionNode action: factory_produce_worker
-					DecisionNode action: factory_produce_knight
-					InformationNode function: selectRandomFactory
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getNumberOfHealers
-						OperandNode Value: 5
-					DecisionNode action: factory_produce_healer
-					DecisionNode action: factory_produce_healer
-					InformationNode function: selectRandomFactory
-		IfNode 
-			BooleanNode operation: lt
-				InformationNode function: getNumberOfFactories
-				OperandNode Value: 6
-			IfNode 
-				BooleanNode operation: lt
-					InformationNode function: getNumberOfHealers
-					OperandNode Value: 2
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getNumberOfMages
-						OperandNode Value: 5
-					DecisionNode action: factory_produce_mage
-					DecisionNode action: factory_produce_mage
-					InformationNode function: selectRandomFactory
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getKarbonite
-						OperandNode Value: 140
-					DecisionNode action: factory_produce_healer
-					DecisionNode action: factory_produce_mage
 					InformationNode function: selectRandomFactory
 			IfNode 
 				BooleanNode operation: lt
-					InformationNode function: getNumberOfMages
-					OperandNode Value: 1
+					InformationNode function: getNumberOfKnights
+					OperandNode Value: 8
+				InformationNode function: selectRandomWorker
+					DecisionNode action: workerBuildRocket
 				IfNode WithInfo
 					BooleanNode operation: lt
-						InformationNode function: getNumberOfHealers
-						OperandNode Value: 4
-					DecisionNode action: factory_produce_worker
-					DecisionNode action: factory_produce_knight
-					InformationNode function: selectRandomFactory
-				IfNode WithInfo
-					BooleanNode operation: lt
-						InformationNode function: getNumberOfFactories
-						OperandNode Value: 3
-					DecisionNode action: factory_produce_knight
-					DecisionNode action: factory_produce_random
-					InformationNode function: selectRandomFactory
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 1
+					DecisionNode action: workerBuildRocket
+					DecisionNode action: workerBuildRocket
+					InformationNode function: selectRandomWorker

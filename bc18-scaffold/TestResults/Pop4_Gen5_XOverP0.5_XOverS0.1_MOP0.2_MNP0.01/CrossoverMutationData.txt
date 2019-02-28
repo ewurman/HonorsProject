@@ -1,39 +1,20 @@
 # Number of Avg Crossover Per Generation
-5,3,4,4,3
+5,2,4,4,5
 # Average Number of Avg Crossovers Across Generations
-3.8
+4.0
 
 # Average height of tree A of Crossovers Per Generation
-1.0,0.0,0.5,2.0,4.0
-0.5,0.0,1.5,1.0,0.0
-1.5,1.0,0.0,1.5,1.0
-0.5,0.0,1.0,2.0,1.0
-0.0,1.0,0.5,0.0,1.0
+0,4,0,3,6
+-1,0,3,0,2
+2.5,-1,2,2,0
+2.0,2.0,-1,0,2
+2.0,2.0,3.0,-1,6
 # Average height of tree A of Crossovers Across Generations
-
-
-
-
-
-
-
-
-
-# Number of Avg Crossover Per Generation
-3,7,3,6,3
-# Average Number of Avg Crossovers Across Generations
-4.4
-
-# Average height of tree A of Crossovers Per Generation
-1.0,0.0,0.0,3.0,0.0
-1.5,2.0,1.5,1.0,1.0
-0.0,1.0,0.0,1.0,1.0
-2.0,1.0,2.0,0.0,2.0
-0.0,1.0,0.0,0.0,1.5
-# Average height of tree A of Crossovers Across Generations
-0.9,1.0,0.7,1.0,1.1
+1.1,1.4,1.4,0.8,3.2
 
 # Number of Avg Mutations Per Generation
-6,0,1,2,1
+2,0,2,4,0
 # Average Number of Avg Mutations Across Generations
-2.0
+1.6
+# Winner Distribution 
+2, 8

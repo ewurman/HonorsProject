@@ -5,6 +5,7 @@ import subprocess
 import shlex
 import random
 import runpy
+import sys
 #import battlecode-manager/runGPGame
 
 
@@ -17,20 +18,28 @@ def runGame(player1, player2):
     player1.writeToFiles(pwd1)
     player2.writeToFiles(pwd2)
 
+
+
     # now call the runGPGame script
-    os.system("sh runGenerations.sh")
+    #os.system("sh runGenerations.sh")
+    subprocess.call(["sh", "runGenerations.sh"])
+    #subprocess.run(["sh", "runGenerations.sh"], timeout=30000000) #10 s + 50 each round, goes to avg 30 sec per roundx1000rounds
+    # max is 30000000
+    #sys.path.append("/battlecode/python")
+    #subprocess.call(["sh", "AddBattleCodeToPath.sh"])
+    #subprocess.run(["python3", pwd+"/battlecode-manager/runGPGame.py"], timeout=3000)
 
 
     # now read the winner in
     with open("battlecode-manager/winner.txt") as f:
         line = f.read()
     if line[0] == '0':
-        return player1
-    elif line[1] == '1':
-        return player2
+        return player1, 0
+    elif line[0] == '1':
+        return player2, 1
     else:
         print("ERROR: No winner found")
-        return player1
+        return player1, 0
 
 
 def battleRoyale(population):
@@ -41,7 +50,7 @@ def battleRoyale(population):
         for j in range(0,len(population),2):
             player1 = population[j]
             player2 = population[j+1]
-            winner = runGame(player1, player2)
+            winner, x = runGame(player1, player2)
             new_pop.append(winner)
         population = new_pop.copy()
 
@@ -66,6 +75,7 @@ if __name__ == '__main__':
     crossoversPerRound = []
     cHeightsPerRound = []
     mutationsPerRound = []
+    winnerDist = [0,0]
 
     # initialize population
     for i in range(POP_SIZE):
@@ -92,6 +102,7 @@ if __name__ == '__main__':
         # DATA COLLECTION Declaration
         crossoversThisRound = 0
         cHeightsThisRound = [0,0,0,0,0]
+        numcHeights = [0,0,0,0,0]
         mutationsThisRound = 0
 
         #start games
@@ -103,8 +114,10 @@ if __name__ == '__main__':
             print("About to run game")
             #run battlecode with these two players
             # Tournament Select
-            winner = runGame(player1, player2)
+            winner, playerNum = runGame(player1, player2)
             breedingPool.append(winner) 
+
+            winnerDist[playerNum] += 1
 
         #now breeding pool should be half POP_SIZE
 
@@ -119,7 +132,14 @@ if __name__ == '__main__':
             c1, c2, numCrossover, heightAs = GP.Crossover1Player(m1, m2, crossoverProb, crossoverStopEarly)
             population += [c1, c2]
             crossoversThisRound += numCrossover
-            cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
+
+            for i in range(0, len(heightAs)):
+                if heightAs[i] != -1:
+                    numcHeights[i] += 1
+                    cHeightsThisRound[i] += heightAs[i]
+
+
+            #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
 
         print("Finished Crossover")
         print("Starting Mutations")
@@ -132,7 +152,12 @@ if __name__ == '__main__':
 
 
         # DATA COLLECTION 
-        cHeightsThisRound = [x / (POP_SIZE//2) for x in cHeightsThisRound] #divide by num crossovers for avg
+        for i in range(0, len(cHeightsPerRound)):
+            if numcHeights[i] == 0:
+                cHeightsThisRound[i] = -1
+            else:
+                cHeightsThisRound[i] = cHeightsThisRound[i] / numcHeights[i] #divide by num crossovers for avg
+        
         cHeightsPerRound.append(cHeightsThisRound)
         crossoversPerRound.append(crossoversThisRound)
         mutationsPerRound.append(mutationsThisRound)
@@ -152,6 +177,8 @@ if __name__ == '__main__':
 
 
     with open(resultDirName+"/CrossoverMutationData.txt", 'a+') as f:
+        f.seek(0)
+        f.truncate()
         f.write("# Number of Avg Crossover Per Generation\n")
         last = crossoversPerRound.pop()
         total = last
@@ -184,6 +211,8 @@ if __name__ == '__main__':
             f.write(str(x)+',')
         f.write(str(lastM)+ '\n# Average Number of Avg Mutations Across Generations\n')
         f.write(str( totalM / GENERATIONS) + '\n')
+        f.write("# Winner Distribution \n")
+        f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
 
 
 

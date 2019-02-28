@@ -1,10 +1,10 @@
 IfNode 
 	BooleanNode function: randomChance
-	DecisionNode typeOfActionToMake: 1
+	DecisionNode typeOfActionToMake: 4
 	IfNode 
 		BooleanNode function: randomChance
-		DecisionNode typeOfActionToMake: 4
+		DecisionNode typeOfActionToMake: 2
 		IfNode 
 			BooleanNode function: randomChance
 			DecisionNode typeOfActionToMake: 3
-			DecisionNode typeOfActionToMake: 2
+			DecisionNode typeOfActionToMake: 1

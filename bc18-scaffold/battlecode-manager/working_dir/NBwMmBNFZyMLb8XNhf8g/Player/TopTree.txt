@@ -1,0 +1,7 @@
+IfNode 
+	BooleanNode function: randomChance
+	DecisionNode typeOfActionToMake: 3
+	IfNode 
+		BooleanNode function: randomChance
+		DecisionNode typeOfActionToMake: 1
+		DecisionNode typeOfActionToMake: 1

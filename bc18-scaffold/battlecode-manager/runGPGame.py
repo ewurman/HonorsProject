@@ -292,7 +292,7 @@ def stop_manager():
 
 def start_game_no_gui(return_args):
     global WINNER
-    WINNER = 0
+    WINNER = 1
     '''
     print("***********************************")
     print(return_args)
@@ -341,8 +341,10 @@ def start_game_no_gui(return_args):
     #lock.release()
 
     if winner == 'player1':
+        WINNER = 0;
         eel.trigger_end_game(1)()
     elif winner == ' player2':
+        WINNER = 1;
         eel.trigger_end_game(2)()
     else:
         eel.trigger_end_game(0)()
