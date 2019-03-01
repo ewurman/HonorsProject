@@ -156,7 +156,7 @@ if __name__ == '__main__':
             if numcHeights[j] == 0:
                 cHeightsThisRound[j] = -1
             else:
-                cHeightsThisRound[j] = cHeightsThisRound[i] / numcHeights[j] #divide by num crossovers for avg
+                cHeightsThisRound[j] = cHeightsThisRound[j] / numcHeights[j] #divide by num crossovers for avg
         
         cHeightsPerRound.append(cHeightsThisRound)
         crossoversPerRound.append(crossoversThisRound)
