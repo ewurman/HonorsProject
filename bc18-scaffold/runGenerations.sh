@@ -1,11 +1,11 @@
 # ASSUME we are in the same directory as run_nodocker.sh
 
 #!/bin/bash
-mtput() {
-if command -v tput > /dev/null; then
-tput $@
-fi
-}
+#mtput() {
+#if command -v tput > /dev/null; then
+#tput $@
+#fi
+#}
 
 if uname -s | grep -Fqe CYGWIN ; then
 echo "run_nodocker.sh won't work on windows! Use run_nodocker.bat :)"
