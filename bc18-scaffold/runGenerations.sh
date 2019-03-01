@@ -32,9 +32,9 @@ echo "=== STARTING THE MANAGER (no docker) ==="
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PYTHONPATH="$DIR/battlecode/python:$PYTHONPATH"
 export NODOCKER=1
-mtput setaf 5
+#mtput setaf 5
 echo "$ python3 $DIR/battlecode-manager/runGPGame.py"
-mtput sgr0
+#mtput sgr0
 
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
