@@ -2238,7 +2238,6 @@ def Crossover1(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, Dec
     heightB = 1
     nodes = recursiveDFSNodes(currNodeB, heightB);
     trimmedNodes = [node for node in nodes if type(node) is type(currNodeA)]
-    nodeB = random.choice(trimmedNodes)
     if len(trimmedNodes) != 0:
         nodeB = random.choice(trimmedNodes)
         currNodeA.swap(nodeB) #TODO: check these are working
