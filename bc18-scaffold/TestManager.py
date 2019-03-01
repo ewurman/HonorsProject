@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     population = []
     mutateNodeProb = 0.01
-    mutateOccurProb = 0.2  #{0.2,0.4,0.6}
+    mutateOccurProb = 0.6  #{0.2,0.4,0.6}
     crossoverProb = 0.5 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
     crossoverStopEarly = 0.1 #chance to stop higher in tree
     resultDirName = "TestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
