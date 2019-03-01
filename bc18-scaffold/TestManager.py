@@ -133,10 +133,10 @@ if __name__ == '__main__':
             population += [c1, c2]
             crossoversThisRound += numCrossover
 
-            for i in range(0, len(heightAs)):
-                if heightAs[i] != -1:
-                    numcHeights[i] += 1
-                    cHeightsThisRound[i] += heightAs[i]
+            for k in range(0, len(heightAs)):
+                if heightAs[k] != -1:
+                    numcHeights[k] += 1
+                    cHeightsThisRound[k] += heightAs[k]
 
 
             #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
@@ -152,11 +152,11 @@ if __name__ == '__main__':
 
 
         # DATA COLLECTION 
-        for i in range(0, len(cHeightsPerRound)):
-            if numcHeights[i] == 0:
-                cHeightsThisRound[i] = -1
+        for j in range(0, len(cHeightsPerRound)):
+            if numcHeights[j] == 0:
+                cHeightsThisRound[j] = -1
             else:
-                cHeightsThisRound[i] = cHeightsThisRound[i] / numcHeights[i] #divide by num crossovers for avg
+                cHeightsThisRound[j] = cHeightsThisRound[i] / numcHeights[j] #divide by num crossovers for avg
         
         cHeightsPerRound.append(cHeightsThisRound)
         crossoversPerRound.append(crossoversThisRound)
