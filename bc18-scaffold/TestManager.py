@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
 
         # DATA COLLECTION 
-        for j in range(0, len(cHeightsPerRound)):
+        for j in range(0, len(cHeightsThisRound)):
             if numcHeights[j] == 0:
                 cHeightsThisRound[j] = -1
             else:
