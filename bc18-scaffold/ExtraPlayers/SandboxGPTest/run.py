@@ -365,6 +365,25 @@ class DecisionTree:
     def getWriteString(self):
         return self.root.getWriteString("")
 
+    def getNumNodes(self):
+        print("getting number of nodes in decision Tree")
+        nodes = 0
+        queue = [self.root]
+        while (len(queue) != 0):
+            currNode = queue.pop(0)
+            nodes += 1
+            if currNode.firstChild:
+                queue.append(currNode.firstChild)
+            if currNode.secondChild:
+                queue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                queue.append(currNode.thirdChild)
+            if type(currNode) is IfNode:
+                if currNode.infoChild:
+                    queue.append(currNode.infoChild)
+
+        return nodes
+
     def execute(self, battleCode, gameController):
         print("Executing a decision Tree")
         currNode = self.root
@@ -1803,6 +1822,15 @@ class DecisionTreePlayer:
         self.buildTree = buildTree
         self.researchTree = researchTree
 
+
+    def getNumNodesByTree(self):
+        n0 = self.topTree.getNumNodes()
+        n1 = self.harvestTree.getNumNodes()
+        n2 = self.attackTree.getNumNodes()
+        n3 = self.movementTree.getNumNodes()
+        n4 = self.buildTree.getNumNodes()
+        return [n0, n1, n2, n3, n4]
+
     def execute(self, battleCode, gameController):
         # Runs one turn through the Tree(s)
         actionNum = self.topTree.execute(battleCode, gameController)
@@ -2016,7 +2044,7 @@ class DecisionTreePlayer:
 
 
 def createRandomDecisionTreePlayer():
-    topTree = createBasicTopTree()
+    topTree = createRandomTopTree()
     harvestTree = createRandomHarvestTree()
     attackTree = createRandomAttackTree()
     moveTree = createRandomMoveTree()
@@ -2255,18 +2283,8 @@ def Selection():
 gc = bc.GameController()
 
 
-topTree1 = createRandomTopTree()
-topTree1.printTree()
-print('\n\n')
-
-topTree2 = createRandomTopTree()
-topTree2.printTree()
-print('\n\n')
-
-topTree3 = createRandomTopTree()
-topTree3.printTree()
-print('\n\n')
-
+player = createRandomDecisionTreePlayer()
+print("Tree heights: ", player.getNumNodesByTree())
 
 
 '''

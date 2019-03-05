@@ -18,6 +18,24 @@ class DecisionTree:
     def getWriteString(self):
         return self.root.getWriteString("")
 
+    def getNumNodes(self):
+        print("getting number of nodes in decision Tree")
+        nodes = 0
+        queue = [self.root]
+        while (len(queue) != 0):
+            currNode = queue.pop(0)
+            nodes += 1
+            if currNode.firstChild:
+                queue.append(currNode.firstChild)
+            if currNode.secondChild:
+                queue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                queue.append(currNode.thirdChild)
+            if type(currNode) is IfNode:
+                if currNode.infoChild:
+                    queue.append(currNode.infoChild)
+
+        return nodes
 
     def execute(self, battleCode, gameController):
         print("Executing a decision Tree")

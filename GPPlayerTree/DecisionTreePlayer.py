@@ -210,7 +210,13 @@ class DecisionTreePlayer:
         return player
         
 
-
+    def getNumNodesByTree(self):
+        n0 = self.topTree.getNumNodes()
+        n1 = self.harvestTree.getNumNodes()
+        n2 = self.attackTree.getNumNodes()
+        n3 = self.movementTree.getNumNodes()
+        n4 = self.buildTree.getNumNodes()
+        return [n0, n1, n2, n3, n4]
 
 
 

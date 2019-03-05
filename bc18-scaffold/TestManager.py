@@ -8,6 +8,12 @@ import runpy
 import sys
 #import battlecode-manager/runGPGame
 
+NUM_CROSSOVER_HEADER = "# Number of Avg Crossover Per Generation\n"
+CHEIGHTS_HEADER = "# Average height of tree A of Crossovers Across Generations\n"
+MUTATIONS_HEADER = "# Number of Avg Mutations Per Generation\n"
+TNODES_HEADER = "# Number of Nodes per Tree each Generation\n"
+WINNER_DIST_HEADER = "# Winner Distribution\n"
+
 
 def runGame(player1, player2):
     '''TODO: call battlecode and run a game'''
@@ -18,17 +24,14 @@ def runGame(player1, player2):
     player1.writeToFiles(pwd1)
     player2.writeToFiles(pwd2)
 
-
-
     # now call the runGPGame script
     #os.system("sh runGenerations.sh")
-    subprocess.call(["sh", "runGenerations.sh"])
-    #subprocess.run(["sh", "runGenerations.sh"], timeout=30000000) #10 s + 50 each round, goes to avg 30 sec per roundx1000rounds
+    #subprocess.call(["sh", "runGenerations.sh"])
+    subprocess.run(["sh", "runGenerations.sh"], timeout=30000000) #10 s + 50 each round, goes to avg 30 sec per roundx1000rounds
     # max is 30000000
     #sys.path.append("/battlecode/python")
     #subprocess.call(["sh", "AddBattleCodeToPath.sh"])
     #subprocess.run(["python3", pwd+"/battlecode-manager/runGPGame.py"], timeout=3000)
-
 
     # now read the winner in
     with open("battlecode-manager/winner.txt") as f:
@@ -58,6 +61,130 @@ def battleRoyale(population):
     return finalWinner
 
 
+def log(filepath, message):
+    print("Logging:", message)
+    with open(filepath+"/CrossoverMutationData.txt", 'a+') as f:
+        f.write(message);
+
+
+def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate = True):
+    print("Writing Data to a file at " + filepath)
+    with open(filepath+"/CrossoverMutationData.txt", 'a+') as f:
+        f.seek(0)
+        f.truncate()
+        f.write(NUM_CROSSOVER_HEADER)
+        last = crossoversPerRound.pop()
+        total = last
+        for x in crossoversPerRound:
+            total += x
+            f.write(str(x)+',')
+        f.write(str(last)+ '\n# Average Number of Avg Crossovers Across Generations\n')
+        f.write(str( total / GENERATIONS) + '\n\n')
+
+        f.write(CHEIGHTS_HEADER)
+        avgHeights = [0,0,0,0,0]
+        for h in cHeightsPerRound:
+            h0 = str(h[0])
+            h1 = str(h[1])
+            h2 = str(h[2])
+            h3 = str(h[3])
+            h4 = str(h[4])
+            if isIntermediate:
+                f.write(h0 + ',' + h1 + ',' + h2 + ',' + h3 + ',' + h4 + ';') #easier to read in as one line
+            else: 
+                f.write(h0 + ',' + h1 + ',' + h2 + ',' + h3 + ',' + h4 + '\n')
+            avgHeights = [sum(x) for x in zip(avgHeights, h)] #add component wise
+
+        avgHeights = [str(x / len(cHeightsPerRound)) for x in avgHeights]
+        f.write("# Average height of tree A of Crossovers Across Generations\n")
+        f.write(avgHeights[0] + ',' + avgHeights[1] + ',' + avgHeights[2] + ',' + avgHeights[3] + ',' + avgHeights[4] + '\n\n')
+
+        f.write(MUTATIONS_HEADER)
+        lastM = mutationsPerRound.pop()
+        totalM = lastM
+        for x in mutationsPerRound:
+            totalM += x
+            f.write(str(x)+',')
+        f.write(str(lastM)+ '\n# Average Number of Avg Mutations Across Generations\n')
+        f.write(str( totalM / GENERATIONS) + '\n')
+
+        #node numbers
+        f.write("\n"+ TNODES_HEADER)
+        avgNodes = [0,0,0,0,0]
+        for nodeDist in tNodesPerRound:
+            n0 = str(nodeDist[0])
+            n1 = str(nodeDist[1])
+            n2 = str(nodeDist[2])
+            n3 = str(nodeDist[3])
+            n4 = str(nodeDist[4])
+            if isIntermediate:
+                f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + ';')
+            else:
+                f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + '\n')
+            avgNodes = [sum(x) for x in zip(avgNodes, nodeDist)]
+        f.write("# Mean number of nodes \n")
+        f.write(avgNodes[0] + ',' + avgNodes[1] + ',' + avgNodes[2] + ',' + avgNodes[3] + ',' + avgNodes[4] + '\n\n')
+
+        f.write(WINNER_DIST_HEADER)
+        f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
+
+    print("Wrote Data to File!")
+
+
+
+def readDataFromFile(filepath):
+    '''
+        This should only be called on Intermediate written Data files
+    '''
+    with open(filepath+"/CrossoverMutationData.txt", 'a+') as f:
+        lines = f.readlines()
+
+        crossoversPerRound = []
+        cHeightsPerRound = []
+        mutationsPerRound = []
+        tNodesPerRound = []
+        winnerDist = [0,0]
+
+        for i in range(1, len(lines)):
+            if lines[i-1] == NUM_CROSSOVER_HEADER:
+                print("Found NUM_CROSSOVER_HEADER, parsing for crossoversPerRound")
+                line = lines[i].strip()
+                crossoversPerRound = line.split(',')
+                print("crossoversPerRound: ", crossoversPerRound)
+
+            elif lines[i-1] == CHEIGHTS_HEADER:
+                print("Found CHEIGHTS_HEADER, parsing for cHeightsPerRound")
+                line = lines[i].strip()
+                allCHeights = line.split(";") #ASSUMING INTERMEDIATE FILE
+                cHeightsPerRound = [x.split(',') for x in allCHeights]
+                print("cHeightsPerRound: ", cHeightsPerRound)
+
+            elif lines[i-1] == MUTATIONS_HEADER:
+                print("Found MUTATIONS_HEADER, parsing for mutationsPerRound")
+                line = lines[i].strip()
+                mutationsPerRound = line.split(',')
+                print("mutationsPerRound: ", mutationsPerRound)
+
+            elif lines[i-1] == TNODES_HEADER:
+                print("Found TNODES_HEADER, parsing for tNodesPerRound")
+                line = lines[i].strip()
+                allTNodes = line.split(";") #ASSUMING INTERMEDIATE FILE
+                mutationsPerRound = [x.split(',') for x in allTNodes]
+                print("mutationsPerRound: ", mutationsPerRound)
+
+            elif lines[i-1] == WINNER_DIST_HEADER:
+                print("Found WINNER_DIST_HEADER, parsing for winnerDist")
+                line = lines[i].strip()
+                winnerDist = line.split(',')
+                print("winnerDist: ", winnerDist)
+            #TODO
+
+
+
+    print("Done Reading Data from file")
+
+
+
 
 if __name__ == '__main__':
     POP_SIZE = 32 #must be even -> 32 easy for final tournament
@@ -73,7 +200,8 @@ if __name__ == '__main__':
 
     #DATA COLLECTION VARIABLES
     crossoversPerRound = []
-    cHeightsPerRound = []
+    cHeightsPerRound = []  #list of list of heights at which crossover occurs
+    tNodesPerRound = []  #list of list of avg number of nodes of trees per generation
     mutationsPerRound = []
     winnerDist = [0,0]
 
@@ -102,6 +230,7 @@ if __name__ == '__main__':
         # DATA COLLECTION Declaration
         crossoversThisRound = 0
         cHeightsThisRound = [0,0,0,0,0]
+        tNodesThisRound = [0,0,0,0,0]
         numcHeights = [0,0,0,0,0]
         mutationsThisRound = 0
 
@@ -110,8 +239,13 @@ if __name__ == '__main__':
             player1 = population[j]
             player2 = population[j+1]
 
-            
-            print("About to run game")
+            # SAVE the number of nodes from this generation
+            p1nodes = player1.getNumNodesByTree()
+            p2nodes = player2.getNumNodesByTree()
+            #nodes = [sum(x) for x in zip(p1nodes, p2nodes)]
+            tNodesThisRound = [sum(x) for x in zip(p1nodes, p2nodes, tNodesThisRound)]
+
+            print("About to run game number", (j+ (i*16)))
             #run battlecode with these two players
             # Tournament Select
             winner, playerNum = runGame(player1, player2)
@@ -120,6 +254,7 @@ if __name__ == '__main__':
             winnerDist[playerNum] += 1
 
         #now breeding pool should be half POP_SIZE
+
 
         #get ready for the new generation
         population.clear() 
@@ -161,6 +296,7 @@ if __name__ == '__main__':
         cHeightsPerRound.append(cHeightsThisRound)
         crossoversPerRound.append(crossoversThisRound)
         mutationsPerRound.append(mutationsThisRound)
+        tNodesPerRound.append(tNodesThisRound)
 
     #end Generations
 
@@ -175,7 +311,7 @@ if __name__ == '__main__':
         
     finalWinner.writeToFiles(finalWinnerDir)
 
-
+    '''
     with open(resultDirName+"/CrossoverMutationData.txt", 'a+') as f:
         f.seek(0)
         f.truncate()
@@ -211,8 +347,26 @@ if __name__ == '__main__':
             f.write(str(x)+',')
         f.write(str(lastM)+ '\n# Average Number of Avg Mutations Across Generations\n')
         f.write(str( totalM / GENERATIONS) + '\n')
+
+        #node numbers
+        f.write("\n# Number of Nodes per Tree each Generation\n")
+        avgNodes = [0,0,0,0,0]
+        for nodeDist in tNodesPerRound:
+            n0 = str(nodeDist[0])
+            n1 = str(nodeDist[1])
+            n2 = str(nodeDist[2])
+            n3 = str(nodeDist[3])
+            n4 = str(nodeDist[4])
+            f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + '\n')
+            avgNodes = [sum(x) for x in zip(avgNodes, nodeDist)]
+        f.write("# Mean number of nodes \n")
+        f.write(avgNodes[0] + ',' + avgNodes[1] + ',' + avgNodes[2] + ',' + avgNodes[3] + ',' + avgNodes[4] + '\n\n')
+
         f.write("# Winner Distribution \n")
         f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
+    '''
+    writeDataToFile(resultDirName, crossoversPerRound, cHeightsThisRound, mutationsPerRound, tNodesPerRound, winnerDist)
+    print("Completed All generations and recording!")
 
 
 

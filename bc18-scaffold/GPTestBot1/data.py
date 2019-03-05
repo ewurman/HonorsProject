@@ -265,7 +265,6 @@ class ActionType(IntEnum):
     Attack = 2
     Move = 3 #(or garrison)
     Build = 4 #(worker or factory)
-    Research = 5
 
 
 
@@ -353,6 +352,25 @@ class DecisionTree:
 
     def getWriteString(self):
         return self.root.getWriteString("")
+
+    def getNumNodes(self):
+        print("getting number of nodes in decision Tree")
+        nodes = 0
+        queue = [self.root]
+        while (len(queue) != 0):
+            currNode = queue.pop(0)
+            nodes += 1
+            if currNode.firstChild:
+                queue.append(currNode.firstChild)
+            if currNode.secondChild:
+                queue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                queue.append(currNode.thirdChild)
+            if type(currNode) is IfNode:
+                if currNode.infoChild:
+                    queue.append(currNode.infoChild)
+
+        return nodes
 
     def execute(self, battleCode, gameController):
         print("Executing a decision Tree")
@@ -1114,7 +1132,10 @@ def worker_can_harvest(bc, gc, unit_id):
     return None
 
 def worker_unit_can_harvest(bc, gc, unit):
-    return worker_can_harvest(bc, gc, unit.id)
+    if unit:
+        return worker_can_harvest(bc, gc, unit.id)
+    else: 
+        return None
 
 
 def factory_produce(bc, gc, unit, unit_type, bot_occupiable):
@@ -1570,7 +1591,7 @@ def recursiveRandomBuildSubtree(maxRecursion, currentRecursion, percentRecurse):
                 rChildNode = DecisionNode(lChildFunction)
 
             selectBuilderNode = InformationNode(select_builder_function)
-            junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode )
+            junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode, selectBuilderNode)
             return junctionNode
 
 
@@ -1799,31 +1820,39 @@ class DecisionTreePlayer:
         self.buildTree = buildTree
         self.researchTree = researchTree
 
+    def getNumNodesByTree(self):
+        n0 = self.topTree.getNumNodes()
+        n1 = self.harvestTree.getNumNodes()
+        n2 = self.attackTree.getNumNodes()
+        n3 = self.movementTree.getNumNodes()
+        n4 = self.buildTree.getNumNodes()
+        return [n0, n1, n2, n3, n4]
+
     def execute(self, battleCode, gameController):
         # Runs one turn through the Tree(s)
         actionNum = self.topTree.execute(battleCode, gameController)
         print("Top Tree gave us an action of", actionNum)
         if actionNum == 1:
             # harvest
-            self.harvestTree.printTree()
+            #self.harvestTree.printTree()
             res = self.harvestTree.execute(battleCode, gameController)
             if res:
                 print("harvestTree did not execute an action and instead returned", res)
         elif actionNum == 2:
             # attack
-            self.attackTree.printTree()
+            #self.attackTree.printTree()
             res = self.attackTree.execute(battleCode, gameController)
             if res:
                 print("attackTree did not execute an action and instead returned", res)
         elif actionNum == 3:
             # move
-            self.movementTree.printTree()
+            #self.movementTree.printTree()
             res = self.movementTree.execute(battleCode, gameController)
             if res:
                 print("movementTree did not execute an action and instead returned", res)
         elif actionNum == 4:
             # build
-            self.buildTree.printTree()
+            #self.buildTree.printTree()
             res = self.buildTree.execute(battleCode, gameController)
             if res:
                 print("buildTree did not execute an action and instead returned", res)
@@ -2008,7 +2037,7 @@ class DecisionTreePlayer:
 
 
 def createRandomDecisionTreePlayer():
-    topTree = createBasicTopTree()
+    topTree = createRandomTopTree()
     harvestTree = createRandomHarvestTree()
     attackTree = createRandomAttackTree()
     moveTree = createRandomMoveTree()

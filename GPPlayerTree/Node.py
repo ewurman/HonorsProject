@@ -260,7 +260,6 @@ class ActionType(IntEnum):
     Attack = 2
     Move = 3 #(or garrison)
     Build = 4 #(worker or factory)
-    Research = 5
 
 
 
