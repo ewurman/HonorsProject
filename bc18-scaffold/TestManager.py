@@ -15,6 +15,11 @@ TNODES_HEADER = "# Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
+POP_SIZE = 32 #must be even -> 32 easy for final tournament
+GENERATIONS = 50 # want 50
+RECORD_PER_GEN = 5
+
+
 def runGame(player1, player2):
     '''TODO: call battlecode and run a game'''
     pwd = os.getcwd()
@@ -63,7 +68,7 @@ def battleRoyale(population):
 
 def log(filepath, message):
     print("Logging:", message)
-    with open(filepath+"/CrossoverMutationData.txt", 'a+') as f:
+    with open(filepath+"/Log.txt", 'a+') as f:
         f.write(message);
 
 
@@ -177,19 +182,291 @@ def readDataFromFile(filepath):
                 line = lines[i].strip()
                 winnerDist = line.split(',')
                 print("winnerDist: ", winnerDist)
-            #TODO
-
-
 
     print("Done Reading Data from file")
+    return crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist
+
+
+
+def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly):
+    resultDirName = "TestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
+
+    directories = os.listdir(resultDirName)
+    print("Directories found: ", directories)
+    savedDirs = [x for x in directories if x.startswith("Gen")]
+
+    if len(savedDirs) == 0:
+        print("No saved directories found, starting a new test")
+
+        newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName)
+        return
+
+
+    lastSaved = sorted(savedDirs).pop()
+    genNum = int(lastSaved[3:])
+    lastSavedDir = resultDirName + '/' + lastSaved
+    print("lastSavedDir is: ", lastSavedDir)
+    print("At generation number", genNum) #should always be a multiple of RECORD_PER_GEN
+
+    #Load last population
+    population = []
+    lastSavedSubDirs = os.listdir(lastSavedDir)
+    individualDirs = [x for x in lastSavedDir if x.startswith("Individual")]
+    for individualDir in individualDirs:
+        path = lastSavedDir + '/' + individualDir
+        player = DecisionTreePlayer(None, None, None, None, None, None)
+        player = player.readFromFiles(path, GP.allFunctionSets)
+        population.append(player)
+
+    #Load last Data from file
+    crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist = readDataFromFile(lastSavedDir)
+
+    # Now start playing again
+    log(resultDirName, "############ Resuming test for Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+" ############\n")
+
+    for i in range(genNumber, GENERATIONS):
+        log(resultDirName, "\n\nGeneration {0}\n\n".format(i))
+        random.shuffle(population)
+        breedingPool = []
+
+        # RECORD WINNERS AND POPULATION AT THIS GENERATION 
+        if i + 1 % RECORD_PER_GEN == 0:
+            genWinner = battleRoyale(population)
+            genDir = resultDirName +'/Gen'+ str(i+1) + '/'
+            
+            if not os.path.exists(os.path.dirname(genDir)):
+                os.makedirs(os.path.dirname(genDir), exist_ok=True)
+            genWinner.writeToFiles(genDir+"Winner/")
+
+            #Now record the population
+            for j in range(POP_SIZE):
+                individualDir = genDir + "Individual" + str(j) + "/"
+                if not os.path.exists(os.path.dirname(individualDir)):
+                    os.makedirs(os.path.dirname(individualDir), exist_ok=True)
+
+                individual = population[j]
+                individual.writeToFiles(individualDir)
+
+        # DATA COLLECTION Declaration
+        crossoversThisRound = 0
+        cHeightsThisRound = [0,0,0,0,0]
+        tNodesThisRound = [0,0,0,0,0]
+        numcHeights = [0,0,0,0,0]
+        mutationsThisRound = 0
+
+        #start games
+        for j in range(0,POP_SIZE,2):
+            player1 = population[j]
+            player2 = population[j+1]
+
+            # SAVE the number of nodes from this generation
+            p1nodes = player1.getNumNodesByTree()
+            p2nodes = player2.getNumNodesByTree()
+            #nodes = [sum(x) for x in zip(p1nodes, p2nodes)]
+            tNodesThisRound = [sum(x) for x in zip(p1nodes, p2nodes, tNodesThisRound)]
+
+            log(resultDirName, "About to run game for Gen {0} match {1}".format(i, j))
+            #run battlecode with these two players
+            # Tournament Select
+            winner, playerNum = runGame(player1, player2)
+            breedingPool.append(winner) 
+
+            winnerDist[playerNum] += 1
+
+        #now breeding pool should be half POP_SIZE
+
+        #get ready for the new generation
+        population.clear() 
+        print("Starting Crossover")
+        for j in range(POP_SIZE//2):
+            mates = random.sample(breedingPool, 2)
+            m1 = mates[0]
+            m2 = mates[1]
+            
+            c1, c2, numCrossover, heightAs = GP.Crossover1Player(m1, m2, crossoverProb, crossoverStopEarly)
+            population += [c1, c2]
+            crossoversThisRound += numCrossover
+
+            for k in range(0, len(heightAs)):
+                if heightAs[k] != -1:
+                    numcHeights[k] += 1
+                    cHeightsThisRound[k] += heightAs[k]
+
+
+            #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
+
+        log(resultDirName, "Gen {0}: Finished Crossover".format(i))
+        log(resultDirName, "Gen {0}: Starting Mutations".format(i))
+        for j in range(POP_SIZE):
+            player = population[j]
+            mutatedPlayer, numMutations = GP.MutatePlayer(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets)
+            population[j] = mutatedPlayer
+            mutationsThisRound += numMutations
+        log(resultDirName, "Gen {0}: Finished Mutations".format(i))
+
+
+        # DATA COLLECTION 
+        for j in range(0, len(cHeightsThisRound)):
+            if numcHeights[j] == 0:
+                cHeightsThisRound[j] = -1
+            else:
+                cHeightsThisRound[j] = cHeightsThisRound[j] / numcHeights[j] #divide by num crossovers for avg
+        
+        cHeightsPerRound.append(cHeightsThisRound)
+        crossoversPerRound.append(crossoversThisRound)
+        mutationsPerRound.append(mutationsThisRound)
+        tNodesPerRound.append(tNodesThisRound)
+
+    #end Generations
+
+    #now we want a final tournament
+    #TODO: This assumes a power of 2 population
+    finalWinner = battleRoyale(population)
+    finalWinnerDir = resultDirName + '/Winner/'
+
+    if not os.path.exists(os.path.dirname(finalWinnerDir)):
+        os.makedirs(os.path.dirname(finalWinnerDir), exist_ok=True)
+        
+    finalWinner.writeToFiles(finalWinnerDir)
+
+    writeDataToFile(resultDirName, crossoversPerRound, cHeightsThisRound, mutationsPerRound, tNodesPerRound, winnerDist)
+    print("Completed All generations and Data recording!")
+    log(resultDirName, "Completed All generations and Data recording!")
+
+
+
+
+
+
+
+def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName):
+    #DATA COLLECTION VARIABLES
+    crossoversPerRound = []
+    cHeightsPerRound = []  #list of list of heights at which crossover occurs
+    tNodesPerRound = []  #list of list of avg number of nodes of trees per generation
+    mutationsPerRound = []
+    winnerDist = [0,0]
+
+    log(resultDirName, "############ Starting new test ############\n")
+    # initialize population
+    for i in range(POP_SIZE):
+        player = GP.createRandomDecisionTreePlayer()
+        population.append(player)
+
+    for i in range(GENERATIONS):
+        log(resultDirName, "\n\nGeneration {0}\n\n".format(i))
+        random.shuffle(population)
+        breedingPool = []
+
+        # RECORD WINNERS AND POPULATION AT THIS GENERATION 
+        if i + 1 % RECORD_PER_GEN == 0:
+            genWinner = battleRoyale(population)
+            genDir = resultDirName +'/Gen'+ str(i+1) + '/'
+            
+            if not os.path.exists(os.path.dirname(genDir)):
+                os.makedirs(os.path.dirname(genDir), exist_ok=True)
+            genWinner.writeToFiles(genDir+"Winner/")
+
+            #Now record the population
+            for j in range(POP_SIZE):
+                individualDir = genDir + "Individual" + str(j) + "/"
+                if not os.path.exists(os.path.dirname(individualDir)):
+                    os.makedirs(os.path.dirname(individualDir), exist_ok=True)
+
+                individual = population[j]
+                individual.writeToFiles(individualDir)
+
+        # DATA COLLECTION Declaration
+        crossoversThisRound = 0
+        cHeightsThisRound = [0,0,0,0,0]
+        tNodesThisRound = [0,0,0,0,0]
+        numcHeights = [0,0,0,0,0]
+        mutationsThisRound = 0
+
+        #start games
+        for j in range(0,POP_SIZE,2):
+            player1 = population[j]
+            player2 = population[j+1]
+
+            # SAVE the number of nodes from this generation
+            p1nodes = player1.getNumNodesByTree()
+            p2nodes = player2.getNumNodesByTree()
+            #nodes = [sum(x) for x in zip(p1nodes, p2nodes)]
+            tNodesThisRound = [sum(x) for x in zip(p1nodes, p2nodes, tNodesThisRound)]
+
+            log(resultDirName, "About to run game for Gen {0} match {1}".format(i, j))
+            #run battlecode with these two players
+            # Tournament Select
+            winner, playerNum = runGame(player1, player2)
+            breedingPool.append(winner) 
+
+            winnerDist[playerNum] += 1
+
+        #now breeding pool should be half POP_SIZE
+
+        #get ready for the new generation
+        population.clear() 
+        print("Starting Crossover")
+        for j in range(POP_SIZE//2):
+            mates = random.sample(breedingPool, 2)
+            m1 = mates[0]
+            m2 = mates[1]
+            
+            c1, c2, numCrossover, heightAs = GP.Crossover1Player(m1, m2, crossoverProb, crossoverStopEarly)
+            population += [c1, c2]
+            crossoversThisRound += numCrossover
+
+            for k in range(0, len(heightAs)):
+                if heightAs[k] != -1:
+                    numcHeights[k] += 1
+                    cHeightsThisRound[k] += heightAs[k]
+
+
+            #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
+
+        log(resultDirName, "Gen {0}: Finished Crossover".format(i))
+        log(resultDirName, "Gen {0}: Starting Mutations".format(i))
+        for j in range(POP_SIZE):
+            player = population[j]
+            mutatedPlayer, numMutations = GP.MutatePlayer(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets)
+            population[j] = mutatedPlayer
+            mutationsThisRound += numMutations
+        log(resultDirName, "Gen {0}: Finished Mutations".format(i))
+
+
+        # DATA COLLECTION 
+        for j in range(0, len(cHeightsThisRound)):
+            if numcHeights[j] == 0:
+                cHeightsThisRound[j] = -1
+            else:
+                cHeightsThisRound[j] = cHeightsThisRound[j] / numcHeights[j] #divide by num crossovers for avg
+        
+        cHeightsPerRound.append(cHeightsThisRound)
+        crossoversPerRound.append(crossoversThisRound)
+        mutationsPerRound.append(mutationsThisRound)
+        tNodesPerRound.append(tNodesThisRound)
+
+    #end Generations
+
+    #now we want a final tournament
+    #TODO: This assumes a power of 2 population
+    finalWinner = battleRoyale(population)
+    finalWinnerDir = resultDirName + '/Winner/'
+
+    if not os.path.exists(os.path.dirname(finalWinnerDir)):
+        os.makedirs(os.path.dirname(finalWinnerDir), exist_ok=True)
+        
+    finalWinner.writeToFiles(finalWinnerDir)
+
+    writeDataToFile(resultDirName, crossoversPerRound, cHeightsThisRound, mutationsPerRound, tNodesPerRound, winnerDist)
+    print("Completed All generations and Data recording!")
+    log(resultDirName, "Completed All generations and Data recording!")
 
 
 
 
 if __name__ == '__main__':
-    POP_SIZE = 32 #must be even -> 32 easy for final tournament
-    GENERATIONS = 50 # want 50
-    RECORD_PER_GEN = 5
+
 
     population = []
     mutateNodeProb = 0.01
@@ -216,15 +493,24 @@ if __name__ == '__main__':
         random.shuffle(population)
         breedingPool = []
 
-
-        if i % RECORD_PER_GEN == 0:
+        # RECORD WINNERS AND POPULATION AT THIS GENERATION
+        if i + 1 % RECORD_PER_GEN == 0:
             genWinner = battleRoyale(population)
-            genDir = resultDirName +'/Gen'+ str(i) + '/'
+            genDir = resultDirName +'/Gen'+ str(i+1) + '/'
             
             if not os.path.exists(os.path.dirname(genDir)):
                 os.makedirs(os.path.dirname(genDir), exist_ok=True)
+            genWinner.writeToFiles(genDir+"Winner/")
 
-            genWinner.writeToFiles(genDir)
+
+            #Now record the population
+            for j in range(POP_SIZE):
+                individualDir = genDir + "Individual" + str(j) + "/"
+                if not os.path.exists(os.path.dirname(individualDir)):
+                    os.makedirs(os.path.dirname(individualDir), exist_ok=True)
+
+                individual = population[j]
+                individual.writeToFiles(individualDir)
 
 
         # DATA COLLECTION Declaration
