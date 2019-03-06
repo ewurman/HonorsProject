@@ -1877,12 +1877,21 @@ class DecisionTreePlayer:
     def writeToFiles(self, directoryPath):
         '''we already can print so its similar following along and writing the nodes out'''
         topTreeString = self.topTree.getWriteString()
-        #print(topTreeString)
         harvestTreeString = self.harvestTree.getWriteString()
         attackTreeString = self.attackTree.getWriteString()
         moveTreeString = self.movementTree.getWriteString()
         buildTreeString = self.buildTree.getWriteString()
 
+        if not os.path.exists(os.path.dirname(directoryPath + "TopTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "TopTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "HarvestTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "HarvestTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "AttackTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "AttackTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "MoveTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "MoveTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "BuildTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "BuildTree.txt"), exist_ok=True)
         with open(directoryPath + "TopTree.txt", 'w') as f:
             f.write(topTreeString)
         with open(directoryPath + "HarvestTree.txt", 'w') as f:
@@ -1893,6 +1902,8 @@ class DecisionTreePlayer:
             f.write(moveTreeString)
         with open(directoryPath + "BuildTree.txt", 'w') as f:
             f.write(buildTreeString)
+
+
 
 
     def readFromFiles(self, directoryPath, allFunctionSets):

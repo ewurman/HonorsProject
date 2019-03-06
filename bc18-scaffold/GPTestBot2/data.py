@@ -1865,6 +1865,16 @@ class DecisionTreePlayer:
         moveTreeString = self.movementTree.getWriteString()
         buildTreeString = self.buildTree.getWriteString()
 
+        if not os.path.exists(os.path.dirname(directoryPath + "TopTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "TopTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "HarvestTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "HarvestTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "AttackTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "AttackTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "MoveTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "MoveTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "BuildTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "BuildTree.txt"), exist_ok=True)
         with open(directoryPath + "TopTree.txt", 'w') as f:
             f.write(topTreeString)
         with open(directoryPath + "HarvestTree.txt", 'w') as f:
