@@ -11,11 +11,11 @@ import sys
 NUM_CROSSOVER_HEADER = "# Number of Avg Crossover Per Generation\n"
 CHEIGHTS_HEADER = "# Average height of tree A of Crossovers Across Generations\n"
 MUTATIONS_HEADER = "# Number of Avg Mutations Per Generation\n"
-TNODES_HEADER = "# Number of Nodes per Tree each Generation\n"
+TNODES_HEADER = "# Average Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
-POP_SIZE = 4#32 #must be even -> 32 easy for final tournament
+POP_SIZE = 4 #must be even -> 32 easy for final tournament
 GENERATIONS = 50 # want 50
 RECORD_PER_GEN = 5
 
@@ -79,8 +79,6 @@ def battleRoyale(population):
 def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate = True):
     log(filepath, "Writing Data to a file at " + filepath + '\n')
     fullPath = filepath+"/CrossoverMutationData.txt"
-    if not os.path.exists(fullPath):
-        os.makedirs(fullPath, exist_ok=True)
     with open(fullPath, 'a+') as f:
         f.seek(0)
         f.truncate()
@@ -108,7 +106,7 @@ def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPer
             avgHeights = [sum(x) for x in zip(avgHeights, h)] #add component wise
 
         avgHeights = [str(x / len(cHeightsPerRound)) for x in avgHeights]
-        f.write("# Average height of tree A of Crossovers Across Generations\n")
+        f.write("\n# Average height of tree A of Crossovers Across Generations\n")
         f.write(avgHeights[0] + ',' + avgHeights[1] + ',' + avgHeights[2] + ',' + avgHeights[3] + ',' + avgHeights[4] + '\n\n')
 
         f.write(MUTATIONS_HEADER)
@@ -134,7 +132,8 @@ def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPer
             else:
                 f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + '\n')
             avgNodes = [sum(x) for x in zip(avgNodes, nodeDist)]
-        f.write("# Mean number of nodes \n")
+        f.write("\n# Mean number of nodes \n")
+        avgNodes = [str(x/GENERATIONS) for x in avgNodes]
         f.write(avgNodes[0] + ',' + avgNodes[1] + ',' + avgNodes[2] + ',' + avgNodes[3] + ',' + avgNodes[4] + '\n\n')
 
         f.write(WINNER_DIST_HEADER)
@@ -204,6 +203,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
     directories = os.listdir(resultDirName)
     print("Directories found: ", directories)
     savedDirs = [x for x in directories if x.startswith("Gen")]
+    print("Ordered: ", sorted(savedDirs))
 
     if len(savedDirs) == 0:
         print("No saved directories found, starting a new test")
@@ -220,6 +220,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     #Load last population
     population = []
+
     lastSavedSubDirs = os.listdir(lastSavedDir)
     print("lastSavedSubDirs:", lastSavedSubDirs)
     individualDirs = [x for x in lastSavedSubDirs if x.startswith("Individual")]
@@ -244,12 +245,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
         # RECORD WINNERS AND POPULATION AT THIS GENERATION 
         if (i + 1) % RECORD_PER_GEN == 0:
-            genWinner = battleRoyale(population)
-            genDir = resultDirName +'/Gen'+ str(i+1)
-            
-            if not os.path.exists(os.path.dirname(genDir)):
-                os.makedirs(os.path.dirname(genDir), exist_ok=True)
-            genWinner.writeToFiles(genDir+"/Winner/")
+            genDir = resultDirName +'/Gen'+ str(i+1).zfill(2)
 
             #Now record the population
             for j in range(POP_SIZE):
@@ -262,6 +258,16 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
             # Now write data to file
             writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
+            log(resultDirName, "Finished recording individuals and data\n")
+
+            log(resultDirName, "################## Begin Battle Royale ##################\n")
+            genWinner = battleRoyale(population)
+            log(resultDirName, "################## End Battle Royale ##################\n")
+            
+            if not os.path.exists(os.path.dirname(genDir)):
+                os.makedirs(os.path.dirname(genDir), exist_ok=True)
+            genWinner.writeToFiles(genDir+"/Winner/")
+
 
 
         # DATA COLLECTION Declaration
@@ -378,12 +384,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
         # RECORD WINNERS AND POPULATION AT THIS GENERATION 
         if (i + 1) % RECORD_PER_GEN == 0:
-            genWinner = battleRoyale(population)
-            genDir = resultDirName +'/Gen'+ str(i+1)
-            
-            if not os.path.exists(os.path.dirname(genDir)):
-                os.makedirs(os.path.dirname(genDir), exist_ok=True)
-            genWinner.writeToFiles(genDir+"/Winner/")
+            genDir = resultDirName +'/Gen'+ str(i+1).zfill(2)
 
             #Now record the population
             for j in range(POP_SIZE):
@@ -396,6 +397,15 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
             # Now write data to file
             writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
+            log(resultDirName, "Finished recording individuals and data\n")
+
+            log(resultDirName, "################## Begin Battle Royale ##################\n")
+            genWinner = battleRoyale(population)
+            log(resultDirName, "################## End Battle Royale ##################\n")
+            
+            if not os.path.exists(os.path.dirname(genDir)):
+                os.makedirs(os.path.dirname(genDir), exist_ok=True)
+            genWinner.writeToFiles(genDir+"/Winner/")
 
 
         # DATA COLLECTION Declaration
@@ -462,6 +472,9 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
                 cHeightsThisRound[j] = -1
             else:
                 cHeightsThisRound[j] = cHeightsThisRound[j] / numcHeights[j] #divide by num crossovers for avg
+
+        tNodesThisRound = [x / POP_SIZE for x in tNodesThisRound] #divide to get average
+
         
         cHeightsPerRound.append(cHeightsThisRound)
         crossoversPerRound.append(crossoversThisRound)

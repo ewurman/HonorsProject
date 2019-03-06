@@ -1241,31 +1241,31 @@ def getRoundNumber(bc, gc):
     return gc.round()
 
 def getNumberOfWorkers(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Worker ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Worker ]
     return len(y)
 
 def getNumberOfFactories(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Factory]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Factory]
     return len(y)
 
 def getNumberOfRockets(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Rocket ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Rocket ]
     return len(y)
 
 def getNumberOfKnights(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Knight ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Knight ]
     return len(y)
 
 def getNumberOfRangers(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Ranger ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Ranger ]
     return len(y)
 
 def getNumberOfMages(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Mages ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Mages ]
     return len(y)
 
 def getNumberOfHealers(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Healer ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Healer ]
     return len(y)
 
 
