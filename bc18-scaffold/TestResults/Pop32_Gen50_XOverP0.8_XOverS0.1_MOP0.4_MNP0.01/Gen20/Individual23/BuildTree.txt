@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 975
+	DecisionNode action: workerBuildRocket
+	DecisionNode action: workerBuildRocket
+	InformationNode function: selectRandomWorker

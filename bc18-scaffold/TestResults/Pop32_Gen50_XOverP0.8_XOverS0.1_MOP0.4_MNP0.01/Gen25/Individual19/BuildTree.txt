@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfMages
+		OperandNode Value: 407
+	DecisionNode action: workerBuildRocket
+	DecisionNode action: workerBuildRocket
+	InformationNode function: selectRandomFactory

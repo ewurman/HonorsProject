@@ -1,0 +1,13 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfKnights
+		OperandNode Value: 2
+	InformationNode function: selectWorkerToMoveTowardHarvesting
+		DecisionNode action: unitMoveRandomBehavior
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfKnights
+			OperandNode Value: 7
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveTowardAllyBehavior
+		InformationNode function: selectRandomUnitThatCanMove

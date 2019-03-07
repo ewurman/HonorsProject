@@ -1,0 +1,24 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 430
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 7
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRangers
+				OperandNode Value: 4
+			DecisionNode action: workerBuildBehavior
+			DecisionNode action: workerBuildRocket
+			InformationNode function: selectRandomWorker
+		InformationNode function: selectRandomWorker
+			DecisionNode action: factory_produce_healer
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 9
+		DecisionNode action: workerBuildRocket
+		DecisionNode action: workerBuildBehavior
+		InformationNode function: selectRandomFactory

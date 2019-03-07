@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 5
+	DecisionNode action: unitMoveTowardAllyBehavior
+	DecisionNode action: unitMoveTowardAllyBehavior
+	InformationNode function: selectRandomUnitThatCanMove

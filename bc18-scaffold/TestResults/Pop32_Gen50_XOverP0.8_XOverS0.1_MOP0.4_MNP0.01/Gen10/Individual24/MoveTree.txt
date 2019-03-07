@@ -1,0 +1,13 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 3
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 5
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectRandomUnitThatCanMove
+	InformationNode function: selectWorkerToMoveTowardHarvesting
+		DecisionNode action: unitMoveTowardAllyBehavior

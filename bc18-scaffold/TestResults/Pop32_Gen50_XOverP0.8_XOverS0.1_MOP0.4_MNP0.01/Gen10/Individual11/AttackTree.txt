@@ -1,0 +1,4 @@
+IfNode 
+	BooleanNode function: isKnight
+	DecisionNode action: unitAttackRandomPossibleEnemy
+	DecisionNode action: unitAttackRandomPossibleEnemy
