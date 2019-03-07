@@ -1,0 +1,4 @@
+IfNode 
+	BooleanNode function: isRanger
+	DecisionNode action: unitAttackRandomPossibleEnemy
+	DecisionNode action: unitAttackRandomPossibleEnemy

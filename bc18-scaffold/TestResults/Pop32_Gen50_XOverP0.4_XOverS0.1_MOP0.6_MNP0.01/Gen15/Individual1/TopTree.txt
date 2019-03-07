@@ -1,0 +1,16 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: 309
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRockets
+			OperandNode Value: 20
+		DecisionNode typeOfActionToMake: 3
+		DecisionNode typeOfActionToMake: 4
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 3
+		DecisionNode typeOfActionToMake: 4
+		DecisionNode typeOfActionToMake: 4

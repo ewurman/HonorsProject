@@ -1,0 +1,12 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 3
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: -2
+		DecisionNode action: factory_produce_worker
+		DecisionNode action: factory_produce_worker
+		InformationNode function: selectRandomFactory
+	InformationNode function: getNumberOfWorkers

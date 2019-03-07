@@ -1,0 +1,16 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 2
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 9
+		DecisionNode typeOfActionToMake: 2
+		DecisionNode typeOfActionToMake: 3
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 20
+		DecisionNode typeOfActionToMake: 1
+		DecisionNode typeOfActionToMake: 2

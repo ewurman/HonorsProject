@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfKnights
+		OperandNode Value: 3
+	DecisionNode action: unitMoveRandomBehavior
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	InformationNode function: selectRandomUnitThatCanMove
