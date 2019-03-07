@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: -3
+	DecisionNode action: unitMoveTowardAllyBehavior
+	DecisionNode action: unitMoveTowardAllyBehavior
+	InformationNode function: selectUnitThatCanAttackToMove
