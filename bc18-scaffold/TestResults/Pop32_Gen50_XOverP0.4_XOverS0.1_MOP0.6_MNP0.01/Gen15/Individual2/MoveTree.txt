@@ -1,0 +1,24 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRockets
+		OperandNode Value: 6
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 841
+		InformationNode function: selectRandomUnitThatCanMove
+			DecisionNode action: unitMoveTowardEnemyBehavior
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 7
+			DecisionNode action: unitMoveRandomBehavior
+			DecisionNode action: unitMoveRandomBehavior
+			InformationNode function: selectWorkerToMoveTowardHarvesting
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRangers
+			OperandNode Value: 4
+		DecisionNode action: unitMoveTowardAllyBehavior
+		DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectUnitThatCanAttackToMove

@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 309
+	DecisionNode typeOfActionToMake: 4
+	DecisionNode typeOfActionToMake: 4
