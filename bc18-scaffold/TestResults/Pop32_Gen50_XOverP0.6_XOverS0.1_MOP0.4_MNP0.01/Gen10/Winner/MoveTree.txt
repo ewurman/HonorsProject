@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 99
+	DecisionNode action: unitMoveTowardAllyBehavior
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	InformationNode function: selectWorkerToMoveTowardHarvesting

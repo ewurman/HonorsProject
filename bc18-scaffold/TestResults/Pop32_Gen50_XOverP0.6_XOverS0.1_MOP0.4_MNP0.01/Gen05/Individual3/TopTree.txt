@@ -1,0 +1,16 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 6
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 2
+		DecisionNode typeOfActionToMake: 3
+		DecisionNode typeOfActionToMake: 1
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 598
+		DecisionNode typeOfActionToMake: 4
+		DecisionNode typeOfActionToMake: 1

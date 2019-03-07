@@ -1,0 +1,5 @@
+IfNode WithInfo
+	BooleanNode function: worker_unit_can_harvest
+	DecisionNode action: workerCantHarvestBehavior
+	DecisionNode action: workerCantHarvestBehavior
+	InformationNode function: selectRandomWorker
