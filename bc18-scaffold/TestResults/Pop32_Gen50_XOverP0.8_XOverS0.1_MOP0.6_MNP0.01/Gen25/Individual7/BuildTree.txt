@@ -1,0 +1,8 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: selectRandomWorker
+			DecisionNode action: workerBuildBehavior
+		OperandNode Value: 10
+	DecisionNode action: factory_produce_mage
+	DecisionNode action: factory_produce_healer
+	InformationNode function: selectRandomWorker

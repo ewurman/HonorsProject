@@ -1,0 +1,23 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 781
+	InformationNode function: getNumberOfRockets
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfKnights
+			OperandNode Value: 6
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 4
+			DecisionNode action: unitMoveRandomBehavior
+			DecisionNode action: unitMoveTowardAllyBehavior
+			InformationNode function: selectWorkerToMoveTowardHarvesting
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 7
+			DecisionNode action: unitMoveRandomBehavior
+			DecisionNode action: unitMoveRandomBehavior
+			InformationNode function: selectWorkerToMoveTowardHarvesting

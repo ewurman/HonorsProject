@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 391
+	DecisionNode typeOfActionToMake: 2
+	DecisionNode typeOfActionToMake: 3

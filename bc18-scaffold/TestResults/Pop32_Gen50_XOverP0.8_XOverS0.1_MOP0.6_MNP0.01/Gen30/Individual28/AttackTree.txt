@@ -1,0 +1,4 @@
+IfNode 
+	BooleanNode function: isHealer
+	DecisionNode action: unitAttackRandomPossibleEnemy
+	DecisionNode action: healer_action

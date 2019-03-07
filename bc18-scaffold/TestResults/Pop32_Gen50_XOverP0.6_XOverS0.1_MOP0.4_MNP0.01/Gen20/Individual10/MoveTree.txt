@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 9
+	DecisionNode action: unitMoveRandomBehavior
+	DecisionNode action: unitMoveRandomBehavior
+	InformationNode function: selectWorkerToMoveTowardHarvesting

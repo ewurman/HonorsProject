@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRockets
+		OperandNode Value: 2
+	DecisionNode typeOfActionToMake: 2
+	DecisionNode typeOfActionToMake: 2
