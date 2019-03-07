@@ -1,0 +1,7 @@
+IfNode 
+	BooleanNode function: isHealer
+	DecisionNode action: unitAttackClosestPossibleEnemy
+	IfNode 
+		BooleanNode function: isRanger
+		DecisionNode action: healer_action
+		DecisionNode action: unitAttackRandomPossibleEnemy

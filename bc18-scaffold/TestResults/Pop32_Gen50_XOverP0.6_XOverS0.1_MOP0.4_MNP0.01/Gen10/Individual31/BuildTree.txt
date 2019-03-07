@@ -1,0 +1,62 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 4
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 5
+		DecisionNode action: factory_produce_healer
+		DecisionNode action: factory_produce_random
+		InformationNode function: selectRandomWorker
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 253
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 4
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfHealers
+					OperandNode Value: 7
+				DecisionNode action: factory_produce_random
+				DecisionNode action: factory_produce_random
+				InformationNode function: selectRandomFactory
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfHealers
+					OperandNode Value: 193
+				DecisionNode action: workerBuildBehavior
+				DecisionNode action: factory_produce_knight
+				InformationNode function: selectRandomFactory
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 5
+				DecisionNode action: workerBuildRocket
+				DecisionNode action: workerBuildBehavior
+				InformationNode function: selectRandomFactory
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 738
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfWorkers
+						OperandNode Value: 7
+					DecisionNode action: workerBuildBehavior
+					DecisionNode action: workerBuildRocket
+					InformationNode function: selectRandomWorker
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfMages
+						OperandNode Value: 324
+					DecisionNode action: factory_produce_healer
+					DecisionNode action: workerBuildRocket
+					InformationNode function: selectRandomWorker

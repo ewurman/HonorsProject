@@ -1,0 +1,13 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 4
+	InformationNode function: getKarbonite
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: selectUnitThatCanAttackToMove
+				DecisionNode action: unitMoveTowardAllyBehavior
+			OperandNode Value: 9
+		DecisionNode action: unitMoveRandomBehavior
+		DecisionNode action: unitMoveTowardAllyBehavior
+		InformationNode function: selectRandomUnitThatCanMove

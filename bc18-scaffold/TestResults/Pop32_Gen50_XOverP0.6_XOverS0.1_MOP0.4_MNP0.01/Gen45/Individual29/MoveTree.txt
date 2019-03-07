@@ -1,0 +1,8 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: selectUnitThatCanAttackToMove
+			DecisionNode action: unitMoveTowardAllyBehavior
+		OperandNode Value: 4
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	DecisionNode action: unitMoveRandomBehavior
+	InformationNode function: selectRandomUnitThatCanMove
