@@ -1,0 +1,4 @@
+IfNode 
+	BooleanNode function: isKnight
+	DecisionNode action: healer_action
+	DecisionNode action: healer_action

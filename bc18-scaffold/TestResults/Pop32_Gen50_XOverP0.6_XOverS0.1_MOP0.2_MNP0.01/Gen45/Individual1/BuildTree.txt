@@ -1,0 +1,8 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: selectRandomFactory
+			DecisionNode action: factory_produce_random
+		OperandNode Value: 3
+	DecisionNode action: workerBuildRocket
+	DecisionNode action: factory_produce_mage
+	InformationNode function: selectRandomWorker

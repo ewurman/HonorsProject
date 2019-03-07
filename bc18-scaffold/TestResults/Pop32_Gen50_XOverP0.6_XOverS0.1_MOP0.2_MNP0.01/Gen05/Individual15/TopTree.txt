@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 41
+	DecisionNode typeOfActionToMake: 3
+	DecisionNode typeOfActionToMake: 2
