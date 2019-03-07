@@ -506,7 +506,8 @@ if __name__ == '__main__':
     population = []
     mutateNodeProb = 0.01
     mutateOccurProb = 0.4  #{0.2,0.4,0.6}
-    crossoverProb = 0.6 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
+
+    crossoverProb = 0.4 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly)

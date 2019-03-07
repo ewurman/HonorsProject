@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 66
+	DecisionNode action: workerBuildBehavior
+	DecisionNode action: workerBuildRocket
+	InformationNode function: selectRandomWorker

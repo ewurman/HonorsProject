@@ -1,0 +1,13 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: selectWorkerToMoveTowardHarvesting
+			DecisionNode action: unitMoveTowardAllyBehavior
+		OperandNode Value: 1
+	InformationNode function: getNumberOfRockets
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfHealers
+			OperandNode Value: 11
+		DecisionNode action: unitMoveTowardAllyBehavior
+		DecisionNode action: unitMoveTowardAllyBehavior
+		InformationNode function: selectUnitThatCanAttackToMove

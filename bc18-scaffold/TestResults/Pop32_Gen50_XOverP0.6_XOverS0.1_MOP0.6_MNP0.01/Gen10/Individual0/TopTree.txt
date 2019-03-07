@@ -1,0 +1,26 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 6
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 287
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 5
+			DecisionNode typeOfActionToMake: 2
+			DecisionNode typeOfActionToMake: 4
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getKarbonite
+				OperandNode Value: 135
+			DecisionNode typeOfActionToMake: 4
+			DecisionNode typeOfActionToMake: 1
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRangers
+			OperandNode Value: 9
+		DecisionNode typeOfActionToMake: 4
+		DecisionNode typeOfActionToMake: 4
