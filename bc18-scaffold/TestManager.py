@@ -15,7 +15,7 @@ TNODES_HEADER = "# Average Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
-POP_SIZE = 4 #must be even -> 32 easy for final tournament
+POP_SIZE = 32 #must be even -> 32 easy for final tournament
 GENERATIONS = 50 # want 50
 RECORD_PER_GEN = 5
 
@@ -506,7 +506,7 @@ if __name__ == '__main__':
     population = []
     mutateNodeProb = 0.01
     mutateOccurProb = 0.6  #{0.2,0.4,0.6}
-    crossoverProb = 0.5 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
+    crossoverProb = 0.8 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
     crossoverStopEarly = 0.1 #chance to stop higher in tree
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly)
     
