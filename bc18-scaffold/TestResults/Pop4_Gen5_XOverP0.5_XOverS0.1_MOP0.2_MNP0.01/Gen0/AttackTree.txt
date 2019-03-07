@@ -1,5 +1,0 @@
-IfNode WithInfo
-	BooleanNode function: isHealer
-	DecisionNode action: healer_action
-	DecisionNode action: unitAttackRandomPossibleEnemy
-	InformationNode function: selectUnitWithLeastLifeThatCanAttack

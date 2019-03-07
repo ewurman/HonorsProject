@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 5
+	DecisionNode action: factory_produce_healer
+	DecisionNode action: factory_produce_mage
+	InformationNode function: selectRandomWorker

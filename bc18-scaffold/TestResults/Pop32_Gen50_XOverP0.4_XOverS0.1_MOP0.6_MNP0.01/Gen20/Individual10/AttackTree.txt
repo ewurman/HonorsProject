@@ -1,0 +1,4 @@
+IfNode 
+	BooleanNode function: isKnight
+	DecisionNode action: unitAttackClosestPossibleEnemy
+	DecisionNode action: healer_action

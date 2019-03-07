@@ -1,0 +1,18 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 5
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 4
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectWorkerToMoveTowardHarvesting
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRockets
+			OperandNode Value: 4
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectWorkerToMoveTowardHarvesting

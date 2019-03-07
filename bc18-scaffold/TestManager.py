@@ -139,7 +139,7 @@ def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPer
         f.write(WINNER_DIST_HEADER)
         f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
 
-    log(filepath, "Wrote Data to File!")
+    log(filepath, "Wrote Data to File!\n")
 
 
 
@@ -237,7 +237,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     # Now start playing again
     log(resultDirName, "############ Resuming test for Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+" ############\n")
-    log(resultDirName, "Resuming test at generation: {0}".format(genNum))
+    log(resultDirName, "Resuming test at generation: {0}\n".format(genNum))
     for i in range(genNum, GENERATIONS):
         log(resultDirName, "\n\nGeneration {0}\n\n".format(i))
         random.shuffle(population)
@@ -318,14 +318,14 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
             #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
 
-        log(resultDirName, "Gen {0}: Finished Crossover".format(i))
-        log(resultDirName, "Gen {0}: Starting Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Crossover\n".format(i))
+        log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
             mutatedPlayer, numMutations = GP.MutatePlayer(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
-        log(resultDirName, "Gen {0}: Finished Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
 
 
         # DATA COLLECTION 
@@ -354,7 +354,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     writeDataToFile(resultDirName, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist)
     print("Completed All generations and Data recording!")
-    log(resultDirName, "Completed All generations and Data recording!")
+    log(resultDirName, "Completed All generations and Data recording!\n")
 
 
 
@@ -456,14 +456,14 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
             #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
 
-        log(resultDirName, "Gen {0}: Finished Crossover".format(i))
-        log(resultDirName, "Gen {0}: Starting Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Crossover\n".format(i))
+        log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
             mutatedPlayer, numMutations = GP.MutatePlayer(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
-        log(resultDirName, "Gen {0}: Finished Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
 
 
         # DATA COLLECTION 
@@ -495,7 +495,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
     writeDataToFile(resultDirName, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist)
     print("Completed All generations and Data recording!")
-    log(resultDirName, "Completed All generations and Data recording!")
+    log(resultDirName, "Completed All generations and Data recording!\n")
 
 
 
@@ -505,8 +505,9 @@ if __name__ == '__main__':
 
     population = []
     mutateNodeProb = 0.01
-    mutateOccurProb = 0.6  #{0.2,0.4,0.6}
+    mutateOccurProb = 0.4  #{0.2,0.4,0.6}
     crossoverProb = 0.8 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
+
     crossoverStopEarly = 0.1 #chance to stop higher in tree
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly)
     
