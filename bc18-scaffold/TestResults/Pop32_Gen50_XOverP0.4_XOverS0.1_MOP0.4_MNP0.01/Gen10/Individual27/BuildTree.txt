@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfWorkers
+		OperandNode Value: 2
+	DecisionNode action: workerBuildRocket
+	DecisionNode action: workerBuildBehavior
+	InformationNode function: selectRandomWorker

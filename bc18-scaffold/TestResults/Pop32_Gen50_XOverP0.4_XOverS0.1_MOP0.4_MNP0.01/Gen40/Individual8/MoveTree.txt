@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfMages
+		OperandNode Value: 226
+	DecisionNode action: unitMoveRandomBehavior
+	DecisionNode action: unitMoveRandomBehavior
+	InformationNode function: selectRandomUnitThatCanMove

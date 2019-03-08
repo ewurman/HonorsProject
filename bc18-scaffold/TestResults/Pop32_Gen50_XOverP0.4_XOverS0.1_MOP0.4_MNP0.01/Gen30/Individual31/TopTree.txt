@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfWorkers
+		OperandNode Value: 152
+	DecisionNode typeOfActionToMake: 1
+	DecisionNode typeOfActionToMake: 1
