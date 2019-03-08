@@ -1,0 +1,24 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 226
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfKnights
+			OperandNode Value: 89
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getRoundNumber
+				OperandNode Value: 130
+			DecisionNode action: unitMoveTowardEnemyBehavior
+			DecisionNode action: unitMoveTowardEnemyBehavior
+			InformationNode function: selectWorkerToMoveTowardHarvesting
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 2
+			DecisionNode action: unitMoveTowardEnemyBehavior
+			DecisionNode action: unitMoveTowardEnemyBehavior
+			InformationNode function: selectRandomUnitThatCanMove
+	InformationNode function: selectWorkerToMoveTowardHarvesting
+		DecisionNode action: unitMoveTowardAllyBehavior

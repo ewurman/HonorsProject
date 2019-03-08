@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: 7
+	DecisionNode typeOfActionToMake: 4
+	DecisionNode typeOfActionToMake: 4

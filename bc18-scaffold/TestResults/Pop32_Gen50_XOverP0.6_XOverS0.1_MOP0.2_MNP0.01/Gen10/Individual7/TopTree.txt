@@ -1,0 +1,106 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 574
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRockets
+			OperandNode Value: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 4
+			DecisionNode typeOfActionToMake: 3
+			DecisionNode typeOfActionToMake: 1
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 6
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 1
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 196
+				DecisionNode typeOfActionToMake: 1
+				DecisionNode typeOfActionToMake: 3
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 4
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 4
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 4
+				IfNode 
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfFactories
+						OperandNode Value: 4
+					IfNode 
+						BooleanNode operation: lt
+							InformationNode function: getNumberOfRangers
+							OperandNode Value: 267
+						IfNode 
+							BooleanNode operation: lt
+								InformationNode function: getNumberOfMages
+								OperandNode Value: 6
+							DecisionNode typeOfActionToMake: 1
+							IfNode 
+								BooleanNode operation: lt
+									InformationNode function: getNumberOfFactories
+									OperandNode Value: 8
+								DecisionNode typeOfActionToMake: 3
+								DecisionNode typeOfActionToMake: 1
+						IfNode 
+							BooleanNode operation: lt
+								InformationNode function: getKarbonite
+								OperandNode Value: 5
+							DecisionNode typeOfActionToMake: 3
+							IfNode 
+								BooleanNode operation: lt
+									InformationNode function: getNumberOfWorkers
+									OperandNode Value: 4
+								DecisionNode typeOfActionToMake: 1
+								DecisionNode typeOfActionToMake: 2
+					IfNode 
+						BooleanNode operation: lt
+							InformationNode function: getRoundNumber
+							OperandNode Value: 29
+						DecisionNode typeOfActionToMake: 1
+						DecisionNode typeOfActionToMake: 3
+				IfNode 
+					BooleanNode operation: lt
+						InformationNode function: getKarbonite
+						OperandNode Value: 136
+					DecisionNode typeOfActionToMake: 3
+					DecisionNode typeOfActionToMake: 2
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 4
+				DecisionNode typeOfActionToMake: 3
+				DecisionNode typeOfActionToMake: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 5
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 2
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 380
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 1
