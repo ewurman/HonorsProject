@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfWorkers
+		OperandNode Value: 6
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	DecisionNode action: unitMoveRandomBehavior
+	InformationNode function: selectUnitThatCanAttackToMove

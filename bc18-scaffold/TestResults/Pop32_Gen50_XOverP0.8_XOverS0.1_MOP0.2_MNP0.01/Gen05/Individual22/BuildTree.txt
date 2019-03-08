@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: 8
+	DecisionNode action: factory_produce_healer
+	DecisionNode action: factory_produce_random
+	InformationNode function: selectRandomWorker

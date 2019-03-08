@@ -1,0 +1,6 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 8
+	DecisionNode typeOfActionToMake: 1
+	DecisionNode typeOfActionToMake: 4

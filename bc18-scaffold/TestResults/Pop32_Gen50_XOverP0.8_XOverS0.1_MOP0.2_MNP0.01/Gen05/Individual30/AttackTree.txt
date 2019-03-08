@@ -1,0 +1,18 @@
+IfNode WithInfo
+	BooleanNode function: isRanger
+	DecisionNode action: unitAttackClosestPossibleEnemy
+	IfNode 
+		BooleanNode function: isKnight
+		DecisionNode action: unitAttackRandomPossibleEnemy
+		IfNode 
+			BooleanNode function: isKnight
+			DecisionNode action: unitAttackClosestPossibleEnemy
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				IfNode 
+					BooleanNode function: isKnight
+					DecisionNode action: unitAttackClosestPossibleEnemy
+					DecisionNode action: healer_action
+				InformationNode function: selectUnitDealingMostDamageThatCanAttack
+	InformationNode function: selectUnitWithLeastLifeThatCanAttack

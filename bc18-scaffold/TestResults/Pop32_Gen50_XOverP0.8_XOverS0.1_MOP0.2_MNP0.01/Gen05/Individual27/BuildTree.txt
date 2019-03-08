@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRockets
+		OperandNode Value: 6
+	DecisionNode action: workerBuildBehavior
+	DecisionNode action: factory_produce_mage
+	InformationNode function: selectRandomFactory
