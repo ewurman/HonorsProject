@@ -1,0 +1,52 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 186
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 6
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectUnitThatCanAttackToMove
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRockets
+			OperandNode Value: 2
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getKarbonite
+				OperandNode Value: 873
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfHealers
+					OperandNode Value: 4
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 7
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveRandomBehavior
+					InformationNode function: selectWorkerToMoveTowardHarvesting
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRangers
+						OperandNode Value: 3
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 257
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getKarbonite
+						OperandNode Value: 202
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectWorkerToMoveTowardHarvesting
+				InformationNode function: selectWorkerToMoveTowardHarvesting
+					DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectUnitThatCanAttackToMove
+			DecisionNode action: unitMoveRandomBehavior

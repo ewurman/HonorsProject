@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 3
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	InformationNode function: selectUnitThatCanAttackToMove

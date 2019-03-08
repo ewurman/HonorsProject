@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 3
+	DecisionNode action: unitMoveTowardAllyBehavior
+	DecisionNode action: unitMoveRandomBehavior
+	InformationNode function: selectRandomUnitThatCanMove

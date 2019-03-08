@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRockets
+		OperandNode Value: 3
+	DecisionNode action: unitMoveTowardEnemyBehavior
+	DecisionNode action: unitMoveTowardAllyBehavior
+	InformationNode function: selectRandomUnitThatCanMove
