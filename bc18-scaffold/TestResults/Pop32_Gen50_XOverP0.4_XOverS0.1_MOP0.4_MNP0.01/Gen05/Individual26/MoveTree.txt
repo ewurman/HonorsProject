@@ -1,0 +1,129 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfKnights
+		OperandNode Value: 4
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 375
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 7
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 4
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getKarbonite
+						OperandNode Value: 422
+					DecisionNode action: unitMoveTowardAllyBehavior
+					DecisionNode action: unitMoveTowardAllyBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getRoundNumber
+						OperandNode Value: 130
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRangers
+					OperandNode Value: 257
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 1
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfWorkers
+						OperandNode Value: 3
+					DecisionNode action: unitMoveTowardAllyBehavior
+					DecisionNode action: unitMoveRandomBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getKarbonite
+				OperandNode Value: 652
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 126
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				DecisionNode action: unitMoveTowardAllyBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 264
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveTowardAllyBehavior
+				InformationNode function: selectWorkerToMoveTowardHarvesting
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 4
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfWorkers
+				OperandNode Value: 4
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 5
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 5
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					DecisionNode action: unitMoveTowardAllyBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 2
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 483
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfKnights
+						OperandNode Value: 0
+					DecisionNode action: unitMoveTowardAllyBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+				InformationNode function: selectWorkerToMoveTowardHarvesting
+					DecisionNode action: unitMoveTowardEnemyBehavior
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 8
+			InformationNode function: selectUnitThatCanAttackToMove
+				DecisionNode action: unitMoveTowardAllyBehavior
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 4
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfKnights
+						OperandNode Value: 6
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfHealers
+						OperandNode Value: 3
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveTowardAllyBehavior
+					InformationNode function: selectRandomUnitThatCanMove

@@ -1,0 +1,16 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 4
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 5
+		DecisionNode typeOfActionToMake: 2
+		DecisionNode typeOfActionToMake: 3
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 5
+		DecisionNode typeOfActionToMake: 1
+		DecisionNode typeOfActionToMake: 3
