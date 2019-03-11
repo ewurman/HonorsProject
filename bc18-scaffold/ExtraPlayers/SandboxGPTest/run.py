@@ -192,24 +192,14 @@ class BooleanNode(Node):
             # TODO: How to represent boolean expressions
 
             ''' The operator, is this node, and the kids are the numbers/operands '''
-            leftOperand = 0
-            rightOperand = 0
             if self.firstChild is OperandNode:
                 leftOperand = self.firstChild.evaluate();
             elif self.firstChild is InformationNode:
                 leftOperand = self.firstChild.evaluate(battleCode, gc);
-            elif self.firstChild is BooleanNode:
-                leftOperand = self.firstChild.evaluate(battleCode, gc, moreParams)
-            else:
-                print("leftOperand defaulted to 0")
             if self.secondChild is OperandNode:
                 rightOperand = self.secondChild.evaluate();
             elif self.secondChild is InformationNode:
                 rightOperand = self.secondChild.evaluate(battleCode, gc);
-            elif self.firstChild is BooleanNode:
-                rightOperand = self.secondChild.evaluate(battleCode, gc, moreParams)
-            else:
-                print("rightOperand defaulted to 0")
 
             return self.operation(leftOperand, rightOperand)
 
@@ -275,7 +265,6 @@ class ActionType(IntEnum):
     Attack = 2
     Move = 3 #(or garrison)
     Build = 4 #(worker or factory)
-    Research = 5
 
 
 
@@ -332,8 +321,7 @@ class DecisionNode(Node):
             self.action(battleCode, gameController, *params)
             #https://stackoverflow.com/questions/817087/call-a-function-with-argument-list-in-python
             
-        except Exception as e:
-            print(e)
+        except:
             self.action(gameController, *params)
             #https://stackoverflow.com/questions/32342729/pass-object-along-with-object-method-to-function
             
@@ -366,7 +354,7 @@ class DecisionTree:
         return self.root.getWriteString("")
 
     def getNumNodes(self):
-        print("getting number of nodes in decision Tree")
+        #print("getting number of nodes in decision Tree")
         nodes = 0
         queue = [self.root]
         while (len(queue) != 0):
@@ -401,7 +389,6 @@ class DecisionTree:
             elif type(currNode) is InformationNode: 
                 #Information nodes not imediately under ifNodes' first children have their information stored
                 # This is useful for say, selecting a unit
-                print("Appending to permanantParams")
                 permanantParams.append(currNode.evaluate(battleCode, gameController))
                 currNode = currNode.follow()
 
@@ -467,14 +454,14 @@ def createBasicTopTree() -> DecisionTree:
     lastIf = IfNode(randomProbNode3, moveNode, attackNode)
     secondIf = IfNode(randomProbNode2, buildNode, lastIf)
     firstIf = IfNode(randomProbNode1, harvestNode, secondIf)
-    topTree = DecisionTree(firstIf)
+    topTree = DecisionTree(firstIf, 0)
     return topTree
 
 
 def createBasicHarvestTree() -> DecisionTree:
     harvestNode = DecisionNode(workerHarvestBehavior)
     workerSelectNode = InformationNode(selectRandomWorker, harvestNode)
-    harvestTree = DecisionTree(workerSelectNode)
+    harvestTree = DecisionTree(workerSelectNode, 1)
     return harvestTree
 
 
@@ -493,7 +480,7 @@ def createBasicBuildTree() -> DecisionTree:
     
     factoryIfNode = IfNode(randomProbNode2, selectRandomFactoryNode, workerIfNode)
 
-    buildTree = DecisionTree(factoryIfNode)
+    buildTree = DecisionTree(factoryIfNode, 4)
     return buildTree
 
 
@@ -512,7 +499,7 @@ def createBasicMoveTree() -> DecisionTree:
     #need to pick a unit
     #selectUnitNode = InformationNode(selectRandomMoveableUnit, ifHealerNode)
     #moveTree = DecisionTree(selectUnitNode)
-    moveTree = DecisionTree(ifHealerNode)
+    moveTree = DecisionTree(ifHealerNode, 3)
     return moveTree
 
 
@@ -521,12 +508,12 @@ def createBasicAttackTree() -> DecisionTree:
     attackBehaviorNode = DecisionNode(nonWorkerAttackBehavior)
     #select Unit
     selectUnitNode = InformationNode(selectRandomRobotForAttack, attackBehaviorNode)
-    attackTree = DecisionTree(selectUnitNode)
+    attackTree = DecisionTree(selectUnitNode, 2)
     return attackTree;
 
 def createBasicResearchTree() -> DecisionTree:
     node = DecisionNode(random_unit_type);
-    return DecisionTree(node); #TODO: total hogwash right now.
+    return DecisionTree(node, 5); #TODO: total hogwash right now.
 
 
 
@@ -584,13 +571,13 @@ def selectRandomRobotForAttack(battleCode, gc):
         return random.choice(nonWorkers)
     return None
 
+
 def selectUnitTypesThatCanAttack(bc, gc):
-    
     #TODO: Not in all_functions\
     nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
-    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(x.id)]
     can_attack = []
     my_team = gc.team()
     enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
@@ -612,7 +599,7 @@ def selectRandomUnitThatCanAttack(bc, gc):
     nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
-    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(x.id)]
     can_attack = []
     my_team = gc.team()
     enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
@@ -634,7 +621,7 @@ def selectUnitDealingMostDamageThatCanAttack(bc, gc):
     nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
-    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(x.id)]
 
     can_attack = []
     my_team = gc.team()
@@ -662,7 +649,7 @@ def selectUnitWithLeastLifeThatCanAttack(bc, gc):
     nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
     nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
-    attackReady = [x for x in nonWorkers if gc.is_attack_ready(unit.id)]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(x.id)]
 
     can_attack = []
     my_team = gc.team()
@@ -692,7 +679,7 @@ def selectUnitWithLeastLifeThatCanAttack(bc, gc):
 def selectRandomUnitThatCanMove(bc, gc):
     movables = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     movables = [x for x in movables if x.unit_type != bc.UnitType.Rocket]
-    moveReady = [x for x in movables if gc.is_move_ready(unit.id)]
+    moveReady = [x for x in movables if gc.is_move_ready(x.id)]
     can_move = []
     for unit in moveReady:
         random_directions = list(bc.Direction)
@@ -710,8 +697,8 @@ def selectRandomUnitThatCanMove(bc, gc):
 def selectUnitThatCanAttackToMove(bc, gc):
     movables = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
     movables = [x for x in movables if x.unit_type != bc.UnitType.Rocket]
-    moveReady = [x for x in movables if gc.is_move_ready(unit.id)]
-    moveAttackReady = [x for x in moveReady if gc.is_attack_ready(unit.id)]
+    moveReady = [x for x in movables if gc.is_move_ready(x.id)]
+    moveAttackReady = [x for x in moveReady if gc.is_attack_ready(x.id)]
     can_move = []
     for unit in moveAttackReady:
         random_directions = list(bc.Direction)
@@ -727,8 +714,14 @@ def selectUnitThatCanAttackToMove(bc, gc):
 
 
 def selectWorkerToMoveTowardHarvesting(bc, gc):
-    movables = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
-    return random.choice(movables)
+    movables1 = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
+    movables2 = [x for x in movables1 if gc.is_move_ready(x.id)]
+    if len(movables2) != 0:
+        return random.choice(movables2)
+    else:
+        return random.choice(movables1)
+
+
 
 
 
@@ -1139,7 +1132,10 @@ def worker_can_harvest(bc, gc, unit_id):
     return None
 
 def worker_unit_can_harvest(bc, gc, unit):
-    return worker_can_harvest(bc, gc, unit.id)
+    if unit:
+        return worker_can_harvest(bc, gc, unit.id)
+    else: 
+        return None
 
 
 def factory_produce(bc, gc, unit, unit_type, bot_occupiable):
@@ -1210,6 +1206,7 @@ def randomChance(bc, gc, chanceTrue = 0.25) -> bool:
     return roll <= chanceTrue
 
 
+
 def unitAttackRandomPossibleEnemy(bc, gc, unit):
     if unit:
         my_team = gc.team()
@@ -1240,38 +1237,37 @@ def unitAttackClosestPossibleEnemy(bc, gc, unit):
                     closest_enemy_id = other.id;
         gc.attack(unit.id, closest_enemy_id)
     return None #we attacked
-    
 
 
 def getRoundNumber(bc, gc):
     return gc.round()
 
 def getNumberOfWorkers(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Worker ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Worker ]
     return len(y)
 
 def getNumberOfFactories(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Factory]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Factory]
     return len(y)
 
 def getNumberOfRockets(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Rocket ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Rocket ]
     return len(y)
 
 def getNumberOfKnights(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Knight ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Knight ]
     return len(y)
 
 def getNumberOfRangers(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Ranger ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Ranger ]
     return len(y)
 
 def getNumberOfMages(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Mages ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Mages ]
     return len(y)
 
 def getNumberOfHealers(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type() is bc.UnitType.Healer ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Healer ]
     return len(y)
 
 
@@ -1416,7 +1412,7 @@ game_number_info_functions = [
     getKarbonite
 ]
 
-random_chance_functions = [
+random_chance_function = [
     randomChance
 ]
 
@@ -1429,7 +1425,6 @@ is_unit_type_functions = [
     isFactory,
     isRocket
 ]
-
 
 allFunctionSets = [
     select_factory_functions,
@@ -1455,11 +1450,9 @@ allFunctionSets = [
     worker_can_harvest_functions,
     worker_cant_harvest_functions,
     game_number_info_functions,
-    random_chance_functions,
+    random_chance_function,
     is_unit_type_functions
 ]
-
-
 
 
 def createRandomAttackTree():
@@ -1488,15 +1481,13 @@ def createRandomAttackTree():
             ifRangerNode = IfNode(isRangerNode, rangerAttackNode, mageAttackNode)
             ifKnightNode = IfNode(isKnightNode, knightAttackDecisionNode, ifRangerNode)
 
-
-
         else:
             rangedAttackFunction = random.choice(unit_attack_functions)
             rangedAttackDecisionNode = DecisionNode(rangedAttackFunction)
             ifKnightNode = IfNode(isKnightNode, knightAttackDecisionNode, rangedAttackDecisionNode)
 
         root = IfNode(isHealerNode, healDecisionNode, ifKnightNode, selectUnitInfoNode)
-        return DecisionTree(root)
+        return DecisionTree(root, 2)
 
 
     else:
@@ -1504,7 +1495,78 @@ def createRandomAttackTree():
         attackDecisionNode = DecisionNode(attackFunction)
 
         root = IfNode(isHealerNode, healDecisionNode, attackDecisionNode, selectUnitInfoNode)
-        return DecisionTree(root)
+        return DecisionTree(root, 2)
+
+
+
+def recursiveRandomAttackSubtree(maxRecursion, currentRecursion, percentRecurse) -> Node: #TODO, remove build specifics
+    isHealerNode = BooleanNode(isHealer)
+    healFunction = random.choice(unit_heal_functions)
+    healDecisionNode = DecisionNode(healFunction)
+        
+
+    firstCheckFunction = random.choice(game_number_info_functions)
+    firstChildLeftNode = InformationNode(firstCheckFunction)
+    if firstCheckFunction is getRoundNumber:
+        firstChildRightNode = OperandNode(random.randint(0,999))
+        # TODO money caps at 400 if not gathering it
+    elif firstCheckFunction is getKarbonite:
+        firstChildRightNode = OperandNode(random.randint(0,400))
+    else:
+        firstChildRightNode = createRandomValOperandNode(5,2)
+    firstCheckBoolNode = BooleanNode(None, operation = operator.lt, firstChild = firstChildLeftNode, secondChild = firstChildRightNode, isGCFunction = False)
+
+    if currentRecursion == maxRecursion:
+        #force Decision Node both
+        attackFunction1 = random.choice(unit_attack_functions)
+        attackDecisionNode1 = DecisionNode(attackFunction1)
+        attackFunction2 = random.choice(unit_attack_functions)
+        attackDecisionNode2 = DecisionNode(attackFunction2)
+        junctionNode = IfNode(firstCheckBoolNode, attackDecisionNode1, attackDecisionNode2)
+        ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+        return ifHealerNode
+
+
+    if percentRecurse < random.random():
+        #force Decision node left:
+        if percentRecurse < random.random():
+            #Also force Decision node right:
+            attackFunction1 = random.choice(unit_attack_functions)
+            attackDecisionNode1 = DecisionNode(attackFunction1)
+            attackFunction2 = random.choice(unit_attack_functions)
+            attackDecisionNode2 = DecisionNode(attackFunction2)
+            junctionNode = IfNode(firstCheckBoolNode, attackDecisionNode1, attackDecisionNode2)
+            ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+            return ifHealerNode
+
+        else:
+            #only the left is Decision
+            attackFunction1 = random.choice(unit_attack_functions)
+            attackDecisionNode1 = DecisionNode(attackFunction1)
+            rChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+            junctionNode = IfNode(firstCheckBoolNode, attackDecisionNode1, rChildNode)
+            ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+            return ifHealerNode
+
+
+    elif percentRecurse < random.random():
+        #force ONLY Decision node right:
+        attackFunction2 = random.choice(unit_attack_functions)
+        attackDecisionNode2 = DecisionNode(attackFunction2)
+        lChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, attackDecisionNode2)
+        ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+        return ifHealerNode
+
+    else:
+        #recurse
+        lChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        rChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+        ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+        return ifHealerNode
+
+
 
 
 def createRandomHarvestTree():
@@ -1522,7 +1584,7 @@ def createRandomHarvestTree():
     harvestNode = DecisionNode(harvestFunction)
 
     root = IfNode(canHarvestNode, harvestNode, cantHarvestNode, selectUnitInfoNode)
-    return DecisionTree(root)
+    return DecisionTree(root, 1)
 
 
 def createRandomBuildTree():
@@ -1540,7 +1602,7 @@ def createRandomBuildTree():
     rightSubtree = recursiveRandomBuildSubtree(3, 0, 0.9)
 
     root = IfNode(firstCheckBoolNode, leftSubtree, rightSubtree)
-    return DecisionTree(root)
+    return DecisionTree(root, 4)
 
 
 
@@ -1596,7 +1658,7 @@ def recursiveRandomBuildSubtree(maxRecursion, currentRecursion, percentRecurse):
                 rChildNode = DecisionNode(lChildFunction)
 
             selectBuilderNode = InformationNode(select_builder_function)
-            junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode )
+            junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode, selectBuilderNode)
             return junctionNode
 
 
@@ -1663,7 +1725,7 @@ def createRandomMoveTree():
     leftSubtree = recursiveRandomMoveSubtree(3, 0, 0.8)
     rightSubtree = recursiveRandomMoveSubtree(3, 0, 0.8)
     root = IfNode(gameCheckBoolNode, leftSubtree, rightSubtree)
-    return DecisionTree(root)
+    return DecisionTree(root, 3)
 
 
 
@@ -1734,7 +1796,6 @@ def recursiveRandomMoveSubtree(maxRecursion, currentRecursion, percentRecurse):
         return junctionNode
 
 
-
 def createRandomTopTree():
     #TODO, look at phases and how many things we have
     firstCheckFunction = random.choice(game_number_info_functions)
@@ -1750,11 +1811,11 @@ def createRandomTopTree():
     rightSubtree = recursiveRandomTopSubtree(4, 0, 0.9)
 
     root = IfNode(firstCheckBoolNode, leftSubtree, rightSubtree)
-    return DecisionTree(root)
+    return DecisionTree(root, 0)
 
 
 
-def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse): #TODO, remove build specifics
+def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse) -> Node: #TODO, remove build specifics
     #TODO, look at phases and how many things we have
     firstCheckFunction = random.choice(game_number_info_functions)
     firstChildLeftNode = InformationNode(firstCheckFunction)
@@ -1809,6 +1870,10 @@ def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse): #
 
 
 
+
+
+
+
 '''End DecisionTreeUtils.py'''
 
 
@@ -1821,7 +1886,6 @@ class DecisionTreePlayer:
         self.movementTree = movementTree
         self.buildTree = buildTree
         self.researchTree = researchTree
-
 
     def getNumNodesByTree(self):
         n0 = self.topTree.getNumNodes()
@@ -1837,25 +1901,25 @@ class DecisionTreePlayer:
         print("Top Tree gave us an action of", actionNum)
         if actionNum == 1:
             # harvest
-            self.harvestTree.printTree()
+            #self.harvestTree.printTree()
             res = self.harvestTree.execute(battleCode, gameController)
             if res:
                 print("harvestTree did not execute an action and instead returned", res)
         elif actionNum == 2:
             # attack
-            self.attackTree.printTree()
+            #self.attackTree.printTree()
             res = self.attackTree.execute(battleCode, gameController)
             if res:
                 print("attackTree did not execute an action and instead returned", res)
         elif actionNum == 3:
             # move
-            self.movementTree.printTree()
+            #self.movementTree.printTree()
             res = self.movementTree.execute(battleCode, gameController)
             if res:
                 print("movementTree did not execute an action and instead returned", res)
         elif actionNum == 4:
             # build
-            self.buildTree.printTree()
+            #self.buildTree.printTree()
             res = self.buildTree.execute(battleCode, gameController)
             if res:
                 print("buildTree did not execute an action and instead returned", res)
@@ -1871,12 +1935,21 @@ class DecisionTreePlayer:
     def writeToFiles(self, directoryPath):
         '''we already can print so its similar following along and writing the nodes out'''
         topTreeString = self.topTree.getWriteString()
-        #print(topTreeString)
         harvestTreeString = self.harvestTree.getWriteString()
         attackTreeString = self.attackTree.getWriteString()
         moveTreeString = self.movementTree.getWriteString()
         buildTreeString = self.buildTree.getWriteString()
 
+        if not os.path.exists(os.path.dirname(directoryPath + "TopTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "TopTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "HarvestTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "HarvestTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "AttackTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "AttackTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "MoveTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "MoveTree.txt"), exist_ok=True)
+        if not os.path.exists(os.path.dirname(directoryPath + "BuildTree.txt")):
+            os.makedirs(os.path.dirname(directoryPath + "BuildTree.txt"), exist_ok=True)
         with open(directoryPath + "TopTree.txt", 'w') as f:
             f.write(topTreeString)
         with open(directoryPath + "HarvestTree.txt", 'w') as f:
@@ -1988,9 +2061,6 @@ class DecisionTreePlayer:
 
                 else:
                     #its an operation and has children
-                    #print("****************************************")
-                    #print(elements)
-                    #print("****************************************")
                     operation = operator.lt # TODO: rn we only do less than
                     nextLineNum = lineNum + 1
                     firstChild, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
@@ -2006,31 +2076,31 @@ class DecisionTreePlayer:
         with open(directoryPath + "/" + fileNames[0], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            topTree = DecisionTree(root)
+            topTree = DecisionTree(root, 0)
             print("read topTree")
 
         with open(directoryPath + "/" + fileNames[1], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            harvestTree = DecisionTree(root)
+            harvestTree = DecisionTree(root, 1)
             print("read harvestTree")
 
         with open(directoryPath + "/" + fileNames[2], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            attackTree = DecisionTree(root)
+            attackTree = DecisionTree(root, 2)
             print("read attackTree")
 
         with open(directoryPath + "/" + fileNames[3], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            moveTree = DecisionTree(root)
+            moveTree = DecisionTree(root, 3)
             print("read movementTree")
 
         with open(directoryPath + "/" + fileNames[4], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            buildTree = DecisionTree(root)
+            buildTree = DecisionTree(root, 4)
             print("read buildTree")
 
         player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
@@ -2054,7 +2124,6 @@ def createRandomDecisionTreePlayer():
     return player
 
 
-
 def Crossover1Player(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlayer, DecisionTreePlayer, int, list):
     '''
     p1 and p2 are players, probOfEachTree is the probability of doing crossover,
@@ -2075,6 +2144,7 @@ def Crossover1Player(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlaye
 
 
 
+
 def MutatePlayer(player, probabilityPerNode, probOfMutate, allFunctionSets) -> (DecisionTreePlayer, int):
     topTree, m0 = Mutate(player.topTree, probabilityPerNode, probOfMutate, allFunctionSets)
     harvestTree, m1 = Mutate(player.harvestTree, probabilityPerNode, probOfMutate, allFunctionSets)
@@ -2083,7 +2153,6 @@ def MutatePlayer(player, probabilityPerNode, probOfMutate, allFunctionSets) -> (
     buildTree, m4 = Mutate(player.buildTree, probabilityPerNode, probOfMutate, allFunctionSets)
     numMutations = m0 + m1 + m2 + m3 + m4
     return (DecisionTreePlayer(topTree, harvestTree, attackTree, movementTree, buildTree, None), numMutations)
-
 
 
 ''' GP operators '''
@@ -2147,7 +2216,7 @@ def recursiveDFSNodes(currNode, depth) -> list:
     return nodes
 
 
-def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets) -> (DecisionTree, int):
+def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets, decisionToSubtreeProb = 1.0) -> (DecisionTree, int):
     ''' NEW IMPLEMENTATION
         mutates the trees just a bit by changing functions to like functions in Information and Decision Nodes
         Also can change the value of a operand node. ALl these changes done with some given probability.
@@ -2179,14 +2248,38 @@ def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets) -> (
         if type(currNode) is DecisionNode:
 
             if random.random() < probabilityPerNode:
-                function = currNode.action
-                for functionSet in allFunctionSets:
-                    if function in functionSet:
-                        newFunction = random.choice(functionSet)
-                        print("Changing Decision Node function from " + currNode.action.__name__ + " to " + newFunction.__name__)
-                        currNode.action = newFunction
-                        numMutations += 1
-                        break
+
+                #possibly add subtree
+                if random.random() < decisionToSubtreeProb:
+                    if decisionTree.id == 0:
+                        # Top tree
+                        subtree = recursiveRandomTopSubtree(2, 0, 0.9)
+                        currNode.swap(subtree)
+                    #elif decisionTree.id == 1:
+                        # Harvest Tree, do nothing
+
+                    elif decisionTree.id == 2:
+                        # Attack Tree
+                        subtree = recursiveRandomAttackSubtree(2,0,0.8)
+                        currNode.swap(subtree)
+                    elif decisionTree.id == 3:
+                        # Move Tree
+                        subtree = recursiveRandomMoveSubtree(2, 0, 0.8)
+                        currNode.swap(subtree)
+                    elif decisionTree.id == 4:
+                        # Build Tree
+                        subtree = recursiveRandomBuildSubtree(2, 0, 0.9)
+                        currNode.swap(subtree)
+
+                else:
+                    function = currNode.action
+                    for functionSet in allFunctionSets:
+                        if function in functionSet:
+                            newFunction = random.choice(functionSet)
+                            print("Changing Decision Node function from " + currNode.action.__name__ + " to " + newFunction.__name__)
+                            currNode.action = newFunction
+                            numMutations += 1
+                            break
 
         if type(currNode) is InformationNode:
             if random.random() < probabilityPerNode:
@@ -2211,12 +2304,14 @@ def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets) -> (
 
 
 
+
+
 def Crossover1(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, DecisionTree, int, int):
-    ''' returns two trees that are crossed over.
+    ''' returns two trees that are crossed over. then the number of crossover and the height of the crossover
         we can only do crossover on same type nodes
     '''
     if random.random() > probOfDoing:
-        return (treeA, treeB, 0, 0)
+        return (treeA, treeB, 0, -1)
 
     currNodeA = treeA.root
     heightA = 1 #the number of if nodes
@@ -2253,7 +2348,7 @@ def Crossover1(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, Dec
             currNodeA = currNodeA.follow()
 
         elif currNodeA == None:
-            return (treeA, treeB, 0 , 0)
+            return (treeA, treeB, 0 , -1)
 
 
     #now we search treeB for a node of the same type, weighting toward lower in the tree
@@ -2261,13 +2356,142 @@ def Crossover1(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, Dec
     heightB = 1
     nodes = recursiveDFSNodes(currNodeB, heightB);
     trimmedNodes = [node for node in nodes if type(node) is type(currNodeA)]
-    nodeB = random.choice(trimmedNodes)
-
-    currNodeA.swap(nodeB) #TODO: check these are working
-    return (treeA, treeB, 1, heightA)
+    if len(trimmedNodes) != 0:
+        nodeB = random.choice(trimmedNodes)
+        currNodeA.swap(nodeB) #TODO: check these are working
+        return (treeA, treeB, 1, heightA)
+    else:
+        return (treeA, treeB, 0, -1)
         
 
 
+
+
+def recursiveDFSNodesDepthPair(currNode, depth) -> list:
+    '''returns a list of nodes under and including currNode'''
+    nodes = []
+    if currNode.firstChild:
+        nodes += recursiveDFSNodesDepthPair(currNode.firstChild, depth+1)
+    if currNode.secondChild:
+        nodes += recursiveDFSNodesDepthPair(currNode.secondChild, depth+1)
+    if currNode.thirdChild:
+        nodes += recursiveDFSNodesDepthPair(currNode.thirdChild, depth+1)
+    #TODO: ignoring possible info node for if nodes
+    nodes += [(currNode, depth)]
+    return nodes
+
+
+
+def Crossover2(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, DecisionTree, int, int):
+    ''' returns two trees that are crossed over. then the number of crossover and the height of the crossover
+        we can only do crossover on same type nodes. This version uses a desired crossover height to bias toward averaging 
+        the tree heights after crossover
+    '''
+    if random.random() > probOfDoing:
+        return (treeA, treeB, 0, -1)
+
+    currNodeA = treeA.root
+    heightA = 1 #the number of if nodes
+    # We prefer smaller mutations, so we are going to mutate as a function of depth
+    while(type(currNodeA) is not DecisionNode):
+        randVal = random.random()
+        if randVal < probInSearching*heightA:
+            break;
+
+        if type(currNodeA) is IfNode:
+            #3 children
+            heightA += 1
+            if randVal < 0.33:
+                currNodeA = currNodeA.firstChild
+            elif randVal < 0.67:
+                currNodeA = currNodeA.secondChild
+            else:
+                currNodeA = currNodeA.thirdChild
+            #ignore optional info node until we have the dictionary
+
+        elif type(currNodeA) is BooleanNode:
+            # 0 or two children
+            if currNodeA.firstChild == None:
+                #Do a final test for staying
+                if random.random() < probInSearching*heightA:
+                    break;
+            else:
+                if randVal < 0.5:
+                    currNodeA = currNodeA.firstChild
+                else:
+                    currNodeA = currNodeA.secondChild
+
+        elif type(currNodeA) is InformationNode:
+            currNodeA = currNodeA.follow()
+
+        elif currNodeA == None:
+            return (treeA, treeB, 0 , -1)
+
+
+    #now we search treeB for a node of the same type, weighting toward lower in the tree
+    currNodeB = treeB.root
+    heightB = 1
+    nodes = recursiveDFSNodesDepthPair(currNodeB, heightB);
+    nodeDepthPairs = [nodePair for nodePair in nodes if type(nodePair[0]) is type(currNodeA)]
+    if len(nodeDepthPairs) != 0:
+        
+        nodeB = crossover2NodeSelection(nodeDepthPairs, heightA)
+
+        currNodeA.swap(nodeB) #TODO: check these are working
+        return (treeA, treeB, 1, heightA)
+    else:
+        return (treeA, treeB, 0, -1)
+
+
+def crossover2NodeSelection(nodeDepthPairs, heightA):
+    depthDifference = [] #hold the difference from desiredCHeight
+    for pair in nodeDepthPairs:
+        depthDifference.append(abs(heightA-pair[1]))
+    # now we want the sum and make buckets of probabilities based on those differences
+    depthDifference = [x+1 for x in depthDifference] #zeroes are bad for ranks
+    totalDifs = sum(depthDifference)
+    rankedProbs = [totalDifs - x for x in depthDifference]
+    divideRankProbBy = sum(rankedProbs)
+    buckets = [] #holds the endpoint of the bucket
+    nextBucket = 0
+    for prob in rankedProbs:
+        nextBucket += (prob / divideRankProbBy)
+        buckets.append(nextBucket)
+
+    print("Buckets: ", buckets)
+    target = random.random()
+    index = len(nodeDepthPairs);
+    for i in range(len(nodeDepthPairs)):
+        if target < buckets[i]:
+            #we have passed the bucket
+            index = i-1
+            break;
+    if index == len(nodeDepthPairs):
+        #it didn't work, pick randomly
+        print("crossover2NodeSelection did not get a target {0} into a bucket".format(target))
+        return random.choice(nodeDepthPairs)[0]
+    else:
+        return nodeDepthPairs[index][0]
+
+
+
+def Crossover2Player(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlayer, DecisionTreePlayer, int, list):
+    '''
+    p1 and p2 are players, probOfEachTree is the probability of doing crossover,
+    probInSearch is the probability that helps crossover decide where to crossover.
+    '''
+    p1topTree, p2topTree, x1, h1 = Crossover2(p1.topTree, p2.topTree, probOfEachTree, probInSearch)
+    p1harvestTree, p2harvestTree, x2, h2 = Crossover2(p1.harvestTree, p2.harvestTree, probOfEachTree, probInSearch)
+    p1attackTree, p2attackTree, x3, h3 = Crossover2(p1.attackTree, p2.attackTree, probOfEachTree, probInSearch)
+    p1movementTree, p2movementTree, x4, h4 = Crossover2(p1.movementTree, p2.movementTree, probOfEachTree, probInSearch)
+    p1buildTree, p2buildTree, x5, h5 = Crossover2(p1.buildTree, p2.buildTree, probOfEachTree, probInSearch)
+    numCrossover = x1 + x2 + x3 + x4 + x5
+    heights = [h1, h2, h3, h4, h5]
+    # No research tree rn
+    newp1 = DecisionTreePlayer(p1topTree, p1harvestTree, p1attackTree, p1movementTree, p1buildTree, None)
+    newp2 = DecisionTreePlayer(p2topTree, p2harvestTree, p2attackTree, p2movementTree, p2buildTree, None)
+
+    return newp1, newp2, numCrossover, heights
 
 
 
@@ -2280,11 +2504,37 @@ def Selection():
 
 
 
+
+
+
+
 gc = bc.GameController()
 
+crossoverProb = 1.0
+crossoverStopEarly = 0.1
+mutateNodeProb = 0.01
+mutateOccurProb = 0.4  #{0.2,0.4,0.6}
 
-player = createRandomDecisionTreePlayer()
-print("Tree heights: ", player.getNumNodesByTree())
+
+player1 = createRandomDecisionTreePlayer()
+print("P1 Tree sizes: ", player1.getNumNodesByTree())
+player2 = createRandomDecisionTreePlayer()
+print("P2 Tree sizes: ", player2.getNumNodesByTree())
+
+c1, c2, numCrossover, heightAs = Crossover2Player(player1, player2, crossoverProb, crossoverStopEarly)
+
+print("c1 Tree sizes: ", c1.getNumNodesByTree())
+print("c2 Tree sizes: ", c2.getNumNodesByTree())
+print("numCrossover =", numCrossover)
+print("heightAs =", heightAs)
+
+print("################# Mutate #################")
+print("c1 Pre-Mutate Tree sizes: ", c1.getNumNodesByTree())
+print("c2 Pre-Mutate Tree sizes: ", c2.getNumNodesByTree())
+MutatePlayer(c1, mutateNodeProb, mutateOccurProb, allFunctionSets)
+MutatePlayer(c2, mutateNodeProb, mutateOccurProb, allFunctionSets)
+print("c1 Post-Mutate Tree sizes: ", c1.getNumNodesByTree())
+print("c2 Post-Mutate Tree sizes: ", c2.getNumNodesByTree())
 
 
 '''

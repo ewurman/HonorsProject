@@ -180,8 +180,8 @@ def readDataFromFile(filepath):
                 print("Found TNODES_HEADER, parsing for tNodesPerRound")
                 line = lines[i].strip()
                 allTNodes = line.split(";") #ASSUMING INTERMEDIATE FILE
-                mutationsPerRound = [x.split(',') for x in allTNodes]
-                print("mutationsPerRound: ", mutationsPerRound)
+                tNodesPerRound = [x.split(',') for x in allTNodes[:-1]]
+                print("tNodesPerRound: ", tNodesPerRound)
 
             elif lines[i-1] == WINNER_DIST_HEADER:
                 print("Found WINNER_DIST_HEADER, parsing for winnerDist")

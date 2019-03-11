@@ -354,7 +354,7 @@ class DecisionTree:
         return self.root.getWriteString("")
 
     def getNumNodes(self):
-        print("getting number of nodes in decision Tree")
+        #print("getting number of nodes in decision Tree")
         nodes = 0
         queue = [self.root]
         while (len(queue) != 0):
@@ -454,14 +454,14 @@ def createBasicTopTree() -> DecisionTree:
     lastIf = IfNode(randomProbNode3, moveNode, attackNode)
     secondIf = IfNode(randomProbNode2, buildNode, lastIf)
     firstIf = IfNode(randomProbNode1, harvestNode, secondIf)
-    topTree = DecisionTree(firstIf)
+    topTree = DecisionTree(firstIf, 0)
     return topTree
 
 
 def createBasicHarvestTree() -> DecisionTree:
     harvestNode = DecisionNode(workerHarvestBehavior)
     workerSelectNode = InformationNode(selectRandomWorker, harvestNode)
-    harvestTree = DecisionTree(workerSelectNode)
+    harvestTree = DecisionTree(workerSelectNode, 1)
     return harvestTree
 
 
@@ -480,7 +480,7 @@ def createBasicBuildTree() -> DecisionTree:
     
     factoryIfNode = IfNode(randomProbNode2, selectRandomFactoryNode, workerIfNode)
 
-    buildTree = DecisionTree(factoryIfNode)
+    buildTree = DecisionTree(factoryIfNode, 4)
     return buildTree
 
 
@@ -499,7 +499,7 @@ def createBasicMoveTree() -> DecisionTree:
     #need to pick a unit
     #selectUnitNode = InformationNode(selectRandomMoveableUnit, ifHealerNode)
     #moveTree = DecisionTree(selectUnitNode)
-    moveTree = DecisionTree(ifHealerNode)
+    moveTree = DecisionTree(ifHealerNode, 3)
     return moveTree
 
 
@@ -508,12 +508,12 @@ def createBasicAttackTree() -> DecisionTree:
     attackBehaviorNode = DecisionNode(nonWorkerAttackBehavior)
     #select Unit
     selectUnitNode = InformationNode(selectRandomRobotForAttack, attackBehaviorNode)
-    attackTree = DecisionTree(selectUnitNode)
+    attackTree = DecisionTree(selectUnitNode, 2)
     return attackTree;
 
 def createBasicResearchTree() -> DecisionTree:
     node = DecisionNode(random_unit_type);
-    return DecisionTree(node); #TODO: total hogwash right now.
+    return DecisionTree(node, 5); #TODO: total hogwash right now.
 
 
 
@@ -1455,8 +1455,6 @@ allFunctionSets = [
 ]
 
 
-
-
 def createRandomAttackTree():
     selectUnitFunction = random.choice(select_attacker_functions)
     selectUnitInfoNode = InformationNode(selectUnitFunction)
@@ -1483,15 +1481,13 @@ def createRandomAttackTree():
             ifRangerNode = IfNode(isRangerNode, rangerAttackNode, mageAttackNode)
             ifKnightNode = IfNode(isKnightNode, knightAttackDecisionNode, ifRangerNode)
 
-
-
         else:
             rangedAttackFunction = random.choice(unit_attack_functions)
             rangedAttackDecisionNode = DecisionNode(rangedAttackFunction)
             ifKnightNode = IfNode(isKnightNode, knightAttackDecisionNode, rangedAttackDecisionNode)
 
         root = IfNode(isHealerNode, healDecisionNode, ifKnightNode, selectUnitInfoNode)
-        return DecisionTree(root)
+        return DecisionTree(root, 2)
 
 
     else:
@@ -1499,7 +1495,78 @@ def createRandomAttackTree():
         attackDecisionNode = DecisionNode(attackFunction)
 
         root = IfNode(isHealerNode, healDecisionNode, attackDecisionNode, selectUnitInfoNode)
-        return DecisionTree(root)
+        return DecisionTree(root, 2)
+
+
+
+def recursiveRandomAttackSubtree(maxRecursion, currentRecursion, percentRecurse) -> Node: #TODO, remove build specifics
+    isHealerNode = BooleanNode(isHealer)
+    healFunction = random.choice(unit_heal_functions)
+    healDecisionNode = DecisionNode(healFunction)
+        
+
+    firstCheckFunction = random.choice(game_number_info_functions)
+    firstChildLeftNode = InformationNode(firstCheckFunction)
+    if firstCheckFunction is getRoundNumber:
+        firstChildRightNode = OperandNode(random.randint(0,999))
+        # TODO money caps at 400 if not gathering it
+    elif firstCheckFunction is getKarbonite:
+        firstChildRightNode = OperandNode(random.randint(0,400))
+    else:
+        firstChildRightNode = createRandomValOperandNode(5,2)
+    firstCheckBoolNode = BooleanNode(None, operation = operator.lt, firstChild = firstChildLeftNode, secondChild = firstChildRightNode, isGCFunction = False)
+
+    if currentRecursion == maxRecursion:
+        #force Decision Node both
+        attackFunction1 = random.choice(unit_attack_functions)
+        attackDecisionNode1 = DecisionNode(attackFunction1)
+        attackFunction2 = random.choice(unit_attack_functions)
+        attackDecisionNode2 = DecisionNode(attackFunction2)
+        junctionNode = IfNode(firstCheckBoolNode, attackDecisionNode1, attackDecisionNode2)
+        ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+        return ifHealerNode
+
+
+    if percentRecurse < random.random():
+        #force Decision node left:
+        if percentRecurse < random.random():
+            #Also force Decision node right:
+            attackFunction1 = random.choice(unit_attack_functions)
+            attackDecisionNode1 = DecisionNode(attackFunction1)
+            attackFunction2 = random.choice(unit_attack_functions)
+            attackDecisionNode2 = DecisionNode(attackFunction2)
+            junctionNode = IfNode(firstCheckBoolNode, attackDecisionNode1, attackDecisionNode2)
+            ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+            return ifHealerNode
+
+        else:
+            #only the left is Decision
+            attackFunction1 = random.choice(unit_attack_functions)
+            attackDecisionNode1 = DecisionNode(attackFunction1)
+            rChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+            junctionNode = IfNode(firstCheckBoolNode, attackDecisionNode1, rChildNode)
+            ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+            return ifHealerNode
+
+
+    elif percentRecurse < random.random():
+        #force ONLY Decision node right:
+        attackFunction2 = random.choice(unit_attack_functions)
+        attackDecisionNode2 = DecisionNode(attackFunction2)
+        lChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, attackDecisionNode2)
+        ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+        return ifHealerNode
+
+    else:
+        #recurse
+        lChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        rChildNode = recursiveRandomAttackSubtree(maxRecursion, currentRecursion+1, percentRecurse)
+        junctionNode = IfNode(firstCheckBoolNode, lChildNode, rChildNode)
+        ifHealerNode = IfNode(isHealerNode, healDecisionNode, junctionNode)
+        return ifHealerNode
+
+
 
 
 def createRandomHarvestTree():
@@ -1517,7 +1584,7 @@ def createRandomHarvestTree():
     harvestNode = DecisionNode(harvestFunction)
 
     root = IfNode(canHarvestNode, harvestNode, cantHarvestNode, selectUnitInfoNode)
-    return DecisionTree(root)
+    return DecisionTree(root, 1)
 
 
 def createRandomBuildTree():
@@ -1535,7 +1602,7 @@ def createRandomBuildTree():
     rightSubtree = recursiveRandomBuildSubtree(3, 0, 0.9)
 
     root = IfNode(firstCheckBoolNode, leftSubtree, rightSubtree)
-    return DecisionTree(root)
+    return DecisionTree(root, 4)
 
 
 
@@ -1658,7 +1725,7 @@ def createRandomMoveTree():
     leftSubtree = recursiveRandomMoveSubtree(3, 0, 0.8)
     rightSubtree = recursiveRandomMoveSubtree(3, 0, 0.8)
     root = IfNode(gameCheckBoolNode, leftSubtree, rightSubtree)
-    return DecisionTree(root)
+    return DecisionTree(root, 3)
 
 
 
@@ -1744,11 +1811,11 @@ def createRandomTopTree():
     rightSubtree = recursiveRandomTopSubtree(4, 0, 0.9)
 
     root = IfNode(firstCheckBoolNode, leftSubtree, rightSubtree)
-    return DecisionTree(root)
+    return DecisionTree(root, 0)
 
 
 
-def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse): #TODO, remove build specifics
+def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse) -> Node: #TODO, remove build specifics
     #TODO, look at phases and how many things we have
     firstCheckFunction = random.choice(game_number_info_functions)
     firstChildLeftNode = InformationNode(firstCheckFunction)
@@ -2009,31 +2076,31 @@ class DecisionTreePlayer:
         with open(directoryPath + "/" + fileNames[0], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            topTree = DecisionTree(root)
+            topTree = DecisionTree(root, 0)
             print("read topTree")
 
         with open(directoryPath + "/" + fileNames[1], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            harvestTree = DecisionTree(root)
+            harvestTree = DecisionTree(root, 1)
             print("read harvestTree")
 
         with open(directoryPath + "/" + fileNames[2], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            attackTree = DecisionTree(root)
+            attackTree = DecisionTree(root, 2)
             print("read attackTree")
 
         with open(directoryPath + "/" + fileNames[3], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            moveTree = DecisionTree(root)
+            moveTree = DecisionTree(root, 3)
             print("read movementTree")
 
         with open(directoryPath + "/" + fileNames[4], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            buildTree = DecisionTree(root)
+            buildTree = DecisionTree(root, 4)
             print("read buildTree")
 
         player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
@@ -2149,7 +2216,7 @@ def recursiveDFSNodes(currNode, depth) -> list:
     return nodes
 
 
-def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets) -> (DecisionTree, int):
+def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets, decisionToSubtreeProb = 0) -> (DecisionTree, int):
     ''' NEW IMPLEMENTATION
         mutates the trees just a bit by changing functions to like functions in Information and Decision Nodes
         Also can change the value of a operand node. ALl these changes done with some given probability.
@@ -2181,14 +2248,39 @@ def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets) -> (
         if type(currNode) is DecisionNode:
 
             if random.random() < probabilityPerNode:
-                function = currNode.action
-                for functionSet in allFunctionSets:
-                    if function in functionSet:
-                        newFunction = random.choice(functionSet)
-                        print("Changing Decision Node function from " + currNode.action.__name__ + " to " + newFunction.__name__)
-                        currNode.action = newFunction
-                        numMutations += 1
-                        break
+
+                #possibly add subtree
+                if random.random() < decisionToSubtreeProb:
+                    if decisionTree.id == 0:
+                        # Top tree
+                        subtree = recursiveRandomTopSubtree(2, 0, 0.9)
+                        currNode.swap(subtree)
+                        
+                    # Harvest Tree, do nothing
+                    # TODO: can't swap if and decision nodes
+
+                    elif decisionTree.id == 2:
+                        # Attack Tree
+                        subtree = recursiveRandomAttackSubtree(2,0,0.8)
+                        currNode.swap(subtree)
+                    elif decisionTree.id == 3:
+                        # Move Tree
+                        subtree = recursiveRandomMoveSubtree(2, 0, 0.8)
+                        currNode.swap(subtree)
+                    elif decisionTree.id == 4:
+                        # Build Tree
+                        subtree = recursiveRandomBuildSubtree(2, 0, 0.9)
+                        currNode.swap(subtree)
+
+                else:
+                    function = currNode.action
+                    for functionSet in allFunctionSets:
+                        if function in functionSet:
+                            newFunction = random.choice(functionSet)
+                            print("Changing Decision Node function from " + currNode.action.__name__ + " to " + newFunction.__name__)
+                            currNode.action = newFunction
+                            numMutations += 1
+                            break
 
         if type(currNode) is InformationNode:
             if random.random() < probabilityPerNode:
@@ -2272,6 +2364,135 @@ def Crossover1(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, Dec
     else:
         return (treeA, treeB, 0, -1)
         
+
+
+
+
+def recursiveDFSNodesDepthPair(currNode, depth) -> list:
+    '''returns a list of nodes under and including currNode'''
+    nodes = []
+    if currNode.firstChild:
+        nodes += recursiveDFSNodesDepthPair(currNode.firstChild, depth+1)
+    if currNode.secondChild:
+        nodes += recursiveDFSNodesDepthPair(currNode.secondChild, depth+1)
+    if currNode.thirdChild:
+        nodes += recursiveDFSNodesDepthPair(currNode.thirdChild, depth+1)
+    #TODO: ignoring possible info node for if nodes
+    nodes += [(currNode, depth)]
+    return nodes
+
+
+
+def Crossover2(treeA, treeB, probOfDoing, probInSearching) -> (DecisionTree, DecisionTree, int, int):
+    ''' returns two trees that are crossed over. then the number of crossover and the height of the crossover
+        we can only do crossover on same type nodes. This version uses a desired crossover height to bias toward averaging 
+        the tree heights after crossover
+    '''
+    if random.random() > probOfDoing:
+        return (treeA, treeB, 0, -1)
+
+    currNodeA = treeA.root
+    heightA = 1 #the number of if nodes
+    # We prefer smaller mutations, so we are going to mutate as a function of depth
+    while(type(currNodeA) is not DecisionNode):
+        randVal = random.random()
+        if randVal < probInSearching*heightA:
+            break;
+
+        if type(currNodeA) is IfNode:
+            #3 children
+            heightA += 1
+            if randVal < 0.33:
+                currNodeA = currNodeA.firstChild
+            elif randVal < 0.67:
+                currNodeA = currNodeA.secondChild
+            else:
+                currNodeA = currNodeA.thirdChild
+            #ignore optional info node until we have the dictionary
+
+        elif type(currNodeA) is BooleanNode:
+            # 0 or two children
+            if currNodeA.firstChild == None:
+                #Do a final test for staying
+                if random.random() < probInSearching*heightA:
+                    break;
+            else:
+                if randVal < 0.5:
+                    currNodeA = currNodeA.firstChild
+                else:
+                    currNodeA = currNodeA.secondChild
+
+        elif type(currNodeA) is InformationNode:
+            currNodeA = currNodeA.follow()
+
+        elif currNodeA == None:
+            return (treeA, treeB, 0 , -1)
+
+
+    #now we search treeB for a node of the same type, weighting toward lower in the tree
+    currNodeB = treeB.root
+    heightB = 1
+    nodes = recursiveDFSNodesDepthPair(currNodeB, heightB);
+    nodeDepthPairs = [nodePair for nodePair in nodes if type(nodePair[0]) is type(currNodeA)]
+    if len(nodeDepthPairs) != 0:
+        
+        nodeB = crossover2NodeSelection(nodeDepthPairs, heightA)
+
+        currNodeA.swap(nodeB) #TODO: check these are working
+        return (treeA, treeB, 1, heightA)
+    else:
+        return (treeA, treeB, 0, -1)
+
+
+def crossover2NodeSelection(nodeDepthPairs, heightA):
+    depthDifference = [] #hold the difference from desiredCHeight
+    for pair in nodeDepthPairs:
+        depthDifference.append(abs(heightA-pair[1]))
+    # now we want the sum and make buckets of probabilities based on those differences
+    depthDifference = [x+1 for x in depthDifference] #zeroes are bad for ranks
+    totalDifs = sum(depthDifference)
+    rankedProbs = [totalDifs - x for x in depthDifference]
+    divideRankProbBy = sum(rankedProbs)
+    buckets = [] #holds the endpoint of the bucket
+    nextBucket = 0
+    for prob in rankedProbs:
+        nextBucket += (prob / divideRankProbBy)
+        buckets.append(nextBucket)
+
+    print("Buckets: ", buckets)
+    target = random.random()
+    index = len(nodeDepthPairs);
+    for i in range(len(nodeDepthPairs)):
+        if target < buckets[i]:
+            #we have passed the bucket
+            index = i-1
+            break;
+    if index == len(nodeDepthPairs):
+        #it didn't work, pick randomly
+        print("crossover2NodeSelection did not get a target {0} into a bucket".format(target))
+        return random.choice(nodeDepthPairs)[0]
+    else:
+        return nodeDepthPairs[index][0]
+
+
+
+def Crossover2Player(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlayer, DecisionTreePlayer, int, list):
+    '''
+    p1 and p2 are players, probOfEachTree is the probability of doing crossover,
+    probInSearch is the probability that helps crossover decide where to crossover.
+    '''
+    p1topTree, p2topTree, x1, h1 = Crossover2(p1.topTree, p2.topTree, probOfEachTree, probInSearch)
+    p1harvestTree, p2harvestTree, x2, h2 = Crossover2(p1.harvestTree, p2.harvestTree, probOfEachTree, probInSearch)
+    p1attackTree, p2attackTree, x3, h3 = Crossover2(p1.attackTree, p2.attackTree, probOfEachTree, probInSearch)
+    p1movementTree, p2movementTree, x4, h4 = Crossover2(p1.movementTree, p2.movementTree, probOfEachTree, probInSearch)
+    p1buildTree, p2buildTree, x5, h5 = Crossover2(p1.buildTree, p2.buildTree, probOfEachTree, probInSearch)
+    numCrossover = x1 + x2 + x3 + x4 + x5
+    heights = [h1, h2, h3, h4, h5]
+    # No research tree rn
+    newp1 = DecisionTreePlayer(p1topTree, p1harvestTree, p1attackTree, p1movementTree, p1buildTree, None)
+    newp2 = DecisionTreePlayer(p2topTree, p2harvestTree, p2attackTree, p2movementTree, p2buildTree, None)
+
+    return newp1, newp2, numCrossover, heights
 
 
 
