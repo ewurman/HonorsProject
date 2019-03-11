@@ -192,6 +192,8 @@ class BooleanNode(Node):
             # TODO: How to represent boolean expressions
 
             ''' The operator, is this node, and the kids are the numbers/operands '''
+            leftOperand = 1
+            rightOperand = 1
             if self.firstChild is OperandNode:
                 leftOperand = self.firstChild.evaluate();
             elif self.firstChild is InformationNode:
