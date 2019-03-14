@@ -2280,7 +2280,7 @@ class DecisionTreePlayer:
         with open(directoryPath + "/" + fileNames[0], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            topTree = DecisionTree(root, 0)
+            topTree = FixedSiDecisionTree(root, 0)
             print("read topTree")
 
         with open(directoryPath + "/" + fileNames[1], 'r') as f:
@@ -2314,6 +2314,15 @@ class DecisionTreePlayer:
 
 
 
+def createRandomFixedSizeDecisionTreePlayer(topHeight):
+    topTree = createRandomFixedSizeTopTree(topHeight)
+    harvestTree = createRandomHarvestTree()
+    attackTree = createRandomAttackTree()
+    moveTree = createRandomMoveTree()
+    buildTree = createRandomBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
 
 
 
@@ -2830,8 +2839,6 @@ def MutatePlayerFixed(player, probabilityPerNode, probOfMutate, allFunctionSets,
     buildTree, m4 = Mutate(player.buildTree, probabilityPerNode, probOfMutate, allFunctionSets)
     numMutations = m0 + m1 + m2 + m3 + m4
     return (DecisionTreePlayer(topTree, harvestTree, attackTree, movementTree, buildTree, None), numMutations)
-
-
 
 
 

@@ -2314,7 +2314,7 @@ class DecisionTreePlayer:
 
 
 
-def createRandomFixedSizeDecisionTreePlayer(topheight):
+def createRandomFixedSizeDecisionTreePlayer(topHeight):
     topTree = createRandomFixedSizeTopTree(topHeight)
     harvestTree = createRandomHarvestTree()
     attackTree = createRandomAttackTree()
