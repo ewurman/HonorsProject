@@ -139,7 +139,7 @@ def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPer
         f.write(WINNER_DIST_HEADER)
         f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
 
-    log(filepath, "Wrote Data to File!")
+    log(filepath, "Wrote Data to File!\n")
 
 
 
@@ -180,8 +180,8 @@ def readDataFromFile(filepath):
                 print("Found TNODES_HEADER, parsing for tNodesPerRound")
                 line = lines[i].strip()
                 allTNodes = line.split(";") #ASSUMING INTERMEDIATE FILE
-                mutationsPerRound = [x.split(',') for x in allTNodes]
-                print("mutationsPerRound: ", mutationsPerRound)
+                tNodesPerRound = [x.split(',') for x in allTNodes[:-1]]
+                print("tNodesPerRound: ", tNodesPerRound)
 
             elif lines[i-1] == WINNER_DIST_HEADER:
                 print("Found WINNER_DIST_HEADER, parsing for winnerDist")
@@ -195,7 +195,7 @@ def readDataFromFile(filepath):
 
 
 def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly):
-    resultDirName = "TestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
+    resultDirName = "TestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
     print(os.listdir("TestResults"))
     if not os.path.exists(resultDirName):
         print("Creating new folder for test ", resultDirName)
@@ -237,7 +237,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     # Now start playing again
     log(resultDirName, "############ Resuming test for Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+" ############\n")
-    log(resultDirName, "Resuming test at generation: {0}".format(genNum))
+    log(resultDirName, "Resuming test at generation: {0}\n".format(genNum))
     for i in range(genNum, GENERATIONS):
         log(resultDirName, "\n\nGeneration {0}\n\n".format(i))
         random.shuffle(population)
@@ -306,7 +306,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
             m1 = mates[0]
             m2 = mates[1]
             
-            c1, c2, numCrossover, heightAs = GP.Crossover1Player(m1, m2, crossoverProb, crossoverStopEarly)
+            c1, c2, numCrossover, heightAs = GP.Crossover3PlayerFixed(m1, m2, crossoverProb, crossoverStopEarly)
             population += [c1, c2]
             crossoversThisRound += numCrossover
 
@@ -318,14 +318,14 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
             #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
 
-        log(resultDirName, "Gen {0}: Finished Crossover".format(i))
-        log(resultDirName, "Gen {0}: Starting Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Crossover\n".format(i))
+        log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
-            mutatedPlayer, numMutations = GP.MutatePlayer(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets)
+            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
-        log(resultDirName, "Gen {0}: Finished Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
 
 
         # DATA COLLECTION 
@@ -354,7 +354,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     writeDataToFile(resultDirName, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist)
     print("Completed All generations and Data recording!")
-    log(resultDirName, "Completed All generations and Data recording!")
+    log(resultDirName, "Completed All generations and Data recording!\n")
 
 
 
@@ -370,11 +370,12 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     mutationsPerRound = []
     winnerDist = [0,0]
     population = []
+    topTreeHeight = 4
 
     log(resultDirName, "############ Starting new test ############\n")
     # initialize population
     for i in range(POP_SIZE):
-        player = GP.createRandomDecisionTreePlayer()
+        player = GP.createRandomFixedSizeDecisionTreePlayer(topTreeHeight)
         population.append(player)
 
     for i in range(GENERATIONS):
@@ -444,7 +445,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             m1 = mates[0]
             m2 = mates[1]
             
-            c1, c2, numCrossover, heightAs = GP.Crossover1Player(m1, m2, crossoverProb, crossoverStopEarly)
+            c1, c2, numCrossover, heightAs = GP.Crossover3PlayerFixed(m1, m2, crossoverProb, crossoverStopEarly)
             population += [c1, c2]
             crossoversThisRound += numCrossover
 
@@ -456,14 +457,14 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
             #cHeightsThisRound = [sum(x) for x in zip(heightAs, cHeightsThisRound)] #add component wise
 
-        log(resultDirName, "Gen {0}: Finished Crossover".format(i))
-        log(resultDirName, "Gen {0}: Starting Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Crossover\n".format(i))
+        log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
-            mutatedPlayer, numMutations = GP.MutatePlayer(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets)
+            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
-        log(resultDirName, "Gen {0}: Finished Mutations".format(i))
+        log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
 
 
         # DATA COLLECTION 
@@ -495,7 +496,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
     writeDataToFile(resultDirName, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist)
     print("Completed All generations and Data recording!")
-    log(resultDirName, "Completed All generations and Data recording!")
+    log(resultDirName, "Completed All generations and Data recording!\n")
 
 
 
@@ -505,8 +506,10 @@ if __name__ == '__main__':
 
     population = []
     mutateNodeProb = 0.01
-    mutateOccurProb = 0.6  #{0.2,0.4,0.6}
-    crossoverProb = 0.6 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
+    mutateOccurProb = 0.4  #{0.2,0.4,0.6}
+
+    crossoverProb = 0.4 #50% chance each tree  want it to be one of {0.4, 0.6, 0.8}
+
     crossoverStopEarly = 0.1 #chance to stop higher in tree
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly)
     

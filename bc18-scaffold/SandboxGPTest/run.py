@@ -18,10 +18,11 @@ import operator
 
 class Node:
 
-    def __init__(self, firstChild = None, secondChild = None, thirdChild = None):
+    def __init__(self, firstChild = None, secondChild = None, thirdChild = None, identity = -1):
         self.firstChild = firstChild
         self.secondChild = secondChild
         self.thirdChild = thirdChild
+        self.identity = identity
 
     def swap(self, node):
         temp1 = self.firstChild
@@ -52,13 +53,16 @@ class Node:
             s += self.thirdChild.getWriteString(indent + "\t")
         return s
 
+    def setIdentity(self, newID):
+        self.identity = newID
+
 
 
 class IfNode(Node):
     #first child is the booleanNode, then the true subtree as secondChild then an else subtree as thirdChild.
 
-    def __init__(self, firstChild, secondChild, thirdChild, infoChild = None):
-        super().__init__(firstChild, secondChild, thirdChild)
+    def __init__(self, firstChild, secondChild, thirdChild, infoChild = None, identity = -1):
+        super().__init__(firstChild = firstChild, secondChild = secondChild, thirdChild = thirdChild, identity = identity)
         self.infoChild = infoChild 
         if firstChild == None:
             print("Creating if node with None firstChild")
@@ -121,8 +125,8 @@ class IfNode(Node):
 
 class BooleanNode(Node):
 
-    def __init__(self, function, params = [], operation = None, firstChild = None, secondChild = None, isGCFunction = True):
-        super().__init__(firstChild, secondChild)
+    def __init__(self, function, params = [], operation = None, firstChild = None, secondChild = None, isGCFunction = True, identity = -1):
+        super().__init__(firstChild = firstChild, secondChild = secondChild, identity = identity)
         self.function = function;
         self.isFunction = function != None
         self.params = params
@@ -192,6 +196,8 @@ class BooleanNode(Node):
             # TODO: How to represent boolean expressions
 
             ''' The operator, is this node, and the kids are the numbers/operands '''
+            leftOperand = 1
+            rightOperand = 1
             if self.firstChild is OperandNode:
                 leftOperand = self.firstChild.evaluate();
             elif self.firstChild is InformationNode:
@@ -205,8 +211,8 @@ class BooleanNode(Node):
 
 
 class OperandNode(Node):
-    def __init__(self, value):
-        super().__init__()
+    def __init__(self, value, identity=-1):
+        super().__init__(identity = identity)
         self.value = value
 
     def swap(self, node):
@@ -230,8 +236,8 @@ class OperandNode(Node):
 
 
 class InformationNode(Node):
-    def __init__(self, function, firstChild = None):
-        super().__init__(firstChild)
+    def __init__(self, function, firstChild = None, identity = -1):
+        super().__init__(firstChild, identity = identity)
         self.function = function
 
     def swap(self, node):
@@ -271,8 +277,8 @@ class ActionType(IntEnum):
 
 class DecisionNode(Node):
 
-    def __init__(self, action, typeOfActionToMake = 0):
-        super().__init__()
+    def __init__(self, action, typeOfActionToMake = 0, identity = -1):
+        super().__init__(identity = identity)
         #self.unit = unit
         self.action = action
         self.typeOfActionToMake = typeOfActionToMake
@@ -339,9 +345,9 @@ class DecisionNode(Node):
 
 class DecisionTree:
 
-    def __init__(self, node, id = 0):
+    def __init__(self, node, treeID = 0):
         self.root = node
-        self.id = id
+        self.treeID = treeID
 
 
     def isLegal(self) -> bool:
@@ -414,6 +420,123 @@ class DecisionTree:
             print("\t", type(currNode))
 
 
+
+
+class FixedSizeDecisionTree(DecisionTree):
+
+    def __init__(self, node, id = 0, height = 4):
+        self.root = node
+        self.id = id
+        self.height = height
+
+    def isLegal(self) -> bool:
+        depth = 1
+        queue = [(self.root, depth)]
+        while (len(queue) != 0):
+            currNode, currDepth = queue.pop(0)
+            if currDepth > self.height:
+                return False
+            if type(currNode) is DecisionNode and currDepth != self.height:
+                return False
+            if currNode.firstChild:
+                queue.append((currNode.firstChild, currDepth+1))
+            if currNode.secondChild:
+                queue.append((currNode.secondChild, currDepth+1))
+            if currNode.thirdChild:
+                queue.append((currNode.thirdChild, currDepth+1))
+            if type(currNode) is IfNode:
+                if currNode.infoChild:
+                    queue.append((currNode.infoChild, currDepth+1))
+
+
+        return True # TODO, test this
+
+    def printTree(self):
+        self.root.printNode("")
+
+    def getWriteString(self):
+        return self.root.getWriteString("")
+
+    def getNumNodes(self):
+        nodes = 0
+        queue = [self.root]
+        while (len(queue) != 0):
+            currNode = queue.pop(0)
+            nodes += 1
+            if currNode.firstChild:
+                queue.append(currNode.firstChild)
+            if currNode.secondChild:
+                queue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                queue.append(currNode.thirdChild)
+            if type(currNode) is IfNode:
+                if currNode.infoChild:
+                    queue.append(currNode.infoChild)
+
+        return nodes
+
+    def execute(self, battleCode, gameController):
+        print("Executing a decision Tree")
+        currNode = self.root
+        ifParams = []
+        permanantParams = []
+        while(type(currNode) is not DecisionNode):
+
+            print("At a node of type", type(currNode));
+            if type(currNode) is IfNode:
+                ifNode = currNode #IfNode(currNode)
+                currNode, ifParams = ifNode.follow(battleCode, gameController, permanantParams, ifParams)
+
+            elif type(currNode) is InformationNode: 
+                #Information nodes not imediately under ifNodes' first children have their information stored
+                # This is useful for say, selecting a unit
+                print("Appending to permanantParams")
+                permanantParams.append(currNode.evaluate(battleCode, gameController))
+                currNode = currNode.follow()
+
+            elif type(currNode) is BooleanNode:
+                #why would we end up here?
+                print("ERROR: Decision Tree execute is at a BooleanNode")
+
+            else:
+                print ("ERROR: Decision Tree execute at currNode of type", type(currNode))
+                print ("    This should only get to ifNodes and then finish at a DecisionNode, but not in this loop")
+                return
+        # Now currNode is a DecisionNode.
+        if type(currNode) is DecisionNode:
+            result = currNode.execute(battleCode, gameController, permanantParams + ifParams)
+            return result #None if this executed an action, number otherwise indicating which action tree to use
+            # 1 = Harvest
+            # 2 = Attack
+            # 3 = Move (or garrison)
+            # 4 = Build (worker or factory)
+            # 5 = Research
+        else:
+            print("ERROR: execute DecisionTree did not terminate at a DecisionNode");
+            print("\t", type(currNode))
+
+
+    def setNodeIdNumbers(self):
+        ''' BFS set Id numbers of Nodes starting at node 0 -> the root'''
+        nodeID = 0
+        queue = [self.root]
+        while (len(queue) != 0):
+            currNode = queue.pop(0)
+            currNode.setIdentity(nodeID)
+            nodeID += 1
+            if currNode.firstChild:
+                queue.append(currNode.firstChild)
+            if currNode.secondChild:
+                queue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                queue.append(currNode.thirdChild)
+            if type(currNode) is IfNode:
+                if currNode.infoChild:
+                    queue.append(currNode.infoChild)
+
+        return None
+
+''' End FixedSizeDecisionTree '''
 
 
 
@@ -1454,6 +1577,18 @@ allFunctionSets = [
     is_unit_type_functions
 ]
 
+game_number_info_functions_number_mappings = {
+    getRoundNumber : [50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 750],
+    getNumberOfWorkers : [1,2,4,7,11],
+    getNumberOfFactories : [1,2,3],
+    getNumberOfKnights : [1,2,3,5],
+    getNumberOfRangers : [1,3,5,8],
+    getNumberOfMages : [1,3,5,8],
+    getNumberOfHealers : [1,2,3],
+    getNumberOfRockets : [1,2],
+    getKarbonite : [50,100,150,200,250,300,350,400,450,500]
+}
+
 
 def createRandomAttackTree():
     selectUnitFunction = random.choice(select_attacker_functions)
@@ -1796,6 +1931,9 @@ def recursiveRandomMoveSubtree(maxRecursion, currentRecursion, percentRecurse):
         return junctionNode
 
 
+
+
+
 def createRandomTopTree():
     #TODO, look at phases and how many things we have
     firstCheckFunction = random.choice(game_number_info_functions)
@@ -1869,8 +2007,74 @@ def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse) ->
 
 
 
+def createRandomFixedSizeTopTree(height):
+
+    bottomDecisionNodes = []
+    for i in range(2**(height-1)):
+        node = createRandomTopTreeDecisionNode()
+        bottomDecisionNodes.append(node)
+    nextLayerIfs = []
+    layer = height - 1
+    for i in range(2**(layer-1)):
+        infoFunc = random.choice(game_number_info_functions)
+        infoNode = InformationNode(infoFunc)
+        opVal = random.choice(game_number_info_functions_number_mappings[infoFunc])
+        opNode = OperandNode(opVal)
+        boolNode = BooleanNode(None, operation = operator.lt, firstChild = infoNode, secondChild = opNode, isGCFunction = False)
+        d1 = bottomDecisionNodes.pop()
+        d2 = bottomDecisionNodes.pop()
+        ifNode = IfNode(boolNode, d1, d2)
+        nextLayerIfs.append(ifNode)
+    layer -= 1
+
+    while (layer >= 1):
+        newLayer = []
+        for i in range(2**(layer-1)):
+            lowerNode1 = nextLayerIfs.pop()
+            lowerNode2 = nextLayerIfs.pop()
+            usedFuncs = getTopTreeBoolCheckFunctionsUsed(lowerNode1)
+            usedFuncs = usedFuncs | getTopTreeBoolCheckFunctionsUsed(lowerNode2)
+            possibleFuncs = set(game_number_info_functions) - usedFuncs
+            if len(possibleFuncs) == 0:
+                infoFunc = random.choice(game_number_info_functions)
+            else: 
+                infoFunc = random.choice(list(possibleFuncs))
+            infoNode = InformationNode(infoFunc)
+            opVal = random.choice(game_number_info_functions_number_mappings[infoFunc])
+            opNode = OperandNode(opVal)
+
+            boolNode = BooleanNode(None, operation = operator.lt, firstChild = infoNode, secondChild = opNode, isGCFunction = False) 
+            ifNode = IfNode(boolNode, lowerNode1, lowerNode2)
+            newLayer.append(ifNode)
+
+        layer -= 1
+        nextLayerIfs = newLayer
+    # done now on the top layer
+    root = nextLayerIfs[0]
+    return FixedSizeDecisionTree(root, 0, height)
 
 
+
+def getTopTreeBoolCheckFunctionsUsed(ifNode):
+    functions = set()
+    queue = [ifNode]
+    while (len(queue) != 0):
+        currNode = queue.pop(0)
+        if currNode.firstChild: #booleanNode
+            if type(currNode.firstChild) is BooleanNode:
+                queue.append(currNode.firstChild)
+        if currNode.secondChild: #ifNode
+            if type(currNode.secondChild) is IfNode:
+                queue.append(currNode.secondChild)
+        if currNode.thirdChild: #ifNode
+            if type(currNode.thirdChild) is IfNode:
+                queue.append(currNode.thirdChild)
+        if type(currNode) is BooleanNode:
+            #we want the first child's function
+            if currNode.firstChild:
+                if type(currNode.firstChild) is InformationNode:
+                    functions.add(currNode.firstChild.function)
+    return functions
 
 
 
@@ -2216,7 +2420,7 @@ def recursiveDFSNodes(currNode, depth) -> list:
     return nodes
 
 
-def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets, decisionToSubtreeProb = 1.0) -> (DecisionTree, int):
+def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets, decisionToSubtreeProb = 0) -> (DecisionTree, int):
     ''' NEW IMPLEMENTATION
         mutates the trees just a bit by changing functions to like functions in Information and Decision Nodes
         Also can change the value of a operand node. ALl these changes done with some given probability.
@@ -2255,8 +2459,9 @@ def Mutate(decisionTree, probabilityPerNode, probOfMutate, allFunctionSets, deci
                         # Top tree
                         subtree = recursiveRandomTopSubtree(2, 0, 0.9)
                         currNode.swap(subtree)
-                    #elif decisionTree.id == 1:
-                        # Harvest Tree, do nothing
+
+                    # Harvest Tree, do nothing
+                    # TODO: can't swap if and decision nodes
 
                     elif decisionTree.id == 2:
                         # Attack Tree
@@ -2495,13 +2700,146 @@ def Crossover2Player(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlaye
 
 
 
-def Selection():
-    ''' TODO: to do this, we need to be able to run the trees from scripting '''
-    return
+def FixedTopTreeCrossover(fst1, fst2, probOfDoing, probInSearch) -> (DecisionTree, DecisionTree, int, int):
+    ''' 
+        Crossover of fixed trees. We only want to do it at if, bool, or decision nodes
+    '''
+    if random.random() > probOfDoing:
+        return (fst1, fst2, 0, -1)
+
+    fst1.setNodeIdNumbers()
+    fst2.setNodeIdNumbers()
+
+    currNodeA = fst1.root
+    currNodeB = fst2.root
+    heightA = 1 #the number of if nodes
+    # We prefer smaller mutations, so we are going to mutate as a function of depth
+    while(type(currNodeA) is not DecisionNode):
+
+        
+        if type(currNodeA) is IfNode:
+            #3 children
+            randVal = random.random()
+            if randVal < probInSearch*heightA:
+                break;
+
+            heightA += 1
+            if randVal < 0.33:
+                currNodeA = currNodeA.firstChild
+                currNodeB = currNodeB.firstChild
+            elif randVal < 0.67:
+                currNodeA = currNodeA.secondChild
+                currNodeB = currNodeB.secondChild
+            else:
+                currNodeA = currNodeA.thirdChild
+                currNodeB = currNodeB.thirdChild
+            #ignore optional info node until we have the dictionary
+
+        elif type(currNodeA) is BooleanNode:
+            if random.random() < probInSearch*heightA:
+                break;
+            return (fst1, fst2, 0, -1)
+            
+
+        elif type(currNodeA) is InformationNode:
+            print("Arrived at info node in Fixed Top Tree Crossover... and we shouldn't")
+            currNodeA = currNodeA.follow()
+            currNodeB = currNodeB.follow()
+
+        elif currNodeA == None:
+            return (fst1, fst2, 0 , -1)
+
+    currNodeA.swap(currNodeB)
+    return (fst1, fst2, 1, heightA)
+
+
+def FixedSizeTopTreeMutateOnce(tree, probOfMutate, game_number_info_functions_number_mappings):
+    ''' NEW IMPLEMENTATION
+        Mutates the fixed size top tree to adjust the numbers/functions of boolean nodes or the Decision Node output.
+        We only do mutate at Boolean Nodes or Decision Nodes, but Boolean node mutations are actually the infoNode functions
+        and the Operand Node values of the Boolean Node children
+        Unlike the other Mutates, this only mutates once in the tree
+    '''
+    if random.random() > probOfMutate:
+        # don't mutate this tree
+        return (tree, 0)
+
+    nodeQueue = [tree.root]
+    potentialNodes = []
+
+    while(len(nodeQueue) != 0):
+        #add children to Queue
+        currNode = nodeQueue.pop(0)
+
+        if type(currNode) is IfNode:
+            if currNode.firstChild:
+                nodeQueue.append(currNode.firstChild)
+            if currNode.secondChild:
+                nodeQueue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                nodeQueue.append(currNode.thirdChild)
+            '''
+            if currNode.infoChild:
+                nodeQueue.append(currNode.infoChild)
+            '''
+        #if decision node, possibly mutate
+        elif type(currNode) is DecisionNode:
+            potentialNodes.append(currNode)
+
+        #if boolean node, may want to mutate
+        elif type(currNode) is BooleanNode:
+           potentialNodes.append(currNode)
+
+    nodeToMutate = random.choice(potentialNodes)
+
+    if type(nodeToMutate) is DecisionNode:
+        newNode = createRandomTopTreeDecisionNode()
+        nodeToMutate.swap(newNode)
+    elif type(nodeToMutate) is BooleanNode:
+        if nodeToMutate.firstChild and type(nodeToMutate.firstChild) is InformationNode:
+            if nodeToMutate.secondChild and type(nodeToMutate.secondChild) is OperandNode:
+                newFunc = random.choice(list(game_number_info_functions_number_mappings.keys()))
+                newVal = random.choice(game_number_info_functions_number_mappings[newFunc])
+                nodeToMutate.firstChild.function = newFunc
+                nodeToMutate.secondChild.value = newVal
+            else:
+                print("In FixedSizeDecisionTree top tree, boolean node's second child is not OperandNode") 
+                return (tree, 0)
+        else:
+            print("In FixedSizeDecisionTree top tree, boolean node's first child is not InfoNode") 
+            return (tree, 0)
+
+    return (tree, 1)
 
 
 
+def Crossover3PlayerFixed(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlayer, DecisionTreePlayer, int, list):
+    '''
+    p1 and p2 are players, probOfEachTree is the probability of doing crossover,
+    probInSearch is the probability that helps crossover decide where to crossover.
+    '''
+    p1topTree, p2topTree, x1, h1 = FixedTopTreeCrossover(p1.topTree, p2.topTree, probOfEachTree, probInSearch)
+    p1harvestTree, p2harvestTree, x2, h2 = Crossover2(p1.harvestTree, p2.harvestTree, probOfEachTree, probInSearch)
+    p1attackTree, p2attackTree, x3, h3 = Crossover2(p1.attackTree, p2.attackTree, probOfEachTree, probInSearch)
+    p1movementTree, p2movementTree, x4, h4 = Crossover2(p1.movementTree, p2.movementTree, probOfEachTree, probInSearch)
+    p1buildTree, p2buildTree, x5, h5 = Crossover2(p1.buildTree, p2.buildTree, probOfEachTree, probInSearch)
+    numCrossover = x1 + x2 + x3 + x4 + x5
+    heights = [h1, h2, h3, h4, h5]
+    # No research tree rn
+    newp1 = DecisionTreePlayer(p1topTree, p1harvestTree, p1attackTree, p1movementTree, p1buildTree, None)
+    newp2 = DecisionTreePlayer(p2topTree, p2harvestTree, p2attackTree, p2movementTree, p2buildTree, None)
 
+    return newp1, newp2, numCrossover, heights
+
+
+def MutatePlayerFixed(player, probabilityPerNode, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings) -> (DecisionTreePlayer, int):
+    topTree, m0 = FixedSizeTopTreeMutateOnce(player.topTree, probOfMutate, game_number_info_functions_number_mappings)
+    harvestTree, m1 = Mutate(player.harvestTree, probabilityPerNode, probOfMutate, allFunctionSets)
+    attackTree, m2 = Mutate(player.attackTree, probabilityPerNode, probOfMutate, allFunctionSets)
+    movementTree, m3 =Mutate(player.movementTree, probabilityPerNode, probOfMutate, allFunctionSets)
+    buildTree, m4 = Mutate(player.buildTree, probabilityPerNode, probOfMutate, allFunctionSets)
+    numMutations = m0 + m1 + m2 + m3 + m4
+    return (DecisionTreePlayer(topTree, harvestTree, attackTree, movementTree, buildTree, None), numMutations)
 
 
 
@@ -2510,76 +2848,28 @@ def Selection():
 
 gc = bc.GameController()
 
-crossoverProb = 1.0
-crossoverStopEarly = 0.1
-mutateNodeProb = 0.01
-mutateOccurProb = 0.4  #{0.2,0.4,0.6}
+print("creating fixed size top tree")
+tree1 = createRandomFixedSizeTopTree(4)
+tree1.printTree()
+
+print("creating another one")
+tree2 = createRandomFixedSizeTopTree(4)
+tree2.printTree()
 
 
-player1 = createRandomDecisionTreePlayer()
-print("P1 Tree sizes: ", player1.getNumNodesByTree())
-player2 = createRandomDecisionTreePlayer()
-print("P2 Tree sizes: ", player2.getNumNodesByTree())
+c1,c2,i,j = FixedTopTreeCrossover(tree1, tree2, 1.0, 0.1)
 
-c1, c2, numCrossover, heightAs = Crossover2Player(player1, player2, crossoverProb, crossoverStopEarly)
+print("\nDid crossover at height {0} {1} times\n".format(j,i))
 
-print("c1 Tree sizes: ", c1.getNumNodesByTree())
-print("c2 Tree sizes: ", c2.getNumNodesByTree())
-print("numCrossover =", numCrossover)
-print("heightAs =", heightAs)
-
-print("################# Mutate #################")
-print("c1 Pre-Mutate Tree sizes: ", c1.getNumNodesByTree())
-print("c2 Pre-Mutate Tree sizes: ", c2.getNumNodesByTree())
-MutatePlayer(c1, mutateNodeProb, mutateOccurProb, allFunctionSets)
-MutatePlayer(c2, mutateNodeProb, mutateOccurProb, allFunctionSets)
-print("c1 Post-Mutate Tree sizes: ", c1.getNumNodesByTree())
-print("c2 Post-Mutate Tree sizes: ", c2.getNumNodesByTree())
+c1.printTree()
+print("--------------------------------------------")
+c2.printTree()
 
 
-'''
-path = os.getcwd()
-path = path.split('/battlecode-manager/')[0] #take only up to battlecode-manager
-path += "/GPTestBot1/Player"
-print(path)
-
-
-player1 = DecisionTreePlayer(None, None, None, None, None, None)
-player1 = player1.readFromFiles(path, allFunctionSets)
-
-
-print("GPTestBot1: Ready to make a move")
-sys.stdout.flush()
-sys.stderr.flush()
-
-while True:
-    
-    print('pyround:', gc.round(), 'time left:', gc.get_time_left_ms(), 'ms')
-    sys.stdout.flush()
-    sys.stderr.flush()
-    try:
-        print("Money: " + str(gc.karbonite()))
-        sys.stdout.flush()
-        sys.stderr.flush()
-
-        #ALL the money really happens in here 
-        player1.execute(bc, gc)
-
-    except Exception as e:
-        print('Error:', e)
-        # use this to show where the error was
-        traceback.print_exc()
-
-    # send the actions we've performed, and wait for our next turn.
-    gc.next_turn()
-
-    # these lines are not strictly necessary, but it helps make the logs make more sense.
-    # it forces everything we've written this turn to be written to the manager.
-    sys.stdout.flush()
-    sys.stderr.flush()
-'''
-
-
+print("--------------------------------------------")
+m1, numMutations = FixedSizeTopTreeMutateOnce(c1, 1.0, game_number_info_functions_number_mappings)
+print("--------------------------------------------")
+m1.printTree()
 
 
 

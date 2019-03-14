@@ -4,10 +4,11 @@ import operator
 
 class Node:
 
-    def __init__(self, firstChild = None, secondChild = None, thirdChild = None):
+    def __init__(self, firstChild = None, secondChild = None, thirdChild = None, identity = -1):
         self.firstChild = firstChild
         self.secondChild = secondChild
         self.thirdChild = thirdChild
+        self.identity = identity
 
     def swap(self, node):
         temp1 = self.firstChild
@@ -43,8 +44,8 @@ class Node:
 class IfNode(Node):
     #first child is the booleanNode, then the true subtree as secondChild then an else subtree as thirdChild.
 
-    def __init__(self, firstChild, secondChild, thirdChild, infoChild = None):
-        super().__init__(firstChild, secondChild, thirdChild)
+    def __init__(self, firstChild, secondChild, thirdChild, infoChild = None, identity = -1):
+        super().__init__(firstChild, secondChild, thirdChild, identity = identity)
         self.infoChild = infoChild 
         if firstChild == None:
             print("Creating if node with None firstChild")
@@ -108,8 +109,8 @@ class IfNode(Node):
 
 class BooleanNode(Node):
 
-    def __init__(self, function, params = [], operation = None, firstChild = None, secondChild = None, isGCFunction = True):
-        super().__init__(firstChild, secondChild)
+    def __init__(self, function, params = [], operation = None, firstChild = None, secondChild = None, isGCFunction = True, identity = -1):
+        super().__init__(firstChild, secondChild, identity = identity)
         self.function = function;
         self.isFunction = function != None
         self.params = params
@@ -200,8 +201,8 @@ class BooleanNode(Node):
 
 
 class OperandNode(Node):
-    def __init__(self, value):
-        super().__init__()
+    def __init__(self, value, identity = -1):
+        super().__init__(identity = identity)
         self.value = value
 
     def swap(self, node):
@@ -225,8 +226,8 @@ class OperandNode(Node):
 
 
 class InformationNode(Node):
-    def __init__(self, function, firstChild = None):
-        super().__init__(firstChild)
+    def __init__(self, function, firstChild = None, identity = -1):
+        super().__init__(firstChild = firstChild, identity = identity)
         self.function = function
 
     def swap(self, node):
@@ -266,8 +267,8 @@ class ActionType(IntEnum):
 
 class DecisionNode(Node):
 
-    def __init__(self, action, typeOfActionToMake = 0):
-        super().__init__()
+    def __init__(self, action, typeOfActionToMake = 0, identity = -1):
+        super().__init__(identity = identity)
         #self.unit = unit
         self.action = action
         self.typeOfActionToMake = typeOfActionToMake
