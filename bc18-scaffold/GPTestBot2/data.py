@@ -2280,7 +2280,7 @@ class DecisionTreePlayer:
         with open(directoryPath + "/" + fileNames[0], 'r') as f:
             lines = f.readlines()
             root, x = recursiveBuildTree(lines, 0, 0)
-            topTree = FixedSiDecisionTree(root, 0)
+            topTree = FixedSizeDecisionTree(root, 0)
             print("read topTree")
 
         with open(directoryPath + "/" + fileNames[1], 'r') as f:
