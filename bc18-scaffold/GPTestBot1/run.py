@@ -35,6 +35,9 @@ class Node:
         node.secondChild = temp2
         node.thirdChild = temp3
 
+    def compareTo(self, node):
+        return 0
+
     def printNode(self, indent):
         if self.firstChild:
             self.firstChild.printNode(indent + "\t")
@@ -77,6 +80,10 @@ class IfNode(Node):
         temp1 = self.infoChild
         self.infoChild = node.infoChild
         node.infoChild = temp1
+
+    def compareTo(self, node):
+        val = 0 + super().compareTo(node)
+        return val
 
     def printNode(self, indent):
         ending = ""
@@ -148,6 +155,12 @@ class BooleanNode(Node):
         self.isGCFunction = node.isGCFunction
         node.isGCFunction = temp4
 
+    def compareTo(self, node):
+        val = super().compareTo(node)
+        if self.function and node.function:
+            if self.function is node.function:
+                val += 1
+        return val
 
     def printNode(self, indent):
         if (self.isFunction):
@@ -221,6 +234,12 @@ class OperandNode(Node):
         self.value = node.value
         node.value = temp1
 
+    def compareTo(self, node):
+        val = super().compareTo(node)
+        if self.value == node.value:
+            val += 1
+        return val
+
     def printNode(self, indent):
         print(indent + "At Operand Node with value: "+ str(self.value))
         super().printNode(indent)
@@ -245,6 +264,12 @@ class InformationNode(Node):
         temp1 = self.function
         self.function = node.function
         node.function = temp1
+
+    def compareTo(self, node):
+        val = super().compareTo(node)
+        if self.function is node.function:
+            val += 1
+        return val
 
     def printNode(self, indent):
         print(indent + "At Info Node with function: " + self.function.__name__ )
@@ -296,6 +321,15 @@ class DecisionNode(Node):
         self.typeOfActionToMake = node.typeOfActionToMake
         node.action = temp1
         node.typeOfActionToMake = temp2
+
+    def compareTo(self, node):
+        val = super().compareTo(node)
+        if self.action and node.action:
+            if self.action is node.action:
+                val += 1
+        if self.typeOfActionToMake == node.typeOfActionToMake:
+            val += 1
+        return val
 
     def printNode(self, indent):
         if self.action:
@@ -377,6 +411,10 @@ class DecisionTree:
                     queue.append(currNode.infoChild)
 
         return nodes
+
+
+    def compareTo(self, tree):
+        return 0 #TODO
 
     def execute(self, battleCode, gameController):
         #print("Executing a decision Tree")
@@ -475,6 +513,41 @@ class FixedSizeDecisionTree(DecisionTree):
 
         return nodes
 
+
+    def compareTo(self, tree):
+        ''' 
+            gives a fitness evaluation based on the comparison between nodes. 
+            Nodes higher in the tree are weighted more heavily. 
+            This is used to test our GP operators without running the time-intesive game
+        '''
+        x = super().compareTo(tree)
+        val = 0
+        queue = [(self.root, tree.root, 1)]
+        while (len(queue) != 0):
+            nodeA, nodeB, currHeight  = queue.pop(0)
+            multiplier = 2 **(self.height - currHeight)
+            toAdd = nodeA.compareTo(nodeB) * multiplier 
+            val += toAdd
+
+            if type(nodeA) is IfNode:
+                if nodeA.firstChild:
+                    queue.append((nodeA.firstChild, nodeB.firstChild, currHeight))
+                if nodeA.secondChild:
+                    queue.append((nodeA.secondChild, nodeB.secondChild, currHeight+1))
+                if nodeA.thirdChild:
+                    queue.append((nodeA.thirdChild, nodeB.thirdChild, currHeight+1))
+
+                if nodeA.infoChild:
+                    queue.append((nodeA.infoChild, nodeB.infoChild, currHeight+1))
+            else: 
+                if nodeA.firstChild:
+                    queue.append((nodeA.firstChild, nodeB.firstChild, currHeight+1))
+                if nodeA.secondChild:
+                    queue.append((nodeA.secondChild, nodeB.secondChild, currHeight+1))
+
+        return val
+
+
     def execute(self, battleCode, gameController):
         #print("Executing a decision Tree")
         currNode = self.root
@@ -565,6 +638,61 @@ def createRandomValOperandNode(mean, stdev):
     Build = 4 #(worker or factory)
     Research = 5
 '''
+
+def createIdealTopTree() -> FixedSizeDecisionTree:
+    ''' 
+        A basic Fixed Size Tree that we use as dummy test to make sure GP code works
+    '''
+
+    harvestNode = DecisionNode(None, ActionType.Harvest)
+    buildNode1 = DecisionNode(None, ActionType.Build)
+    getKarboniteNode = InformationNode(getKarbonite)
+    node150 = OperandNode(150)
+    karbonite150BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getKarboniteNode, secondChild = node150, isGCFunction = False)
+    ifKarbonite150Node = IfNode(karbonite150BoolNode, harvestNode, buildNode1)
+
+    buildNode2 = DecisionNode(None, ActionType.Build)
+    moveNode1 = DecisionNode(None, ActionType.Move)
+    getFactoriesNode = InformationNode(getNumberOfFactories)
+    nodeFactory1 = OperandNode(1)
+    factory1BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getFactoriesNode, secondChild = nodeFactory1, isGCFunction = False)
+    ifFactory1Node = IfNode(factory1BoolNode, buildNode2, moveNode1)
+
+    getWorkersNode = InformationNode(getNumberOfWorkers)
+    nodeWorkers4 = OperandNode(4)
+    workers4BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getWorkersNode, secondChild = nodeWorkers4, isGCFunction = False)
+    if4WorkersNode = IfNode(workers4BoolNode, ifKarbonite150Node, ifFactory1Node)
+
+    #Now right side of the tree
+    buildNode3 = DecisionNode(None, ActionType.Build)
+    moveNode2 = DecisionNode(None, ActionType.Move)
+    getRangersNode = InformationNode(getNumberOfRangers)
+    nodeRangers3 = OperandNode(3)
+    rangers3BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRangersNode, secondChild = nodeRangers3, isGCFunction = False)
+    if3RangersNode = IfNode(rangers3BoolNode, buildNode3, moveNode2)
+
+    attackNode = DecisionNode(None, ActionType.Attack)
+    moveNode3 = DecisionNode(None, ActionType.Move)
+    getRoundNode1 = InformationNode(getRoundNumber)
+    nodeRound500 = OperandNode(500)
+    round500BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRoundNode1, secondChild = nodeRound500, isGCFunction = False)
+    ifRound500Node = IfNode(round500BoolNode, attackNode, moveNode3)
+
+    getRocketsNode = InformationNode(getNumberOfRockets)
+    nodeRockets1 = OperandNode(1)
+    rockets1BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRocketsNode, secondChild = nodeRockets1, isGCFunction = False)
+    if1RocketsNode = IfNode(rockets1BoolNode, if3RangersNode, ifRound500Node)
+
+    #now connect the two halves
+    getRoundNode2 = InformationNode(getRoundNumber)
+    nodeRound250 = OperandNode(250)
+    round250BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRoundNode2, secondChild = nodeRound250, isGCFunction = False)
+    ifRound250Node = IfNode(round250BoolNode, if4WorkersNode, if1RocketsNode)
+
+    return FixedSizeDecisionTree(ifRound250Node, 0, 4)
+
+
+
 def createBasicTopTree() -> DecisionTree:
     attackNode = DecisionNode(None, ActionType.Attack)
     harvestNode = DecisionNode(None, ActionType.Harvest)
@@ -1071,6 +1199,18 @@ def unitMoveTowardAllyBehavior(battleCode, gc, unit):
             unitMoveRandomBehavior(battleCode,gc, unit)
     return
 
+def unitMoveIntoClosestRocket(bc, gc, unit):
+    if unit:
+        rockets = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Rocket]
+        for rocket in rockets:
+            if gc.can_load(rocket.id, unit.id):
+                gc.load(rocket.id, unit.id)
+                return
+        direction = get_direction_of_closest_rocket(bc, gc, unit)
+        gc.move_robot(unit.id, direction)
+
+    return None
+
 def nonWorkerAttackBehavior(battleCode, gc, unit):
     if unit:
         if unit.unit_type == battleCode.UnitType.Knight:
@@ -1324,6 +1464,26 @@ def get_direction_of_closest_ally(bc, gc, unit):
     return random.choice(list(bc.Direction))
 
 
+def get_direction_of_closest_rocket(bc, gc, unit):
+    if unit:
+        closest_rocket_dist = 99999
+        closest_rocket = None
+        direction = None
+        rockets = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Rocket]
+        if len(rockets) > 0:
+            for rocket in rockets:
+                distance = unit.location.map_location().distance_squared_to(rocket.location.map_location())
+                if distance < closest_rocket_dist:
+                    closest_rocket_dist = distance
+                    closest_rocket = rocket
+                    if closest_rocket:
+                        direction = unit.location.map_location().direction_to(closest_rocket.location.map_location())
+            return direction
+    return random.choice(list(bc.Direction))
+
+
+
+
 def randomChance(bc, gc, chanceTrue = 0.25) -> bool:
     roll = random.random()
     return roll <= chanceTrue
@@ -1396,6 +1556,39 @@ def getNumberOfHealers(bc, gc):
 
 def getKarbonite(bc, gc):
     return gc.karbonite()
+
+
+def select_random_rocket(bc, gc):
+    rockets = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Rocket]
+    if len(rockets) > 0:
+        return random.choice(rockets)
+    return None
+
+
+def select_rocket_with_most_units_garrisoned(bc, gc):
+    rockets = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Rocket]
+    if len(rockets) == 0:
+        return 0
+    bestRocket = None
+    mostUnits = -1
+    for rocket in rockets:
+        numUnits = len(rocket.structure_garrison())
+        if numUnits > mostUnits:
+            bestRocket = rocket
+            mostUnits = numUnits
+    return bestRocket
+
+
+def launch_rocket_to_mars(bc, gc, unit):
+    if unit:
+        destination = rocket_destination(bc, gc, unit.id)
+        if gc.can_launch_rocket(unit.id, destination): 
+            print("Launching a Rocket!")
+            gc.launch_rocket(unit.id, destination)
+    return
+
+
+
 
 '''
 
@@ -1512,7 +1705,8 @@ unit_heal_functions = [
 unit_move_functions = [
     unitMoveRandomBehavior,
     unitMoveTowardAllyBehavior,
-    unitMoveTowardEnemyBehavior
+    unitMoveTowardEnemyBehavior,
+    unitMoveIntoClosestRocket
 ]
 
 worker_can_harvest_functions = [
@@ -1549,6 +1743,16 @@ is_unit_type_functions = [
     isRocket
 ]
 
+select_rocket_functions = [
+    select_random_rocket,
+    select_rocket_with_most_units_garrisoned
+]
+
+rocket_action_functions = [
+    launch_rocket_to_mars
+]
+
+
 allFunctionSets = [
     select_factory_functions,
     factory_produce_functions,
@@ -1565,6 +1769,8 @@ allFunctionSets = [
     mage_action_functions,
     select_healer_functions,
     healer_action_functions,
+    select_rocket_functions,
+    rocket_action_functions,
     select_attacker_functions,
     select_moveable_unit_functions,
     unit_attack_functions,
@@ -1877,29 +2083,48 @@ def recursiveRandomMoveSubtree(maxRecursion, currentRecursion, percentRecurse):
 
     if currentRecursion == maxRecursion:
         #force Decision Node both
-        selectUnitNode = InformationNode(random.choice(select_moveable_unit_functions))
-
-        lChildFunction = random.choice(unit_move_functions)
-        lChildNode = DecisionNode(lChildFunction)
-        rChildFunction = random.choice(unit_move_functions)
-        rChildNode = DecisionNode(rChildFunction)
+        lChildNode, rChildNode, selectUnitNode = None,None,None
+        if random.random() < 0.33:
+            selectUnitNode = InformationNode(random.choice(select_rocket_functions))
+            lChildFunction = random.choice(rocket_action_functions)
+            lChildNode = DecisionNode(lChildFunction)
+            rChildFunction = random.choice(rocket_action_functions)
+            rChildNode = DecisionNode(rChildFunction)
+        else:
+            selectUnitNode = InformationNode(random.choice(select_moveable_unit_functions))
+            lChildFunction = random.choice(unit_move_functions)
+            lChildNode = DecisionNode(lChildFunction)
+            rChildFunction = random.choice(unit_move_functions)
+            rChildNode = DecisionNode(rChildFunction)
 
         junctionNode = IfNode(gameCheckBoolNode, lChildNode, rChildNode, selectUnitNode)
         return junctionNode
 
-
     if percentRecurse < random.random(): 
         #force Decision node left:
-        lChildFunction = random.choice(unit_move_functions)
-        lChildNode = DecisionNode(lChildFunction)
-        select_unit_function = random.choice(select_moveable_unit_functions)
+        select_unit_function = None
+        lChildNode = None
+        isRocketFunc = False
+        if random.random() < 0.33:
+            select_unit_function = random.choice(select_rocket_functions)
+            lChildFunction = random.choice(rocket_action_functions)
+            lChildNode = DecisionNode(lChildFunction)
+            isRocketFunc = True
+        else: 
+            select_unit_function = random.choice(select_moveable_unit_functions)
+            lChildFunction = random.choice(unit_move_functions)
+            lChildNode = DecisionNode(lChildFunction)
 
         if percentRecurse < random.random(): 
             #Also force right
-            rChildFunction = random.choice(unit_move_functions)
-            rChildNode = DecisionNode(rChildFunction)
-            selectUnitNode = InformationNode(select_unit_function)
+            if isRocketFunc:
+                rChildFunction = random.choice(rocket_action_functions)
+                rChildNode = DecisionNode(rChildFunction)
+            else:
+                rChildFunction = random.choice(unit_move_functions)
+                rChildNode = DecisionNode(rChildFunction)
 
+            selectUnitNode = InformationNode(select_unit_function)
             junctionNode = IfNode(gameCheckBoolNode, lChildNode, rChildNode, selectUnitNode)
 
         else:
@@ -1910,14 +2135,22 @@ def recursiveRandomMoveSubtree(maxRecursion, currentRecursion, percentRecurse):
 
         return junctionNode
     
+
     elif percentRecurse < random.random():
-        #just right side
+        #just right side stops
         lChildNode = recursiveRandomMoveSubtree(maxRecursion, currentRecursion+1, percentRecurse)
 
-        rChildFunction = random.choice(unit_move_functions)
-        rChildNode = DecisionNode(rChildFunction)
-        select_unit_function = random.choice(select_moveable_unit_functions)
-        selectUnitNode = InformationNode(select_unit_function, rChildNode)
+        selectUnitNode = None
+        if random.random() < 0.33:
+            rChildFunction = random.choice(rocket_action_functions)
+            rChildNode = DecisionNode(rChildFunction)
+            select_unit_function = random.choice(select_rocket_functions)
+            selectUnitNode = InformationNode(select_unit_function, rChildNode)
+        else:
+            rChildFunction = random.choice(unit_move_functions)
+            rChildNode = DecisionNode(rChildFunction)
+            select_unit_function = random.choice(select_moveable_unit_functions)
+            selectUnitNode = InformationNode(select_unit_function, rChildNode)
 
         junctionNode = IfNode(gameCheckBoolNode, lChildNode, selectUnitNode)
         return junctionNode
@@ -2008,7 +2241,9 @@ def recursiveRandomTopSubtree(maxRecursion, currentRecursion, percentRecurse) ->
 
 
 def createRandomFixedSizeTopTree(height):
-
+    '''
+        height includes the Decision nodes so should have height - 1 layes of IfNodes
+    '''
     bottomDecisionNodes = []
     for i in range(2**(height-1)):
         node = createRandomTopTreeDecisionNode()
@@ -2090,6 +2325,9 @@ class DecisionTreePlayer:
         self.movementTree = movementTree
         self.buildTree = buildTree
         self.researchTree = researchTree
+
+    def compareTo(self, p2):
+        return self.topTree.compareTo(p2.topTree)
 
     def getNumNodesByTree(self):
         n0 = self.topTree.getNumNodes()
@@ -2839,6 +3077,21 @@ def MutatePlayerFixed(player, probabilityPerNode, probOfMutate, allFunctionSets,
     buildTree, m4 = Mutate(player.buildTree, probabilityPerNode, probOfMutate, allFunctionSets)
     numMutations = m0 + m1 + m2 + m3 + m4
     return (DecisionTreePlayer(topTree, harvestTree, attackTree, movementTree, buildTree, None), numMutations)
+
+
+def createIdealPlayer() -> DecisionTreePlayer:
+    ''' Gives us the 'ideal' player we are testing all our GP operations against
+    '''
+    topTree = createIdealTopTree()
+    harvestTree = createRandomHarvestTree()
+    attackTree = createRandomAttackTree()
+    moveTree = createRandomMoveTree()
+    buildTree = createRandomBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
+
+
 
 
 

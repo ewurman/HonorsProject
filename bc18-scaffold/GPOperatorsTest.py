@@ -6,6 +6,7 @@ import shlex
 import random
 import runpy
 import sys
+import shutil
 #import battlecode-manager/runGPGame
 
 NUM_CROSSOVER_HEADER = "# Number of Avg Crossover Per Generation\n"
@@ -15,46 +16,41 @@ TNODES_HEADER = "# Average Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
-POP_SIZE = 32 #must be even -> 32 easy for final tournament
-GENERATIONS = 50 # want 50
+POP_SIZE = 64 #must be even -> 32 easy for final tournament
+GENERATIONS = 100 # want 50
 RECORD_PER_GEN = 5
 
-
+IDEAL_PLAYER = GP.createIdealPlayer()
+gbest = None
 
 def log(filepath, message):
-    print("Logging:", message)
+    #print("Logging:", message)
     with open(filepath+"/Log.txt", 'a+') as f:
         f.write(message);
 
 
 def runGame(player1, player2):
-    '''TODO: call battlecode and run a game'''
-    pwd = os.getcwd()
-    pwd1 = pwd + "/GPTestBot1/Player/"
-    pwd2 = pwd + "/GPTestBot2/Player/"
-    print("PWD: " + pwd)
-    player1.writeToFiles(pwd1)
-    player2.writeToFiles(pwd2)
+    ''' Fake running a game'''
+    p1Score = player1.compareTo(IDEAL_PLAYER)
+    p2Score = player2.compareTo(IDEAL_PLAYER)
+    global gbest
 
-    # now call the runGPGame script
-    #os.system("sh runGenerations.sh")
-    #subprocess.call(["sh", "runGenerations.sh"])
-    subprocess.run(["sh", "runGenerations.sh"], timeout=30000000) #10 s + 50 each round, goes to avg 30 sec per roundx1000rounds
-    # max is 30000000
-    #sys.path.append("/battlecode/python")
-    #subprocess.call(["sh", "AddBattleCodeToPath.sh"])
-    #subprocess.run(["python3", pwd+"/battlecode-manager/runGPGame.py"], timeout=3000)
+    if gbest == None:
+        gbest = (player1, p1Score)
 
-    # now read the winner in
-    with open("battlecode-manager/winner.txt") as f:
-        line = f.read()
-    if line[0] == '0':
-        return player1, 0
-    elif line[0] == '1':
-        return player2, 1
+    if p1Score > gbest[1]:
+        gbest = (player1, p1Score)
+
+    if p2Score > gbest[1]:
+        gbest = (player1, p2Score)
+
+
+    if p1Score > p2Score:
+        return (player1, 0)
+    elif p2Score > p1Score:
+        return (player2, 1)
     else:
-        print("ERROR: No winner found")
-        return player1, 0
+        return random.choice([(player1, 0), (player2, 1)])
 
 
 def battleRoyale(population):
@@ -194,12 +190,20 @@ def readDataFromFile(filepath):
 
 
 
-def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly):
-    resultDirName = "TestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
-    print(os.listdir("TestResults"))
+def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, elitismNum):
+    resultDirName = "GPOperatorTestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
+    print(os.listdir("GPOperatorTestResults"))
     if not os.path.exists(resultDirName):
         print("Creating new folder for test ", resultDirName)
         os.makedirs(resultDirName, exist_ok=True)
+    else:
+        print("This directory already exists!")
+        x = input("Do you want to delete the last tests and start over? (y/n) ")
+        if x == 'y':
+            shutil.rmtree(resultDirName)
+            os.makedirs(resultDirName, exist_ok=True)
+
+
     directories = os.listdir(resultDirName)
     print("Directories found: ", directories)
     savedDirs = [x for x in directories if x.startswith("Gen")]
@@ -208,8 +212,8 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
     if len(savedDirs) == 0:
         print("No saved directories found, starting a new test")
 
-        newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName)
-        return
+        return newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName, elitismNum)
+        
 
 
     lastSaved = sorted(savedDirs).pop()
@@ -295,13 +299,16 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
             breedingPool.append(winner) 
 
             winnerDist[playerNum] += 1
-
         #now breeding pool should be half POP_SIZE
 
+        #Now we do our elitism
+        elitistPlayers = getElitistPlayers(population, elitismNum)
         #get ready for the new generation
         population.clear() 
+        population += elitistPlayers
+
         print("Starting Crossover")
-        for j in range(POP_SIZE//2):
+        for j in range((POP_SIZE - elitistPlayers)//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
@@ -356,13 +363,15 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
     print("Completed All generations and Data recording!")
     log(resultDirName, "Completed All generations and Data recording!\n")
 
+    return finalWinner
 
 
 
 
 
 
-def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName):
+
+def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName, elitismNum):
     #DATA COLLECTION VARIABLES
     crossoversPerRound = []
     cHeightsPerRound = []  #list of list of heights at which crossover occurs
@@ -434,13 +443,17 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             breedingPool.append(winner) 
 
             winnerDist[playerNum] += 1
-
         #now breeding pool should be half POP_SIZE
 
+        #Now we do our elitism
+        elitistPlayers = getElitistPlayers(population, elitismNum)
         #get ready for the new generation
         population.clear() 
+       #population += elitistPlayers
+        print("population has {0} players".format(len(population)))
+
         print("Starting Crossover")
-        for j in range(POP_SIZE//2):
+        for j in range((POP_SIZE - elitismNum)//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
@@ -459,13 +472,14 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
         log(resultDirName, "Gen {0}: Finished Crossover\n".format(i))
         log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
-        for j in range(POP_SIZE):
+        for j in range(len(population)):
             player = population[j]
             mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
         log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
 
+        population += elitistPlayers
 
         # DATA COLLECTION 
         for j in range(0, len(cHeightsThisRound)):
@@ -498,7 +512,28 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     print("Completed All generations and Data recording!")
     log(resultDirName, "Completed All generations and Data recording!\n")
 
+    return finalWinner
 
+
+
+
+def getElitistPlayers(population, elitismNum):
+    popScores = [(x,x.compareTo(IDEAL_PLAYER)) for x in population]
+    top4 = popScores[:4]
+
+    def myKey(playerScoreA):
+        return playerScoreA[1]
+
+    top4 = sorted(top4, key=myKey) #Ascending order
+    for playerScore in popScores[4:]:
+        if playerScore[1] > top4[0][1]:
+            top4[0] = playerScore
+            top4 = sorted(top4, key=myKey) #Ascending order
+
+    bestPlayers = [x[0] for x in top4]
+
+    print("Elitist Players have scores of {0}, {1}, {2}, {3}".format(top4[0][1],top4[1][1],top4[2][1],top4[3][1]))
+    return bestPlayers
 
 
 
@@ -508,17 +543,28 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
 if __name__ == '__main__':
 
+    gpOperatorTestsDir = "GPOperatorTestResults"
+    if not os.path.exists(gpOperatorTestsDir):
+        os.makedirs(gpOperatorTestsDir, exist_ok=True)
 
     population = []
     mutateNodeProb = 0.01
-    mutateOccurProb = 0.4  #{0.2,0.4,0.6}
+    mutateOccurProb = 0.2  #{0.2,0.4,0.6}
 
     crossoverProb = 0.6 #% chance each tree  want it to be one of {0.4, 0.6, 0.8}
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
-    doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly)
+    elitismNum = 4
+    winner = doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, elitismNum)
     
     print("Completed All generations and recording!")
+
+    finalScore = winner.compareTo(IDEAL_PLAYER)
+    bestScore = IDEAL_PLAYER.compareTo(IDEAL_PLAYER)
+
+    print("Final Score: {0}, Ideal Score: {1}, Accuracy: {2}".format(finalScore, bestScore, finalScore/bestScore))
+    print("Generation Best:")
+    print("gBest Score: {0}, Ideal Score: {1}, Accuracy: {2}".format(gbest[1], bestScore, gbest[1]/bestScore))
 
 
 
