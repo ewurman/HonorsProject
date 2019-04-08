@@ -692,6 +692,239 @@ def createIdealTopTree() -> FixedSizeDecisionTree:
     return FixedSizeDecisionTree(ifRound250Node, 0, 4)
 
 
+def createIdealMoveTree() -> FixedSizeDecisionTree:
+    ''' My own move tree to use GP on to improve '''
+    moveFromBuildingNode1 = DecisionNode(unitMoveAwayFromBuilding)
+    workerAction3Node = DecisionNode(workerActionBehavior3)
+    selectRandomWorkerNode1 = DecisionNode(selectRandomWorker)
+    getKarboniteNode1 = InformationNode(getKarbonite)
+    nodeKarbonite100 = OperandNode(100)
+    karbonite100BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getKarboniteNode1, secondChild = nodeKarbonite100, isGCFunction = False)
+    if100KarboniteIfNode = IfNode(karbonite100BoolNode, moveFromBuildingNode1, workerAction3Node, selectRandomWorkerNode)
+
+    moveFromBuildingNode2 = DecisionNode(unitMoveAwayFromBuilding)
+    moveFromBuildingNode3 = DecisionNode(unitMoveAwayFromBuilding)
+    selectRandomWorkerNode2 = DecisionNode(selectRandomWorker)
+    isWorkerBoolNode1 = BooleanNode(isWorker)
+    isWorkerIfNode1 = IfNode(isWorkerBoolNode1, moveFromBuildingNode2, moveFromBuildingNode3, selectRandomWorkerNode2)
+
+    getNumFactoriesNode = InformationNode(getNumberOfFactories)
+    nodeFactories2 = OperandNode(2)
+    factories2BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getFactoriesNode, secondChild = nodeFactories2, isGCFunction = False)
+    if2FactoriesIfNode = IfNode(factories2BoolNode, if100KarboniteIfNode, isWorkerIfNode1)
+
+    #second group on left side
+    moveFromBuildingNode4 = DecisionNode(unitMoveAwayFromBuilding)
+    moveRandomly = DecisionNode(unitMoveRandomBehavior)
+    selectMoveableUnitNode = InformationNode(selectRandomMoveableUnit)
+    isWorkerBoolNode2 = BooleanNode(isWorker)
+    isWorkerIfNode2 = IfNode(isWorkerBoolNode2, moveFromBuildingNode4, moveRandomly, selectMoveableUnitNode)
+
+    moveTowardEnemyNode1 = DecisionNode(unitMoveTowardEnemyBehavior)
+    moveTowardEnemyNode2 = DecisionNode(unitMoveTowardEnemyBehavior)
+    selectMovableAttackerNode1 = InformationNode(selectUnitThatCanAttackToMove)
+    isAttackerBoolNode1 = BooleanNode(isAttacker)
+    isAttackerIfNode1 = IfNode(isAttackerBoolNode1, moveTowardEnemyNode1, moveTowardEnemyNode2, selectMovableAttackerNode1)
+
+    getNumAttackersNode = InformationNode(getNumberOfAttackers)
+    nodeAttackers4 = OperandNode(4)
+    attackers4BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getNumAttackersNode, secondChild = nodeAttackers4, isGCFunction = False)
+    if4AttackersIfNode = IfNode(attackers4BoolNode, isWorkerIfNode2, isAttackerIfNode1)
+
+    getNumWorkersNode = InformationNode(getNumberOfWorkers)
+    nodeWorkers4 = OperandNode(4)
+    workers4BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getNumWorkersNode, secondChild = nodeWorkers4, isGCFunction = False)
+    if4WorkersIfNode = IfNode(workers4BoolNode, if2FactoriesIfNode, if4AttackersIfNode)
+
+    #now the right side
+    moveTowardEnemyNode3 = DecisionNode(unitMoveTowardEnemyBehavior)
+    moveAwayFromEnemyNode1 = DecisionNode(unitMoveAwayFromEnemy)
+    selectMovableAttackerNode2 = InformationNode(selectUnitThatCanAttackToMove)
+    isKnightBoolNode1 = BooleanNode(isKnight)
+    isKnightIfNode1 = IfNode(isKnightBoolNode1, moveTowardEnemyNode3, moveAwayFromEnemyNode1, selectMovableAttackerNode2)
+
+    moveTowardEnemyNode4 = DecisionNode(unitMoveTowardEnemyBehavior)
+    moveAwayFromEnemyNode2 = DecisionNode(unitMoveAwayFromEnemy)
+    selectMovableAttackerNode3 = InformationNode(selectUnitThatCanAttackToMove)
+    isKnightBoolNode2 = BooleanNode(isKnight)
+    isKnightIfNode2 = IfNode(isKnightBoolNode2, moveTowardEnemyNode4, moveAwayFromEnemyNode2, selectMovableAttackerNode3)
+
+    getNumRangersNode = InformationNode(getNumberOfRangers)
+    nodeRangers3 = OperandNode(3)
+    rangers3BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getNumRangersNode, secondChild = nodeRangers3, isGCFunction = False)
+    if3RangersIfNode = IfNode(rangers3BoolNode, isKnightIfNode1, isKnightIfNode2)
+
+    #second group on right side
+    moveIntoRocketNode = DecisionNode(unitMoveIntoClosestRocket)
+    moveFromBuildingNode5 = DecisionNode(unitMoveAwayFromBuilding)
+    selectMovableAttackerNode4 = InformationNode(selectUnitThatCanAttackToMove)
+    isAttackerBoolNode2 = BooleanNode(isAttacker)
+    isAttackerIfNode2 = IfNode(isAttackerBoolNode1, moveIntoRocketNode, moveFromBuildingNode5, selectMovableAttackerNode4)
+
+    launchNode1 = DecisionNode(launch_rocket_to_mars)
+    launchNode2 = DecisionNode(launch_rocket_to_mars)
+    selectFullestRocketNode = InformationNode(select_rocket_with_most_units_garrisoned)
+    isRocketBoolNode = BooleanNode(isRocket)
+    isRocketIfNode = IfNode(isRocketBoolNode, launchNode1, launchNode2, selectFullestRocketNode)
+
+    getMaxGarrisonNode = InformationNode(getMaxNumberOfUnitsInEarthRocket)
+    nodeGarrisoned3 = OperandNode(3)
+    garrisoned3BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getMaxGarrisonNode, secondChild = nodeGarrisoned3, isGCFunction = False)
+    if3GarrisonedIfNode = IfNode(garrisoned3BoolNode, isAttackerIfNode2, isRocketIfNode)
+
+    #combine right side
+    getNumRocketsNode = InformationNode(getNumberOfRockets)
+    nodeRockets1 = OperandNode(1)
+    rockets1BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getNumRocketsNode, secondChild = nodeRockets1, isGCFunction = False)
+    if1RocketsIfNode = IfNode(rockets1BoolNode, if3RangersIfNode, if3GarrisonedIfNode)
+
+    #now combine left and right
+    getRoundNode = InformationNode(getRoundNumber)
+    nodeRound300 = OperandNode(300)
+    round300BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRoundNode, secondChild = nodeRound300, isGCFunction = False)
+    ifRound300IfNode = IfNode(round300BoolNode, if4WorkersIfNode, if1RocketsIfNode)
+
+    return FixedSizeDecisionTree(ifRound300IfNode, 3, 5)
+
+
+
+def createIdealBuildTree() -> FixedSizeDecisionTree:
+    buildFactoryNode1 = DecisionNode(workerBuildFactory)
+    buildWorkerNode1 = DecisionNode(factory_produce_worker)
+    selectBuilderNode1 = InformationNode(selectBuilderThatCanBuild)
+    isWorkerNode1 = BooleanNode(isWorker)
+    ifIsWorkerNode1 = IfNode(isWorkerNode1, buildFactoryNode1, buildWorkerNode1, selectBuilderNode1)
+
+    workerReplicateNode1 = DecisionNode(workerBuildBehavior)
+    buildRangerNode1 = DecisionNode(factory_produce_ranger)
+    selectBuilderNode2 = InformationNode(selectBuilderThatCanBuild)
+    isWorkerNode2 = BooleanNode(isWorker)
+    ifIsWorkerNode2 = IfNode(isWorkerNode2, workerReplicateNode1, buildRangerNode1, selectBuilderNode2)
+
+    getNumFactoriesNode - InformationNode(getNumberOfFactories)
+    nodeFactories2 = OperandNode(2)
+    factories2BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getNumFactoriesNode, secondChild = nodeFactories2, isGCFunction = False)
+    if2FactoriesIfNode = IfNode(factories2BoolNode, ifIsWorkerNode1, ifIsWorkerNode2)
+
+    #2nd 4th of tree (middle left)
+    buildAttackerNode1 = DecisionNode(factory_produce_attacker)
+    buildAttackerNode2 = DecisionNode(factory_produce_attacker)
+    selectFactoryNode1 = InformationNode(selectRandomFactory)
+    isFactoryNode1 = BooleanNode(isFactory)
+    ifIsFactoryNode1 = IfNode(isFactoryNode1, buildAttackerNode1, buildAttackerNode2, selectFactoryNode1)
+
+    buildRocketNode1 = DecisionNode(workerBuildRocket)
+    buildRocketNode2 = DecisionNode(workerBuildRocket)
+    selectWorkerNode1 = InformationNode(selectWorkerThatCanBuild)
+    isWorkerNode3 = BooleanNode(isWorker)
+    ifIsWorkerNode3 = IfNode(isWorkerNode3, buildRocketNode1, buildRocketNode2, selectWorkerNode1)
+
+    getRoundNode1 = InformationNode(getRoundNumber)
+    nodeRound500 = OperandNode(500)
+    round500BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRoundNode1, secondChild = nodeRound500, isGCFunction = False)
+    ifRound500Node = IfNode(round500BoolNode, ifIsFactoryNode1, ifIsWorkerNode3)
+
+    # left half
+    getRoundNode2 = InformationNode(getRoundNumber)
+    nodeRound250 = OperandNode(250)
+    round250BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRoundNode2, secondChild = nodeRound250, isGCFunction = False)
+    ifRound250Node = IfNode(round250BoolNode, if2FactoriesIfNode, ifRound500Node)
+
+    #start right half
+    buildRangerNode2 = DecisionNode(factory_produce_ranger)
+    buildAttackerNode3 = DecisionNode(factory_produce_attacker)
+    selectFactoryNode2 = InformationNode(selectRandomFactory)
+    isFactoryNode2 = BooleanNode(isFactory)
+    ifIsFactoryNode2 = IfNode(isFactoryNode2, buildRangerNode2, buildAttackerNode3, selectFactoryNode2)
+
+    buildRocketNode3 = DecisionNode(workerBuildRocket)
+    buildAttackerNode4 = DecisionNode(factory_produce_attacker)
+    selectBuilderNode3 = InformationNode(selectBuilderThatCanBuild)
+    isWorkerNode4 = BooleanNode(isWorker)
+    ifIsWorkerNode4 = IfNode(isWorkerNode4, buildRocketNode3, buildAttackerNode4, selectBuilderNode3)
+
+    getAttackersNode = InformationNode(getNumberOfAttackers)
+    nodeAttackers8 = OperandNode(8)
+    attackers8BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getAttackersNode, secondChild = nodeAttackers8, isGCFunction = False)
+    if8AttackersNode = IfNode(attackers8BoolNode, ifIsFactoryNode2, ifIsWorkerNode4)
+
+    #last 4th
+    buildRangerNode3 = DecisionNode(factory_produce_ranger)
+    buildRangerNode4 = DecisionNode(factory_produce_ranger)
+    selectFactoryNode3 = InformationNode(selectRandomFactory)
+    isFactoryNode3 = BooleanNode(isFactory)
+    ifIsFactoryNode3 = IfNode(isFactoryNode3, buildRangerNode3, buildRangerNode4, selectFactoryNode3)
+
+    buildRocketNode4 = DecisionNode(workerBuildRocket)
+    buildRangerNode5 = DecisionNode(factory_produce_ranger)
+    selectBuilderNode4 = InformationNode(selectBuilderThatCanBuild)
+    isWorkerNode5 = BooleanNode(isWorker)
+    ifIsWorkerNode5 = IfNode(isWorkerNode5, buildRocketNode4, buildRangerNode5, selectBuilderNode4)
+
+    getMaxGarrisonNode = InformationNode(getMaxNumberOfUnitsInEarthRocket)
+    nodeGarrison5 = OperandNode(5)
+    garrison5BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getMaxGarrisonNode, secondChild = nodeGarrison5, isGCFunction = False)
+    if5GarrisonNode = IfNode(garrison5BoolNode, ifIsFactoryNode3, ifIsWorkerNode5)
+
+    getRoundNode3 = InformationNode(getRoundNumber)
+    nodeRound600 = OperandNode(600)
+    round600BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRoundNode3, secondChild = nodeRound600, isGCFunction = False)
+    ifRound600Node = IfNode(round600BoolNode, if8AttackersNode, if5GarrisonNode)
+
+    #bridge two sides
+    getRocketsNode = InformationNode(getNumberOfRockets)
+    nodeRockets1 = OperandNode(1)
+    rockets1BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getRocketsNode, secondChild = nodeRockets1, isGCFunction = False)
+
+    if1RocketsNode = IfNode(rockets1BoolNode, ifRound250Node, ifRound600Node)
+    return FixedSizeDecisionTree(if1RocketsNode, 4, 5)
+
+    
+
+def createIdealHarvestTree() -> FixedSizeDecisionTree:
+    harvestNode1 = DecisionNode(workerHarvestBehavior)
+    cantHarvestNode = DecisionNode(workerCantHarvestBehavior)
+    selectWorkerNode = InformationNode(selectWorkerToMoveTowardHarvesting)
+    canHarvestBoolNode = BooleanNode(worker_unit_can_harvest)
+    ifCanHarvestNode = IfNode(canHarvestBoolNode, harvestNode1, workerCantHarvestNode, selectWorkerNode)
+
+    replicateNode = DecisionNode(workerReplicate)
+    harvestNode2 = DecisionNode(workerHarvestBehavior)
+    selectRandomWorkerNode = InformationNode(selectRandomWorker)
+
+    getWorkersNode = InformationNode(getNumberOfWorkers)
+    nodeWorkers4 = OperandNode(4)
+    workers4BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getWorkersNode, secondChild = nodeWorkers4, isGCFunction = False)
+    if4WorkersNode = IfNode(workers4BoolNode, replicateNode, harvestNode2, selectRandomWorkerNode)
+
+    getKarboniteNode = InformationNode(getKarbonite)
+    nodeKarbonite300 = OperandNode(300)
+    karbonite300BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getKarboniteNode, secondChild = nodeKarbonite300, isGCFunction = False)
+    if300KarboniteNode = IfNode(karbonite300BoolNode, ifCanHarvestNode, if4WorkersNode)
+
+    return FixedSizeDecisionTree(if300KarboniteNode, 1,3)
+
+
+
+def createIdealAttackTree() -> FixedSizeDecisionTree:
+    attackNode1 = DecisionNode(nonWorkerAttackBehavior)
+    attackNode2 = DecisionNode(nonWorkerAttackBehavior)
+    selectAttackerNode = InformationNode(selectUnitDealingMostDamageThatCanAttack)
+    isAttackerBoolNode1 = BooleanNode(isAttacker)
+    ifIsAttackerNode1 = IfNode(isAttackerBoolNode1, attackNode1, attackNode2, selectAttackerNode)
+
+    moveTowardEnemyNode = DecisionNode(unitMoveTowardEnemyBehavior)
+    moveAwayFromEnemyNode = DecisionNode(unitMoveAwayFromEnemy)
+    selectMovableUnitNode = InformationNode(selectRandomMoveableUnit)
+    isAttackerBoolNode2 = BooleanNode(isAttacker)
+    ifIsAttackerNode2 = IfNode(isAttackerBoolNode2, moveTowardEnemyNode, moveAwayFromEnemyNode, selectMovableUnitNode)
+
+    canAttackBoolNode = BooleanNode(canAnyUnitAttack)
+    ifCanAttackNode = IfNode(canAttackBoolNode, ifIsAttackerNode1, ifIsAttackerNode2)
+
+    return FixedSizeDecisionTree(ifCanAttackNode, 2, 3)
+
+
 
 def createBasicTopTree() -> DecisionTree:
     attackNode = DecisionNode(None, ActionType.Attack)
@@ -924,6 +1157,22 @@ def selectUnitWithLeastLifeThatCanAttack(bc, gc):
     return leastLife
 
 
+def canAnyUnitAttack(bc, gc) -> bool:
+    nonWorkers = [x for x in gc.my_units() if x.unit_type != bc.UnitType.Factory]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Rocket]
+    nonWorkers = [x for x in nonWorkers if x.unit_type != bc.UnitType.Worker]
+    attackReady = [x for x in nonWorkers if gc.is_attack_ready(x.id)]
+
+    my_team = gc.team()
+    enemy_team = bc.Team.Red if my_team == bc.Team.Blue else bc.Team.Blue
+    for unit in attackReady:
+        nearby = gc.sense_nearby_units_by_team(unit.location.map_location(), unit.vision_range, enemy_team)
+        for other in nearby:
+            if other.team != my_team:
+                if gc.can_attack(unit.id, other.id):
+                    return True
+
+    return False
 
 
 
@@ -964,6 +1213,7 @@ def selectUnitThatCanAttackToMove(bc, gc):
         return selectRandomUnitThatCanMove(bc, gc)
 
 
+
 def selectWorkerToMoveTowardHarvesting(bc, gc):
     movables1 = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
     movables2 = [x for x in movables1 if gc.is_move_ready(x.id)]
@@ -973,8 +1223,17 @@ def selectWorkerToMoveTowardHarvesting(bc, gc):
         return random.choice(movables1)
 
 
+def selectWorkerThatCanBuild(bc, gc):
+    workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
+    earthWorkers = [x for x in workers if x.location.map_location().planet == bc.Planet.Earth]
+    return random.choice(earthWorkers)
 
-
+def selectBuilderThatCanBuild(bc, gc):
+    workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
+    earthWorkers = [x for x in workers if x.location.map_location().planet == bc.Planet.Earth]
+    factories = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Factory]
+    both = earthWorkers + factories
+    return random.choice(both)
 
 def selectRandomRocket(battleCode, gc):
     rockets = [x for x in gc.my_units() if x.unit_type == battleCode.UnitType.Rocket]
@@ -1080,7 +1339,41 @@ def workerBuildBehavior(battleCode, gc, unit):
                     gc.build(unit.id, other.id)
                     #print('built a factory!')
                     continue
-    return
+    return None
+
+
+def workerBuildFactory(bc, gc, unit):
+    if unit:
+        bot_occupiable = find_occupiable(bc, gc, unit)
+        if gc.karbonite() > battleCode.UnitType.Factory.blueprint_cost() and gc.can_blueprint(unit.id, battleCode.UnitType.Factory, bot_occupiable):
+            gc.blueprint(unit.id, battleCode.UnitType.Factory, bot_occupiable)
+
+        # lastly, let's look for nearby blueprints to work on
+        location = unit.location
+        if location.is_on_map():
+            nearby = gc.sense_nearby_units(location.map_location(), 2)
+            for other in nearby:
+                if unit.unit_type == battleCode.UnitType.Worker and gc.can_build(unit.id, other.id):
+                    gc.build(unit.id, other.id)
+                    #print('built a factory!')
+                    continue
+    return None
+
+def workerReplicate(bc, gc, unit):
+    if unit:
+        bot_occupiable = find_occupiable(bc, gc, unit)
+        if bot_occupiable and gc.can_replicate(unit.id, bot_occupiable):
+            gc.replicate(unit.id, bot_occupiable)
+        location = unit.location
+        if location.is_on_map():
+            nearby = gc.sense_nearby_units(location.map_location(), 2)
+            for other in nearby:
+                if unit.unit_type == battleCode.UnitType.Worker and gc.can_build(unit.id, other.id):
+                    gc.build(unit.id, other.id)
+                    #print('built a factory!')
+                    continue
+    return None
+
 
 def workerActionBehavior1(bc, gc, unit):
     if unit:
@@ -1213,6 +1506,75 @@ def unitMoveIntoClosestRocket(bc, gc, unit):
 
     return None
 
+def getOpposite3Directions(direction):
+    if direction == bc.Direction.East:
+        return [bc.Direction.West, bc.Direction.Northwest, bc.Direction.Southwest]
+    if direction == bc.Direction.Northeast:
+        return [bc.Direction.West, bc.Direction.South, bc.Direction.Southwest]
+    if direction == bc.Direction.North:
+        return [bc.Direction.Southeast, bc.Direction.South, bc.Direction.Southwest]
+    if direction == bc.Direction.Northwest:
+        return [bc.Direction.East, bc.Direction.South, bc.Direction.Southeast]
+    if direction == bc.Direction.West:
+        return [bc.Direction.East, bc.Direction.Southeast, bc.Direction.Northeast]
+    if direction == bc.Direction.Southwest:
+        return [bc.Direction.East, bc.Direction.North, bc.Direction.Northeast]
+    if direction == bc.Direction.South:
+        return [bc.Direction.Northwest, bc.Direction.North, bc.Direction.Northeast]
+    if direction == bc.Direction.Southeast:
+        return [bc.Direction.West, bc.Direction.North, bc.Direction.Northwest]
+    if direction == bc.Direction.Center:
+        return [bc.Direction.Center]
+
+
+def unitMoveAwayFromBuilding(bc, gc, unit):
+    if unit:
+        if gc.is_move_ready(unit.id):
+            rockets = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Rocket]
+            factories = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Factory]
+            buildings = rockets + factories
+            direction = get_direction_of_closest_building(bc, gc, unit)
+            possibleDirections = getOpposite3Directions(direction)
+            movableDirections = [x for x in possibleDirections if gc.can_move(unit.id, x)]
+            if len(movableDirections) == 0:
+                #move random
+                allDirections = list(bc.Direction)
+                canMoveIn = [x for x in allDirections if gc.can_move(unit.id, x)]
+                if len(canMoveIn) > 0:
+                    moveIn = random.choice(canMoveIn)
+                    gc.move_robot(unit.id, moveIn)
+                    return None
+                else: 
+                    return None
+            else:
+                moveIn = random.choice(possibleDirections)
+                gc.move_robot(unit.id, moveIn)
+
+    return None
+
+def unitMoveAwayFromEnemy(bc, gc, unit):
+    if unit:
+        if gc.is_move_ready(unit.id):
+            direction = get_direction_of_closest_enemy(battleCode, gc, unit)
+            possibleDirections = getOpposite3Directions(direction)
+            movableDirections = [x for x in possibleDirections if gc.can_move(unit.id, x)]
+            if len(movableDirections) == 0:
+                #move random
+                allDirections = list(bc.Direction)
+                canMoveIn = [x for x in allDirections if gc.can_move(unit.id, x)]
+                if len(canMoveIn) > 0:
+                    moveIn = random.choice(canMoveIn)
+                    gc.move_robot(unit.id, moveIn)
+                    return None
+                else: 
+                    return None
+            else:
+                moveIn = random.choice(possibleDirections)
+                gc.move_robot(unit.id, moveIn)
+
+    return None
+
+
 def nonWorkerAttackBehavior(battleCode, gc, unit):
     if unit:
         if unit.unit_type == battleCode.UnitType.Knight:
@@ -1283,6 +1645,15 @@ def factory_produce_random(bc, gc, unit):
         bot_occupiable = find_occupiable(bc, gc, unit)
         factory_produce(bc, gc, unit, random_unit_type(bc), bot_occupiable)
     return
+
+def factory_produce_attacker(bc, gc, unit):
+    if unit:
+        bot_occupiable = find_occupiable(bc, gc, unit)
+        attackerTypes = [bc.UnitType.Knight, bc.UnitType.Ranger, bc.UnitType.Mage]
+        unit_type = random.choice(attackerTypes)
+        factory_produce(bc, gc, unit, unit_type, bot_occupiable)
+    return
+
 
 def knight_action(bc, gc, unit):
     if unit:
@@ -1365,6 +1736,7 @@ def healer_action(bc, gc, unit):
                 else:
                     gc.move_robot(unit.id, bot_occupiable)
 
+
 ''' The following were taken from the medium player's helper functions '''
 
 #gives adjacent direction or space for a unit to move or place something
@@ -1396,12 +1768,20 @@ def worker_can_harvest(bc, gc, unit_id):
              return direct
     return None
 
-def worker_unit_can_harvest(bc, gc, unit):
+def worker_unit_can_harvest(bc, gc, unit) -> bool:
     if unit:
-        return worker_can_harvest(bc, gc, unit.id)
+        direct = worker_can_harvest(bc, gc, unit.id)
+        if direct is not None: 
+            return True
+        else:
+            return False
     else: 
-        return None
+        return False
 
+def worker_get_direct_for_harvest(bc, gc, unit):
+    if unit:
+        return worker_can_harvest(bc,gc, unit.id)
+    return None
 
 def factory_produce(bc, gc, unit, unit_type, bot_occupiable):
     if unit:
@@ -1483,7 +1863,24 @@ def get_direction_of_closest_rocket(bc, gc, unit):
             return direction
     return random.choice(list(bc.Direction))
 
-
+def get_direction_of_closest_building(bc, gc, unit):
+    if unit:
+        closest_rocket_dist = 99999
+        closest_rocket = None
+        direction = None
+        rockets = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Rocket]
+        factories = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Factory]
+        buildings = factories + rockets
+        if len(buildings) > 0:
+            for rocket in buildings:
+                distance = unit.location.map_location().distance_squared_to(rocket.location.map_location())
+                if distance < closest_rocket_dist:
+                    closest_rocket_dist = distance
+                    closest_rocket = rocket
+                    if closest_rocket:
+                        direction = unit.location.map_location().direction_to(closest_rocket.location.map_location())
+            return direction
+    return random.choice(list(bc.Direction))
 
 
 def randomChance(bc, gc, chanceTrue = 0.25) -> bool:
@@ -1638,7 +2035,8 @@ factory_produce_functions = [
     factory_produce_mage,
     factory_produce_ranger,
     factory_produce_healer,
-    factory_produce_random
+    factory_produce_random,
+    factory_produce_attacker
 ]
 
 
@@ -1648,7 +2046,8 @@ select_worker_functions = [
 ]
 
 select_worker_build_functions = [
-    selectRandomWorker
+    selectRandomWorker,
+    selectWorkerThatCanBuild
 ]
 
 worker_harvest_functions = [
@@ -1657,6 +2056,8 @@ worker_harvest_functions = [
 
 worker_build_functions = [
     workerBuildBehavior,
+    workerBuildFactory,
+    workerReplicate,
     workerBuildRocket
 ]
 
@@ -1668,6 +2069,10 @@ worker_behavior_functions = [
     workerActionBehavior3
     #workerBuildRocket
 ]
+
+select_builder_functions = [
+    selectBuilderThatCanBuild
+] 
 
 #params are bc, gc
 select_knight_functions = [
@@ -1734,7 +2139,9 @@ unit_move_functions = [
     unitMoveRandomBehavior,
     unitMoveTowardAllyBehavior,
     unitMoveTowardEnemyBehavior,
-    unitMoveIntoClosestRocket
+    unitMoveIntoClosestRocket,
+    unitMoveAwayFromEnemy,
+    unitMoveAwayFromBuilding
 ]
 
 worker_can_harvest_functions = [
@@ -1757,6 +2164,10 @@ game_number_info_functions = [
     getKarbonite,
     getNumberOfAttackers,
     getMaxNumberOfUnitsInEarthRocket
+]
+
+boolean_game_info_functions = [
+    canAnyUnitAttack
 ]
 
 random_chance_function = [
@@ -1812,7 +2223,9 @@ allFunctionSets = [
     worker_cant_harvest_functions,
     game_number_info_functions,
     random_chance_function,
-    is_unit_type_functions
+    is_unit_type_functions,
+    select_builder_functions,
+    boolean_game_info_functions
 ]
 
 game_number_info_functions_number_mappings = {
@@ -3312,10 +3725,10 @@ def createIdealPlayer() -> DecisionTreePlayer:
     ''' Gives us the 'ideal' player we are testing all our GP operations against
     '''
     topTree = createIdealTopTree()
-    harvestTree = createRandomHarvestTree()
-    attackTree = createRandomAttackTree()
-    moveTree = createRandomMoveTree()
-    buildTree = createRandomBuildTree()
+    harvestTree = createIdealHarvestTree()
+    attackTree = createIdealAttackTree()
+    moveTree = createIdealMoveTree()
+    buildTree = createIdealBuildTree()
 
     player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
     return player
