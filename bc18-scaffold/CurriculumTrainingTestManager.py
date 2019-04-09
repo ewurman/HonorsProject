@@ -333,7 +333,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
         log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
-            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
+            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings, treeTesting)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
         log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
@@ -486,7 +486,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
         log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
-            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
+            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings, treeTesting)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
         log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
@@ -536,7 +536,7 @@ if __name__ == '__main__':
 
     population = []
     mutateNodeProb = 0.01
-    mutateOccurProb = 0.4  #{0.2,0.4,0.6}
+    mutateOccurProb = 0.2  #{0.2,0.4,0.6}
 
     crossoverProb = 0.6 #% chance each tree  want it to be one of {0.4, 0.6, 0.8}
 
