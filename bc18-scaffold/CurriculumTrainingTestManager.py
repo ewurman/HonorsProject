@@ -399,6 +399,9 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             player = GP.createCurriculumTrainingPlayerAttack(attackTreeHeight)
         elif treeTesting == 3:
             player = GP.createCurriculumTrainingPlayerMove(moveTreeHeight)
+            dirBeginName = "CurriculumTestingResults/"
+            dirEndName = "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed/Winner"
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0])
         elif treeTesting == 4:
             player = GP.createCurriculumTrainingPlayerAttack(buildTreeHeight)
         population.append(player)
@@ -542,7 +545,7 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 0
+    treeTraining = 3
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")
