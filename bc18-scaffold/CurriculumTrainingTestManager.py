@@ -390,7 +390,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     log(resultDirName, "############ Starting new test ############\n")
     # initialize population
     for i in range(POP_SIZE):
-        player = createRandomFixedSizeDecisionTreePlayer(topTreeHeight, 3)
+        player = GP.createRandomFixedSizeDecisionTreePlayer(topTreeHeight, 3)
         if treeTesting == 0:
             player = GP.createCurriculumTrainingPlayerTop(topTreeHeight)
         elif treeTesting == 1:

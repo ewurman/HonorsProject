@@ -125,10 +125,10 @@ class IfNode(Node):
 
         allparams += ifparams
         if nextNode.evaluate(boardController, gc, allparams + boolParams):
-            print("If evaluated as True")
+            #print("If evaluated as True")
             return (self.secondChild , ifparams)
         else:
-            print("If evaluated as False")
+            #print("If evaluated as False")
             return (self.thirdChild, ifparams)
 
 
@@ -218,10 +218,12 @@ class BooleanNode(Node):
                 rightOperand = self.secondChild.evaluate(battleCode, gc);
 
             value = self.operation(leftOperand, rightOperand)
+            '''
             if value:
                 print("Boolean node evaluated as true")
             else:
                 print("Boolean node evaluated as false")
+            '''
             return value
 
 
@@ -252,7 +254,7 @@ class OperandNode(Node):
         return s
 
     def evaluate(self):
-        print("Operand Value of ", self.value)
+        #print("Operand Value of ", self.value)
         return self.value
 
 
@@ -725,7 +727,7 @@ def createIdealMoveTree() -> FixedSizeDecisionTree:
     #second group on left side
     moveFromBuildingNode4 = DecisionNode(unitMoveAwayFromBuilding)
     moveRandomly = DecisionNode(unitMoveRandomBehavior)
-    selectMoveableUnitNode = InformationNode(selectRandomMoveableUnit)
+    selectMoveableUnitNode = InformationNode(selectRandomUnitThatCanMove)
     isWorkerBoolNode2 = BooleanNode(isWorker)
     isWorkerIfNode2 = IfNode(isWorkerBoolNode2, moveFromBuildingNode4, moveRandomly, selectMoveableUnitNode)
 
@@ -927,7 +929,7 @@ def createIdealAttackTree() -> FixedSizeDecisionTree:
 
     moveTowardEnemyNode = DecisionNode(unitMoveTowardEnemyBehavior)
     moveAwayFromEnemyNode = DecisionNode(unitMoveAwayFromEnemy)
-    selectMovableUnitNode = InformationNode(selectRandomMoveableUnit)
+    selectMovableUnitNode = InformationNode(selectRandomUnitThatCanMove)
     isAttackerBoolNode2 = BooleanNode(isAttacker)
     ifIsAttackerNode2 = IfNode(isAttackerBoolNode2, moveTowardEnemyNode, moveAwayFromEnemyNode, selectMovableUnitNode)
 
@@ -990,10 +992,10 @@ def createBasicMoveTree() -> DecisionTree:
     elseIfWorkerNode = IfNode(isWorkerNode, moveRandomDirectionNode, moveTowardEnemyNode)
 
     isHealerNode = BooleanNode(isHealer)
-    selectUnitNode = InformationNode(selectRandomMoveableUnit, None)
+    selectUnitNode = InformationNode(selectRandomUnitThatCanMove, None)
     ifHealerNode = IfNode(isHealerNode, moveTowardAllyNode, elseIfWorkerNode, selectUnitNode)
     #need to pick a unit
-    #selectUnitNode = InformationNode(selectRandomMoveableUnit, ifHealerNode)
+    #selectUnitNode = InformationNode(selectRandomUnitThatCanMove, ifHealerNode)
     #moveTree = DecisionTree(selectUnitNode)
     moveTree = DecisionTree(ifHealerNode, 3)
     return moveTree
@@ -1579,7 +1581,7 @@ def unitMoveAwayFromBuilding(bc, gc, unit):
 def unitMoveAwayFromEnemy(bc, gc, unit):
     if unit:
         if gc.is_move_ready(unit.id):
-            direction = get_direction_of_closest_enemy(battleCode, gc, unit)
+            direction = get_direction_of_closest_enemy(bc, gc, unit)
             possibleDirections = getOpposite3Directions(direction)
             movableDirections = [x for x in possibleDirections if gc.can_move(unit.id, x)]
             if len(movableDirections) == 0:
@@ -3145,7 +3147,7 @@ class DecisionTreePlayer:
                     child, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
                 
                 if func == None:
-                    print("** building infoNode with no function! **")
+                    print("** building infoNode with no function! **", functionName)
                 node = InformationNode(func, child)
                 return node, nextLineNum
 
