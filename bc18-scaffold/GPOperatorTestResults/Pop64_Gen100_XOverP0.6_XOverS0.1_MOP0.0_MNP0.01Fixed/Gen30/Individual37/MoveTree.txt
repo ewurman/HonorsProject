@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 432
+	DecisionNode action: unitMoveTowardAllyBehavior
+	DecisionNode action: unitMoveIntoClosestRocket
+	InformationNode function: selectWorkerToMoveTowardHarvesting

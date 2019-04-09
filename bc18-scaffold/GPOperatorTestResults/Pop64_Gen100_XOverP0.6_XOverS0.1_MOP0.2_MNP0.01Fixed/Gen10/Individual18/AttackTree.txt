@@ -1,0 +1,5 @@
+IfNode WithInfo
+	BooleanNode function: isKnight
+	DecisionNode action: healer_action
+	DecisionNode action: unitAttackRandomPossibleEnemy
+	InformationNode function: selectRandomUnitThatCanAttack

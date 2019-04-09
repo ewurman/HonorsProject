@@ -125,8 +125,10 @@ class IfNode(Node):
 
         allparams += ifparams
         if nextNode.evaluate(boardController, gc, allparams + boolParams):
+            print("If evaluated as True")
             return (self.secondChild , ifparams)
         else:
+            print("If evaluated as False")
             return (self.thirdChild, ifparams)
 
 
@@ -193,11 +195,6 @@ class BooleanNode(Node):
         if self.isFunction:
         
             totalParams = self.params + moreParams
-            
-            #if (self.isGCFunction):
-            #    return gc.function(*totalParams) #no params?
-            #else: 
-            #    return self.function(boardController, gc, *totalParams)
             try:
                 res = self.function(battleCode, gc, *totalParams)
                 #print("Successfully evaluated BooleanNode")
@@ -211,16 +208,21 @@ class BooleanNode(Node):
             ''' The operator, is this node, and the kids are the numbers/operands '''
             leftOperand = 1
             rightOperand = 1
-            if self.firstChild is OperandNode:
+            if type(self.firstChild) is OperandNode:
                 leftOperand = self.firstChild.evaluate();
-            elif self.firstChild is InformationNode:
+            elif type(self.firstChild) is InformationNode:
                 leftOperand = self.firstChild.evaluate(battleCode, gc);
-            if self.secondChild is OperandNode:
+            if type(self.secondChild) is OperandNode:
                 rightOperand = self.secondChild.evaluate();
-            elif self.secondChild is InformationNode:
+            elif type(self.secondChild) is InformationNode:
                 rightOperand = self.secondChild.evaluate(battleCode, gc);
 
-            return self.operation(leftOperand, rightOperand)
+            value = self.operation(leftOperand, rightOperand)
+            if value:
+                print("Boolean node evaluated as true")
+            else:
+                print("Boolean node evaluated as false")
+            return value
 
 
 class OperandNode(Node):
@@ -250,6 +252,7 @@ class OperandNode(Node):
         return s
 
     def evaluate(self):
+        print("Operand Value of ", self.value)
         return self.value
 
 
@@ -276,11 +279,16 @@ class InformationNode(Node):
         super().printNode(indent)
 
     def getWriteString(self, indent) -> str:
-        s = indent + "InformationNode function: " + self.function.__name__ + "\n"
-        s += super().getWriteString(indent)
-        return s
+        if self.function:
+            s = indent + "InformationNode function: " + self.function.__name__ + "\n"
+            s += super().getWriteString(indent)
+            return s
+        else:
+            print("infoNode has no function ???????????")
+            return super().getWriteString(indent)
 
     def evaluate(self, battleCode, gameController, params = []):
+        print("function name", self.function.__name__)
         if params != []:
             return self.function(battleCode, gameController, *params)
         else:
@@ -462,9 +470,9 @@ class DecisionTree:
 
 class FixedSizeDecisionTree(DecisionTree):
 
-    def __init__(self, node, id = 0, height = 4):
+    def __init__(self, node, idNum = 0, height = 4):
         self.root = node
-        self.id = id
+        self.id = idNum
         self.height = height
 
     def isLegal(self) -> bool:
@@ -549,7 +557,7 @@ class FixedSizeDecisionTree(DecisionTree):
 
 
     def execute(self, battleCode, gameController):
-        #print("Executing a decision Tree")
+        print("Executing a fixed size decision tree of type", self.id)
         currNode = self.root
         ifParams = []
         permanantParams = []
@@ -643,7 +651,7 @@ def createIdealTopTree() -> FixedSizeDecisionTree:
     ''' 
         A basic Fixed Size Tree that we use as dummy test to make sure GP code works
     '''
-
+    print("creating ideal top tree")
     harvestNode = DecisionNode(None, ActionType.Harvest)
     buildNode1 = DecisionNode(None, ActionType.Build)
     getKarboniteNode = InformationNode(getKarbonite)
@@ -694,13 +702,14 @@ def createIdealTopTree() -> FixedSizeDecisionTree:
 
 def createIdealMoveTree() -> FixedSizeDecisionTree:
     ''' My own move tree to use GP on to improve '''
+    print("creating ideal move tree")
     moveFromBuildingNode1 = DecisionNode(unitMoveAwayFromBuilding)
     workerAction3Node = DecisionNode(workerActionBehavior3)
     selectRandomWorkerNode1 = DecisionNode(selectRandomWorker)
     getKarboniteNode1 = InformationNode(getKarbonite)
     nodeKarbonite100 = OperandNode(100)
     karbonite100BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getKarboniteNode1, secondChild = nodeKarbonite100, isGCFunction = False)
-    if100KarboniteIfNode = IfNode(karbonite100BoolNode, moveFromBuildingNode1, workerAction3Node, selectRandomWorkerNode)
+    if100KarboniteIfNode = IfNode(karbonite100BoolNode, moveFromBuildingNode1, workerAction3Node, selectRandomWorkerNode1)
 
     moveFromBuildingNode2 = DecisionNode(unitMoveAwayFromBuilding)
     moveFromBuildingNode3 = DecisionNode(unitMoveAwayFromBuilding)
@@ -708,7 +717,7 @@ def createIdealMoveTree() -> FixedSizeDecisionTree:
     isWorkerBoolNode1 = BooleanNode(isWorker)
     isWorkerIfNode1 = IfNode(isWorkerBoolNode1, moveFromBuildingNode2, moveFromBuildingNode3, selectRandomWorkerNode2)
 
-    getNumFactoriesNode = InformationNode(getNumberOfFactories)
+    getFactoriesNode = InformationNode(getNumberOfFactories)
     nodeFactories2 = OperandNode(2)
     factories2BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getFactoriesNode, secondChild = nodeFactories2, isGCFunction = False)
     if2FactoriesIfNode = IfNode(factories2BoolNode, if100KarboniteIfNode, isWorkerIfNode1)
@@ -789,6 +798,7 @@ def createIdealMoveTree() -> FixedSizeDecisionTree:
 
 
 def createIdealBuildTree() -> FixedSizeDecisionTree:
+    print("Creating ideal build tree")
     buildFactoryNode1 = DecisionNode(workerBuildFactory)
     buildWorkerNode1 = DecisionNode(factory_produce_worker)
     selectBuilderNode1 = InformationNode(selectBuilderThatCanBuild)
@@ -801,7 +811,7 @@ def createIdealBuildTree() -> FixedSizeDecisionTree:
     isWorkerNode2 = BooleanNode(isWorker)
     ifIsWorkerNode2 = IfNode(isWorkerNode2, workerReplicateNode1, buildRangerNode1, selectBuilderNode2)
 
-    getNumFactoriesNode - InformationNode(getNumberOfFactories)
+    getNumFactoriesNode = InformationNode(getNumberOfFactories)
     nodeFactories2 = OperandNode(2)
     factories2BoolNode = BooleanNode(None, operation = operator.lt, firstChild = getNumFactoriesNode, secondChild = nodeFactories2, isGCFunction = False)
     if2FactoriesIfNode = IfNode(factories2BoolNode, ifIsWorkerNode1, ifIsWorkerNode2)
@@ -882,11 +892,12 @@ def createIdealBuildTree() -> FixedSizeDecisionTree:
     
 
 def createIdealHarvestTree() -> FixedSizeDecisionTree:
+    print("creating ideal harvest tree")
     harvestNode1 = DecisionNode(workerHarvestBehavior)
     cantHarvestNode = DecisionNode(workerCantHarvestBehavior)
     selectWorkerNode = InformationNode(selectWorkerToMoveTowardHarvesting)
     canHarvestBoolNode = BooleanNode(worker_unit_can_harvest)
-    ifCanHarvestNode = IfNode(canHarvestBoolNode, harvestNode1, workerCantHarvestNode, selectWorkerNode)
+    ifCanHarvestNode = IfNode(canHarvestBoolNode, harvestNode1, cantHarvestNode, selectWorkerNode)
 
     replicateNode = DecisionNode(workerReplicate)
     harvestNode2 = DecisionNode(workerHarvestBehavior)
@@ -907,6 +918,7 @@ def createIdealHarvestTree() -> FixedSizeDecisionTree:
 
 
 def createIdealAttackTree() -> FixedSizeDecisionTree:
+    print("creating ideal attack tree")
     attackNode1 = DecisionNode(nonWorkerAttackBehavior)
     attackNode2 = DecisionNode(nonWorkerAttackBehavior)
     selectAttackerNode = InformationNode(selectUnitDealingMostDamageThatCanAttack)
@@ -1013,6 +1025,7 @@ def selectRandomWorker(battleCode, gc):
     #print(workers)
     if workers != []:
         return random.choice(workers)
+    print("There are no workers to choose from")
     return None
 
 def selectRandomKnight(battleCode, gc):
@@ -1042,6 +1055,7 @@ def selectRandomHealer(battleCode, gc):
 def selectRandomMoveableUnit(battleCode, gc):
     units = [x for x in gc.my_units() if x.unit_type != battleCode.UnitType.Factory]
     units = [x for x in units if x.unit_type != battleCode.UnitType.Rocket]
+    print("selectRandomMoveableUnit has units length of ", len(units))
     if units != []:
         return random.choice(units)
     print("No units were found that can be moved in selectRandomMoveableUnit")
@@ -1233,7 +1247,8 @@ def selectBuilderThatCanBuild(bc, gc):
     earthWorkers = [x for x in workers if x.location.map_location().planet == bc.Planet.Earth]
     factories = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Factory]
     both = earthWorkers + factories
-    return random.choice(both)
+    x = random.choice(both)
+    return x
 
 def selectRandomRocket(battleCode, gc):
     rockets = [x for x in gc.my_units() if x.unit_type == battleCode.UnitType.Rocket]
@@ -1244,42 +1259,45 @@ def selectRandomRocket(battleCode, gc):
 
 # Boolean Functions
 def isKnight(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Knight
     return False
 
 def isRanger(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Ranger
     return False
 
 def isMage(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Mage
     return False
 
 def isHealer(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Healer
     return False
 
 def isWorker(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Worker
     return False
 
 def isFactory(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Factory
     return False
 
 def isRocket(battleCode, gc, unit):
-    if type(unit) is type(battleCode.Unit):
+    if isinstance(unit, battleCode.Unit):
         return unit.unit_type == battleCode.UnitType.Rocket
     return False
     
 def isAttacker(battleCode, gc, unit):
-    return isKnight(battleCode, gc, unit) or isRanger(battleCode, gc, unit) or isMage(battleCode, gc, unit)
+    if isinstance(unit, battleCode.Unit):
+        return isKnight(battleCode, gc, unit) or isRanger(battleCode, gc, unit) or isMage(battleCode, gc, unit)
+    return False
+
 
 #Behaviors
 def workerHarvestBehavior(battleCode, gc, unit):
@@ -1345,15 +1363,15 @@ def workerBuildBehavior(battleCode, gc, unit):
 def workerBuildFactory(bc, gc, unit):
     if unit:
         bot_occupiable = find_occupiable(bc, gc, unit)
-        if gc.karbonite() > battleCode.UnitType.Factory.blueprint_cost() and gc.can_blueprint(unit.id, battleCode.UnitType.Factory, bot_occupiable):
-            gc.blueprint(unit.id, battleCode.UnitType.Factory, bot_occupiable)
+        if gc.karbonite() > bc.UnitType.Factory.blueprint_cost() and gc.can_blueprint(unit.id, bc.UnitType.Factory, bot_occupiable):
+            gc.blueprint(unit.id, bc.UnitType.Factory, bot_occupiable)
 
         # lastly, let's look for nearby blueprints to work on
         location = unit.location
         if location.is_on_map():
             nearby = gc.sense_nearby_units(location.map_location(), 2)
             for other in nearby:
-                if unit.unit_type == battleCode.UnitType.Worker and gc.can_build(unit.id, other.id):
+                if unit.unit_type == bc.UnitType.Worker and gc.can_build(unit.id, other.id):
                     gc.build(unit.id, other.id)
                     #print('built a factory!')
                     continue
@@ -1368,7 +1386,7 @@ def workerReplicate(bc, gc, unit):
         if location.is_on_map():
             nearby = gc.sense_nearby_units(location.map_location(), 2)
             for other in nearby:
-                if unit.unit_type == battleCode.UnitType.Worker and gc.can_build(unit.id, other.id):
+                if unit.unit_type == bc.UnitType.Worker and gc.can_build(unit.id, other.id):
                     gc.build(unit.id, other.id)
                     #print('built a factory!')
                     continue
@@ -1524,7 +1542,7 @@ def getOpposite3Directions(direction):
     if direction == bc.Direction.Southeast:
         return [bc.Direction.West, bc.Direction.North, bc.Direction.Northwest]
     if direction == bc.Direction.Center:
-        return [bc.Direction.Center]
+        return list(bc.Direction)
 
 
 def unitMoveAwayFromBuilding(bc, gc, unit):
@@ -1547,8 +1565,14 @@ def unitMoveAwayFromBuilding(bc, gc, unit):
                 else: 
                     return None
             else:
-                moveIn = random.choice(possibleDirections)
-                gc.move_robot(unit.id, moveIn)
+                # we look at any direction
+                movableDirections = [x for x in list(bc.Direction) if gc.can_move(unit.id, x)]
+                if len(movableDirections) > 0:
+                    gc.move_robot(unit.id, random.choice(movableDirections))
+                else:
+                    print("unit can move in no direction")
+        else:
+            print("unit is not move ready!")
 
     return None
 
@@ -1945,7 +1969,7 @@ def getNumberOfRangers(bc, gc):
     return len(y)
 
 def getNumberOfMages(bc, gc):
-    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Mages ]
+    y = [x for x in gc.my_units() if x.unit_type is bc.UnitType.Mage ]
     return len(y)
 
 def getNumberOfHealers(bc, gc):
@@ -2238,7 +2262,7 @@ game_number_info_functions_number_mappings = {
     getNumberOfHealers : [1,2,3],
     getNumberOfRockets : [1,2],
     getKarbonite : [50,100,150,200,250,300,350,400,450,500],
-    getNumberOfAttackers: [1,4,8,12]
+    getNumberOfAttackers: [1,4,8,12],
     getMaxNumberOfUnitsInEarthRocket: [1,3,5]
 }
 
@@ -2967,8 +2991,17 @@ class DecisionTreePlayer:
         self.buildTree = buildTree
         self.researchTree = researchTree
 
-    def compareTo(self, p2):
-        return self.topTree.compareTo(p2.topTree)
+    def compareTo(self, p2, treeTesting):
+        if treeTesting == 0:
+            return self.topTree.compareTo(p2.topTree)
+        if treeTesting == 1:
+            return self.harvestTree.compareTo(p2.harvestTree)
+        if treeTesting == 2:
+            return self.attackTree.compareTo(p2.attackTree)
+        if treeTesting == 3:
+            return self.movementTree.compareTo(p2.movementTree)
+        if treeTesting == 4:
+            return self.buildTree.compareTo(p2.buildTree)
 
     def getNumNodesByTree(self):
         n0 = self.topTree.getNumNodes()
@@ -3199,6 +3232,66 @@ def createRandomFixedSizeDecisionTreePlayer(topHeight, attackHeight):
     attackTree = createRandomFixedSizeAttackTree(attackHeight)
     moveTree = createRandomMoveTree()
     buildTree = createRandomBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
+
+
+def createCurriculumTrainingPlayerTop(topHeight) -> DecisionTreePlayer:
+    topTree = createRandomFixedSizeTopTree(topHeight)
+    harvestTree = createIdealHarvestTree()
+    attackTree = createIdealAttackTree()
+    moveTree = createIdealMoveTree()
+    buildTree = createIdealBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
+
+def createCurriculumTrainingPlayerHarvest(harvestHeight) -> DecisionTreePlayer:
+    topTree = createIdealTopTree()
+    harvestTree = createRandomFixedSizeHarvestTree() #TODO add harvest height
+    attackTree = createIdealAttackTree()
+    moveTree = createIdealMoveTree()
+    buildTree = createIdealBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
+
+
+def createCurriculumTrainingPlayerAttack(attackHeight) -> DecisionTreePlayer:
+    ''' Gives us the 'ideal' player we are testing all our GP operations against besides Attack
+    '''
+    topTree = createIdealTopTree()
+    harvestTree = createIdealHarvestTree()
+    attackTree = createRandomFixedSizeAttackTree(attackHeight)
+    moveTree = createIdealMoveTree()
+    buildTree = createIdealBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
+
+
+def createCurriculumTrainingPlayerMove(moveHeight) -> DecisionTreePlayer:
+    ''' Gives us the 'ideal' player we are testing all our GP operations against besides Move
+    '''
+    topTree = createIdealTopTree()
+    harvestTree = createIdealHarvestTree()
+    attackTree = createIdealAttackTree()
+    moveTree = createRandomFixedSizeMoveTree(moveHeight)
+    buildTree = createIdealBuildTree()
+
+    player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
+    return player
+
+
+def createCurriculumTrainingPlayerBuild(buildHeight) -> DecisionTreePlayer:
+    ''' Gives us the 'ideal' player we are testing all our GP operations against besides Build
+    '''
+    topTree = createIdealTopTree()
+    harvestTree = createIdealHarvestTree()
+    attackTree = createIdealAttackTree()
+    moveTree = createIdealMoveTree()
+    buildTree = createRandomFixedSizeBuildTree(buildHeight)
 
     player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
     return player
@@ -3589,7 +3682,7 @@ def Crossover2Player(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlaye
 
 
 
-def FixedTopTreeCrossover(fst1, fst2, probOfDoing, probInSearch) -> (DecisionTree, DecisionTree, int, int):
+def FixedSizeTreeCrossover(fst1, fst2, probOfDoing, probInSearch) -> (FixedSizeDecisionTree, FixedSizeDecisionTree, int, int):
     ''' 
         Crossover of fixed trees. We only want to do it at if, bool, or decision nodes
     '''
@@ -3657,10 +3750,10 @@ def FixedSizeTopTreeMutateOnce(tree, probOfMutate, game_number_info_functions_nu
                 nodeQueue.append(currNode.secondChild)
             if currNode.thirdChild:
                 nodeQueue.append(currNode.thirdChild)
-            '''
+            
             if currNode.infoChild:
                 nodeQueue.append(currNode.infoChild)
-            '''
+            
         #if decision node, possibly mutate
         elif type(currNode) is DecisionNode:
             potentialNodes.append(currNode)
@@ -3691,17 +3784,92 @@ def FixedSizeTopTreeMutateOnce(tree, probOfMutate, game_number_info_functions_nu
     return (tree, 1)
 
 
+def FixedSizeLowerTreeMutateOnce(tree, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings):
+    ''' NEW IMPLEMENTATION
+        Mutates the fixed size top tree to adjust the numbers/functions of boolean nodes or the Decision Node output.
+        We only do mutate at Boolean Nodes or Decision Nodes, but Boolean node mutations are actually the infoNode functions
+        and the Operand Node values of the Boolean Node children
+        Unlike the other Mutates, this only mutates once in the tree
+    '''
+    if random.random() > probOfMutate:
+        # don't mutate this tree
+        return (tree, 0)
 
-def Crossover3PlayerFixed(p1, p2, probOfEachTree, probInSearch) -> (DecisionTreePlayer, DecisionTreePlayer, int, list):
+    nodeQueue = [tree.root]
+    potentialNodes = []
+
+    while(len(nodeQueue) != 0):
+        #add children to Queue
+        currNode = nodeQueue.pop(0)
+
+        if type(currNode) is IfNode:
+            if currNode.firstChild:
+                nodeQueue.append(currNode.firstChild)
+            if currNode.secondChild:
+                nodeQueue.append(currNode.secondChild)
+            if currNode.thirdChild:
+                nodeQueue.append(currNode.thirdChild)
+            
+            if currNode.infoChild:
+                nodeQueue.append(currNode.infoChild)
+            
+        #if decision node, possibly mutate
+        elif type(currNode) is DecisionNode:
+            potentialNodes.append(currNode)
+
+        #if boolean node, may want to mutate
+        elif type(currNode) is BooleanNode:
+           potentialNodes.append(currNode)
+
+    nodeToMutate = random.choice(potentialNodes)
+
+    if type(nodeToMutate) is DecisionNode:
+        function = nodeToMutate.action
+        for functionSet in allFunctionSets:
+            if function in functionSet:
+                newFunction = random.choice(functionSet)
+                newNode = DecisionNode(newFunction)
+                nodeToMutate.swap(newNode)
+                break
+
+    elif type(nodeToMutate) is BooleanNode:
+        if nodeToMutate.firstChild and type(nodeToMutate.firstChild) is InformationNode:
+            if nodeToMutate.secondChild and type(nodeToMutate.secondChild) is OperandNode:
+                newFunc = random.choice(list(game_number_info_functions_number_mappings.keys()))
+                newVal = random.choice(game_number_info_functions_number_mappings[newFunc])
+                nodeToMutate.firstChild.function = newFunc
+                nodeToMutate.secondChild.value = newVal
+            else:
+                print("In FixedSizeDecisionTree top tree, boolean node's second child is not OperandNode") 
+                return (tree, 0)
+        else:
+            print("In FixedSizeDecisionTree top tree, boolean node's first child is not InfoNode") 
+            return (tree, 0)
+
+    return (tree, 1)
+
+
+
+def Crossover3PlayerFixed(p1, p2, probOfEachTree, probInSearch, treeTesting) -> (DecisionTreePlayer, DecisionTreePlayer, int, list):
     '''
     p1 and p2 are players, probOfEachTree is the probability of doing crossover,
     probInSearch is the probability that helps crossover decide where to crossover.
     '''
-    p1topTree, p2topTree, x1, h1 = FixedTopTreeCrossover(p1.topTree, p2.topTree, probOfEachTree, probInSearch)
-    p1harvestTree, p2harvestTree, x2, h2 = Crossover1(p1.harvestTree, p2.harvestTree, probOfEachTree, probInSearch)
-    p1attackTree, p2attackTree, x3, h3 = Crossover1(p1.attackTree, p2.attackTree, probOfEachTree, probInSearch)
-    p1movementTree, p2movementTree, x4, h4 = Crossover1(p1.movementTree, p2.movementTree, probOfEachTree, probInSearch)
-    p1buildTree, p2buildTree, x5, h5 = Crossover1(p1.buildTree, p2.buildTree, probOfEachTree, probInSearch)
+    p1topTree, p1harvestTree, p1attackTree, p1movementTree, p1buildTree = p1.topTree, p1.harvestTree, p1.attackTree, p1.movementTree, p1.buildTree
+    p2topTree, p2harvestTree, p2attackTree, p2movementTree, p2buildTree = p2.topTree, p2.harvestTree, p2.attackTree, p2.movementTree, p2.buildTree
+    x1, x2, x3, x4, x5 = 0,0,0,0,0
+    h1,h2,h3,h4,h5 = 0,0,0,0,0
+    if treeTesting == 0:
+        p1topTree, p2topTree, x1, h1 = FixedSizeTreeCrossover(p1.topTree, p2.topTree, probOfEachTree, probInSearch)
+    elif treeTesting == 1:    
+        p1harvestTree, p2harvestTree, x2, h2 = FixedSizeTreeCrossover(p1.harvestTree, p2.harvestTree, probOfEachTree, probInSearch)
+    elif treeTesting == 2:
+        p1attackTree, p2attackTree, x3, h3 = FixedSizeTreeCrossover(p1.attackTree, p2.attackTree, probOfEachTree, probInSearch)
+    elif treeTesting == 3:
+        p1movementTree, p2movementTree, x4, h4 = FixedSizeTreeCrossover(p1.movementTree, p2.movementTree, probOfEachTree, probInSearch)
+    elif treeTesting == 4:  
+        p1buildTree, p2buildTree, x5, h5 = FixedSizeTreeCrossover(p1.buildTree, p2.buildTree, probOfEachTree, probInSearch)
+
     numCrossover = x1 + x2 + x3 + x4 + x5
     heights = [h1, h2, h3, h4, h5]
     # No research tree rn
@@ -3711,12 +3879,20 @@ def Crossover3PlayerFixed(p1, p2, probOfEachTree, probInSearch) -> (DecisionTree
     return newp1, newp2, numCrossover, heights
 
 
-def MutatePlayerFixed(player, probabilityPerNode, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings) -> (DecisionTreePlayer, int):
-    topTree, m0 = FixedSizeTopTreeMutateOnce(player.topTree, probOfMutate, game_number_info_functions_number_mappings)
-    harvestTree, m1 = Mutate(player.harvestTree, probabilityPerNode, probOfMutate, allFunctionSets)
-    attackTree, m2 = Mutate(player.attackTree, probabilityPerNode, probOfMutate, allFunctionSets)
-    movementTree, m3 =Mutate(player.movementTree, probabilityPerNode, probOfMutate, allFunctionSets)
-    buildTree, m4 = Mutate(player.buildTree, probabilityPerNode, probOfMutate, allFunctionSets)
+def MutatePlayerFixed(player, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings, treeTraining) -> (DecisionTreePlayer, int):
+    topTree, harvestTree, attackTree, movementTree, buildTree = player.topTree, player.harvestTree, player.attackTree, player.movementTree, player.buildTree
+    m0, m1, m2, m3, m4 = 0,0,0,0,0
+
+    if treeTraining == 0:
+        topTree, m0 = FixedSizeTopTreeMutateOnce(player.topTree, probOfMutate, game_number_info_functions_number_mappings)
+    elif treeTraining == 1:
+        harvestTree, m1 = FixedSizeLowerTreeMutateOnce(player.harvestTree, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings)
+    elif treeTraining == 2:
+        attackTree, m2 = FixedSizeLowerTreeMutateOnce(player.attackTree, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings)
+    elif treeTraining == 3:
+        movementTree, m3 = FixedSizeLowerTreeMutateOnce(player.movementTree, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings)
+    elif treeTraining == 4:
+        buildTree, m4 = FixedSizeLowerTreeMutateOnce(player.buildTree, probOfMutate, allFunctionSets, game_number_info_functions_number_mappings)
     numMutations = m0 + m1 + m2 + m3 + m4
     return (DecisionTreePlayer(topTree, harvestTree, attackTree, movementTree, buildTree, None), numMutations)
 
@@ -3734,3 +3910,19 @@ def createIdealPlayer() -> DecisionTreePlayer:
     return player
 
 
+def createIdealPlayerForTesting(treeTraining, treeHeight) -> DecisionTreePlayer:
+    ''' Gives us the 'ideal' player we are testing all our GP operations against
+    '''
+    player = createIdealPlayer() # not correct dimensions of Harvest tree rn, or even topTree
+    if treeTraining == 0:
+        player = createCurriculumTrainingPlayerTop(treeHeight)
+    elif treeTraining == 1:
+        player = createCurriculumTrainingPlayerHarvest(treeHeight)
+    elif treeTraining == 2:
+        player = createCurriculumTrainingPlayerAttack(treeHeight)
+    elif treeTraining == 3:
+        player = createCurriculumTrainingPlayerMove(treeHeight)
+    elif treeTraining == 4:
+        player = createCurriculumTrainingPlayerBuild(treeHeight)
+    
+    return player

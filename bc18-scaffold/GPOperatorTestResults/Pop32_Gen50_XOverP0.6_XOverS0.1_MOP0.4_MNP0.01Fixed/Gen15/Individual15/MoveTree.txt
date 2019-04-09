@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: 4
+	DecisionNode action: unitMoveIntoClosestRocket
+	DecisionNode action: launch_rocket_to_mars
+	InformationNode function: select_random_rocket

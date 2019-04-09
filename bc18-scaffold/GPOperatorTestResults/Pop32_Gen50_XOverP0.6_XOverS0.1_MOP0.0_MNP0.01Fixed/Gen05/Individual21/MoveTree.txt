@@ -1,0 +1,119 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 813
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 8
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 0
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRangers
+						OperandNode Value: 5
+					DecisionNode action: unitMoveIntoClosestRocket
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRangers
+						OperandNode Value: 3
+					DecisionNode action: launch_rocket_to_mars
+					DecisionNode action: launch_rocket_to_mars
+					InformationNode function: select_random_rocket
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 3
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRangers
+						OperandNode Value: 5
+					DecisionNode action: launch_rocket_to_mars
+					DecisionNode action: launch_rocket_to_mars
+					InformationNode function: select_rocket_with_most_units_garrisoned
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getRoundNumber
+						OperandNode Value: 449
+					DecisionNode action: unitMoveIntoClosestRocket
+					DecisionNode action: unitMoveIntoClosestRocket
+					InformationNode function: selectWorkerToMoveTowardHarvesting
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfWorkers
+				OperandNode Value: 2
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfHealers
+					OperandNode Value: 8
+				InformationNode function: selectUnitThatCanAttackToMove
+					DecisionNode action: unitMoveTowardEnemyBehavior
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 5
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveRandomBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+			InformationNode function: selectUnitThatCanAttackToMove
+				DecisionNode action: unitMoveRandomBehavior
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 2
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 2
+			InformationNode function: selectWorkerToMoveTowardHarvesting
+				DecisionNode action: unitMoveIntoClosestRocket
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 1
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfWorkers
+						OperandNode Value: 5
+					DecisionNode action: launch_rocket_to_mars
+					DecisionNode action: launch_rocket_to_mars
+					InformationNode function: select_rocket_with_most_units_garrisoned
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfWorkers
+						OperandNode Value: 7
+					DecisionNode action: unitMoveTowardAllyBehavior
+					DecisionNode action: unitMoveTowardAllyBehavior
+					InformationNode function: selectWorkerToMoveTowardHarvesting
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 0
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 4
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getKarbonite
+						OperandNode Value: 24
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveTowardAllyBehavior
+					InformationNode function: selectUnitThatCanAttackToMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfFactories
+						OperandNode Value: 3
+					DecisionNode action: launch_rocket_to_mars
+					DecisionNode action: launch_rocket_to_mars
+					InformationNode function: select_rocket_with_most_units_garrisoned
+			InformationNode function: select_random_rocket
+				DecisionNode action: launch_rocket_to_mars

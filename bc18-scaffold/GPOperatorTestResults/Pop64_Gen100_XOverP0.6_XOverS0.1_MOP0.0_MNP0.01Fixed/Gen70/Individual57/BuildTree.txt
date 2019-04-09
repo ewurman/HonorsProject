@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 9
+	DecisionNode action: workerBuildRocket
+	DecisionNode action: factory_produce_random
+	InformationNode function: selectRandomWorker

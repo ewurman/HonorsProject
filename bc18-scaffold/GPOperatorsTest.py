@@ -20,19 +20,20 @@ POP_SIZE = 64 #must be even -> 32 easy for final tournament
 GENERATIONS = 100 # want 50
 RECORD_PER_GEN = 5
 
-IDEAL_PLAYER = GP.createIdealPlayer()
+IDEAL_PLAYER = None
 gbest = None
 
+
 def log(filepath, message):
-    #print("Logging:", message)
+    print("Logging:", message)
     with open(filepath+"/Log.txt", 'a+') as f:
         f.write(message);
 
 
-def runGame(player1, player2):
+def runGame(player1, player2, treeTesting):
     ''' Fake running a game'''
-    p1Score = player1.compareTo(IDEAL_PLAYER)
-    p2Score = player2.compareTo(IDEAL_PLAYER)
+    p1Score = player1.compareTo(IDEAL_PLAYER, treeTesting)
+    p2Score = player2.compareTo(IDEAL_PLAYER, treeTesting)
     global gbest
 
     if gbest == None:
@@ -53,7 +54,7 @@ def runGame(player1, player2):
         return random.choice([(player1, 0), (player2, 1)])
 
 
-def battleRoyale(population):
+def battleRoyale(population, treeTesting):
     #TODO: Assumes population is a power of 2
     print("################## Battle Royale Commenced ##################")
     while len(population) != 1:
@@ -62,7 +63,7 @@ def battleRoyale(population):
         for j in range(0,len(population),2):
             player1 = population[j]
             player2 = population[j+1]
-            winner, x = runGame(player1, player2)
+            winner, x = runGame(player1, player2, treeTesting)
             new_pop.append(winner)
         population = new_pop.copy()
 
@@ -190,20 +191,24 @@ def readDataFromFile(filepath):
 
 
 
-def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, elitismNum):
-    resultDirName = "GPOperatorTestResults/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
-    print(os.listdir("GPOperatorTestResults"))
+def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTesting):
+    treeString = "Tree"+str(treeTesting)
+    if treeTesting == 0:
+        treeString = "TopTree"
+    elif treeTesting == 1:
+        treeString = "HarvestTree"
+    elif treeTesting == 2:
+        treeString = "AttackTree"
+    elif treeTesting == 3:
+        treeString = "MoveTree"
+    elif treeTesting == 4:
+        treeString = "BuildTree"    
+
+    resultDirName = "CurriculumTestingResults/" +treeString+ "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
+    
     if not os.path.exists(resultDirName):
         print("Creating new folder for test ", resultDirName)
         os.makedirs(resultDirName, exist_ok=True)
-    else:
-        print("This directory already exists!")
-        x = input("Do you want to delete the last tests and start over? (y/n) ")
-        if x == 'y':
-            shutil.rmtree(resultDirName)
-            os.makedirs(resultDirName, exist_ok=True)
-
-
     directories = os.listdir(resultDirName)
     print("Directories found: ", directories)
     savedDirs = [x for x in directories if x.startswith("Gen")]
@@ -212,8 +217,8 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
     if len(savedDirs) == 0:
         print("No saved directories found, starting a new test")
 
-        return newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName, elitismNum)
-        
+        newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName, treeTesting)
+        return
 
 
     lastSaved = sorted(savedDirs).pop()
@@ -265,7 +270,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
             log(resultDirName, "Finished recording individuals and data\n")
 
             log(resultDirName, "################## Begin Battle Royale ##################\n")
-            genWinner = battleRoyale(population)
+            genWinner = battleRoyale(population, treeTesting)
             log(resultDirName, "################## End Battle Royale ##################\n")
             
             if not os.path.exists(os.path.dirname(genDir)):
@@ -295,25 +300,22 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
             log(resultDirName, "About to run game for Gen {0} match {1}\n".format(i, j))
             #run battlecode with these two players
             # Tournament Select
-            winner, playerNum = runGame(player1, player2)
+            winner, playerNum = runGame(player1, player2, treeTesting)
             breedingPool.append(winner) 
 
             winnerDist[playerNum] += 1
+
         #now breeding pool should be half POP_SIZE
 
-        #Now we do our elitism
-        elitistPlayers = getElitistPlayers(population, elitismNum)
         #get ready for the new generation
         population.clear() 
-        population += elitistPlayers
-
         print("Starting Crossover")
-        for j in range((POP_SIZE - elitistPlayers)//2):
+        for j in range(POP_SIZE//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
             
-            c1, c2, numCrossover, heightAs = GP.Crossover3PlayerFixed(m1, m2, crossoverProb, crossoverStopEarly)
+            c1, c2, numCrossover, heightAs = GP.Crossover3PlayerFixed(m1, m2, crossoverProb, crossoverStopEarly, treeTesting)
             population += [c1, c2]
             crossoversThisRound += numCrossover
 
@@ -329,7 +331,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
         log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
         for j in range(POP_SIZE):
             player = population[j]
-            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
+            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings, treeTesting)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
         log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
@@ -351,7 +353,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     #now we want a final tournament
     #TODO: This assumes a power of 2 population
-    finalWinner = battleRoyale(population)
+    finalWinner = battleRoyale(population, treeTesting)
     finalWinnerDir = resultDirName + '/Winner/'
 
     if not os.path.exists(os.path.dirname(finalWinnerDir)):
@@ -363,15 +365,16 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
     print("Completed All generations and Data recording!")
     log(resultDirName, "Completed All generations and Data recording!\n")
 
-    return finalWinner
+    finalScore = gbest[1]
+    optimalScore = IDEAL_PLAYER.compareTo(IDEAL_PLAYER, treeTesting)
+
+    print("Final score of {0} out of {1}".format(finalScore, optimalScore))
 
 
 
 
 
-
-
-def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName, elitismNum):
+def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, resultDirName, treeTesting):
     #DATA COLLECTION VARIABLES
     crossoversPerRound = []
     cHeightsPerRound = []  #list of list of heights at which crossover occurs
@@ -379,12 +382,26 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     mutationsPerRound = []
     winnerDist = [0,0]
     population = []
-    topTreeHeight = 4
+    topTreeHeight = 5
+    attackTreeHeight = 3
+    moveTreeHeight = 5
+    buildTreeHeight = 5
+
 
     log(resultDirName, "############ Starting new test ############\n")
     # initialize population
     for i in range(POP_SIZE):
-        player = GP.createRandomFixedSizeDecisionTreePlayer(topTreeHeight)
+        player = GP.createRandomFixedSizeDecisionTreePlayer(topTreeHeight, 3)
+        if treeTesting == 0:
+            player = GP.createCurriculumTrainingPlayerTop(topTreeHeight)
+        elif treeTesting == 1:
+            player = GP.createCurriculumTrainingPlayerHarvest() #assumes height of 2
+        elif treeTesting == 2:
+            player = GP.createCurriculumTrainingPlayerAttack(attackTreeHeight)
+        elif treeTesting == 3:
+            player = GP.createCurriculumTrainingPlayerMove(moveTreeHeight)
+        elif treeTesting == 4:
+            player = GP.createCurriculumTrainingPlayerAttack(buildTreeHeight)
         population.append(player)
 
     for i in range(GENERATIONS):
@@ -410,7 +427,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             log(resultDirName, "Finished recording individuals and data\n")
 
             log(resultDirName, "################## Begin Battle Royale ##################\n")
-            genWinner = battleRoyale(population)
+            genWinner = battleRoyale(population, treeTesting)
             log(resultDirName, "################## End Battle Royale ##################\n")
             
             if not os.path.exists(os.path.dirname(genDir)):
@@ -439,26 +456,22 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             log(resultDirName, "About to run game for Gen {0} match {1}\n".format(i, j))
             #run battlecode with these two players
             # Tournament Select
-            winner, playerNum = runGame(player1, player2)
+            winner, playerNum = runGame(player1, player2, treeTesting)
             breedingPool.append(winner) 
 
             winnerDist[playerNum] += 1
+
         #now breeding pool should be half POP_SIZE
 
-        #Now we do our elitism
-        elitistPlayers = getElitistPlayers(population, elitismNum)
         #get ready for the new generation
         population.clear() 
-       #population += elitistPlayers
-        print("population has {0} players".format(len(population)))
-
         print("Starting Crossover")
-        for j in range((POP_SIZE - elitismNum)//2):
+        for j in range(POP_SIZE//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
             
-            c1, c2, numCrossover, heightAs = GP.Crossover3PlayerFixed(m1, m2, crossoverProb, crossoverStopEarly)
+            c1, c2, numCrossover, heightAs = GP.Crossover3PlayerFixed(m1, m2, crossoverProb, crossoverStopEarly, treeTesting)
             population += [c1, c2]
             crossoversThisRound += numCrossover
 
@@ -472,14 +485,13 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
         log(resultDirName, "Gen {0}: Finished Crossover\n".format(i))
         log(resultDirName, "Gen {0}: Starting Mutations\n".format(i))
-        for j in range(len(population)):
+        for j in range(POP_SIZE):
             player = population[j]
-            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateNodeProb, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings)
+            mutatedPlayer, numMutations = GP.MutatePlayerFixed(player, mutateOccurProb, GP.allFunctionSets, GP.game_number_info_functions_number_mappings, treeTesting)
             population[j] = mutatedPlayer
             mutationsThisRound += numMutations
         log(resultDirName, "Gen {0}: Finished Mutations\n".format(i))
 
-        population += elitistPlayers
 
         # DATA COLLECTION 
         for j in range(0, len(cHeightsThisRound)):
@@ -500,7 +512,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
     #now we want a final tournament
     #TODO: This assumes a power of 2 population
-    finalWinner = battleRoyale(population)
+    finalWinner = battleRoyale(population, treeTesting)
     finalWinnerDir = resultDirName + '/Winner/'
 
     if not os.path.exists(os.path.dirname(finalWinnerDir)):
@@ -512,28 +524,12 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     print("Completed All generations and Data recording!")
     log(resultDirName, "Completed All generations and Data recording!\n")
 
-    return finalWinner
+    finalScore = gbest[1]
+    optimalScore = IDEAL_PLAYER.compareTo(IDEAL_PLAYER, treeTesting)
+
+    print("Final score of {0} out of {1}".format(finalScore, optimalScore))
 
 
-
-
-def getElitistPlayers(population, elitismNum):
-    popScores = [(x,x.compareTo(IDEAL_PLAYER)) for x in population]
-    top4 = popScores[:4]
-
-    def myKey(playerScoreA):
-        return playerScoreA[1]
-
-    top4 = sorted(top4, key=myKey) #Ascending order
-    for playerScore in popScores[4:]:
-        if playerScore[1] > top4[0][1]:
-            top4[0] = playerScore
-            top4 = sorted(top4, key=myKey) #Ascending order
-
-    bestPlayers = [x[0] for x in top4]
-
-    print("Elitist Players have scores of {0}, {1}, {2}, {3}".format(top4[0][1],top4[1][1],top4[2][1],top4[3][1]))
-    return bestPlayers
 
 
 
@@ -543,28 +539,27 @@ def getElitistPlayers(population, elitismNum):
 
 if __name__ == '__main__':
 
-    gpOperatorTestsDir = "GPOperatorTestResults"
-    if not os.path.exists(gpOperatorTestsDir):
-        os.makedirs(gpOperatorTestsDir, exist_ok=True)
 
     population = []
     mutateNodeProb = 0.01
-    mutateOccurProb = 0.2  #{0.2,0.4,0.6}
+    mutateOccurProb = 0.4  #{0.2,0.4,0.6}
 
     crossoverProb = 0.6 #% chance each tree  want it to be one of {0.4, 0.6, 0.8}
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
-    elitismNum = 4
-    winner = doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, elitismNum)
+
+    treeTraining = 0
+    '''
+    topTreeHeight = 5
+    attackTreeHeight = 3
+    moveTreeHeight = 5
+    buildTreeHeight = 5
+    '''
+
+    IDEAL_PLAYER = GP.createIdealPlayerForTesting(treeTraining, 5)
+    doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")
-
-    finalScore = winner.compareTo(IDEAL_PLAYER)
-    bestScore = IDEAL_PLAYER.compareTo(IDEAL_PLAYER)
-
-    print("Final Score: {0}, Ideal Score: {1}, Accuracy: {2}".format(finalScore, bestScore, finalScore/bestScore))
-    print("Generation Best:")
-    print("gBest Score: {0}, Ideal Score: {1}, Accuracy: {2}".format(gbest[1], bestScore, gbest[1]/bestScore))
 
 
 

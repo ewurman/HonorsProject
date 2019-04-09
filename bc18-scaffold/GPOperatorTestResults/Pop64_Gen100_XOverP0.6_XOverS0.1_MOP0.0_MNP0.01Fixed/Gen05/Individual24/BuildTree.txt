@@ -1,0 +1,29 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 893
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfKnights
+			OperandNode Value: 4
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 1
+			DecisionNode action: factory_produce_ranger
+			DecisionNode action: factory_produce_ranger
+			InformationNode function: selectRandomFactory
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 3
+			DecisionNode action: factory_produce_mage
+			DecisionNode action: factory_produce_ranger
+			InformationNode function: selectRandomFactory
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfKnights
+			OperandNode Value: 8
+		DecisionNode action: workerBuildBehavior
+		DecisionNode action: workerBuildBehavior
+		InformationNode function: selectRandomWorker

@@ -1,0 +1,22 @@
+# Number of Avg Crossover Per Generation
+42,45,38,46
+# Average Number of Avg Crossovers Across Generations
+3.42
+
+# Average height of tree A of Crossovers Across Generations
+2.4545454545454546,2.0,2.0,3.2222222222222223,3.2;2.769230769230769,2.0,2.125,3.2857142857142856,3.2222222222222223;3.0,2.0,2.0,2.875,3.8333333333333335;2.5555555555555554,1.9090909090909092,2.1,2.6,2.3333333333333335;
+# Average height of tree A of Crossovers Across Generations
+2.6948329448329447,1.9772727272727273,2.05625,2.995734126984127,3.1472222222222226
+
+# Number of Avg Mutations Per Generation
+0,0,0,0
+# Average Number of Avg Mutations Across Generations
+0.0
+
+# Average Number of Nodes per Tree each Generation
+36.0,5.0,9.03125,115.0,142.5;36.0,5.0,8.71875,118.6875,134.78125;36.0,5.0,8.5,113.9375,129.0625;36.0,5.0,8.25,94.5,120.9375;
+# Mean number of nodes 
+2.88,0.4,0.69,8.8425,10.545625
+
+# Winner Distribution
+27, 37

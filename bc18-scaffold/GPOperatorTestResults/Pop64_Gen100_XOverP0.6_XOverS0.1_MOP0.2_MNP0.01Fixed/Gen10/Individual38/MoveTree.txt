@@ -1,0 +1,57 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfMages
+		OperandNode Value: 4
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 822
+		DecisionNode action: unitMoveRandomBehavior
+		DecisionNode action: unitMoveIntoClosestRocket
+		InformationNode function: selectRandomUnitThatCanMove
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 507
+		InformationNode function: selectRandomUnitThatCanMove
+			DecisionNode action: unitMoveTowardEnemyBehavior
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getKarbonite
+				OperandNode Value: 961
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 7
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfWorkers
+						OperandNode Value: 6
+					DecisionNode action: launch_rocket_to_mars
+					DecisionNode action: unitMoveIntoClosestRocket
+					InformationNode function: select_rocket_with_most_units_garrisoned
+				IfNode 
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRockets
+						OperandNode Value: 1
+					IfNode WithInfo
+						BooleanNode operation: lt
+							InformationNode function: getKarbonite
+							OperandNode Value: 384
+						DecisionNode action: unitMoveIntoClosestRocket
+						DecisionNode action: unitMoveTowardEnemyBehavior
+						InformationNode function: selectWorkerToMoveTowardHarvesting
+					IfNode WithInfo
+						BooleanNode operation: lt
+							InformationNode function: getKarbonite
+							OperandNode Value: 872
+						DecisionNode action: unitMoveTowardEnemyBehavior
+						DecisionNode action: unitMoveRandomBehavior
+						InformationNode function: selectWorkerToMoveTowardHarvesting
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRockets
+					OperandNode Value: 5
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveRandomBehavior
+				InformationNode function: selectRandomUnitThatCanMove

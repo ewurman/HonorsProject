@@ -1,0 +1,34 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfMages
+		OperandNode Value: 7
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 1
+		IfNode WithInfo
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 5
+			DecisionNode action: launch_rocket_to_mars
+			DecisionNode action: launch_rocket_to_mars
+			InformationNode function: select_random_rocket
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 4
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 630
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: select_random_rocket
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRangers
+					OperandNode Value: 3
+				DecisionNode action: launch_rocket_to_mars
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: select_rocket_with_most_units_garrisoned
+	InformationNode function: getNumberOfRockets

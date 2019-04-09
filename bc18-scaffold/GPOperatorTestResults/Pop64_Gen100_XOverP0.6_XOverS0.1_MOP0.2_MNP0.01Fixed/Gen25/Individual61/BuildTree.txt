@@ -1,0 +1,7 @@
+IfNode WithInfo
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfKnights
+		OperandNode Value: 0
+	DecisionNode action: factory_produce_worker
+	DecisionNode action: factory_produce_healer
+	InformationNode function: selectRandomWorker

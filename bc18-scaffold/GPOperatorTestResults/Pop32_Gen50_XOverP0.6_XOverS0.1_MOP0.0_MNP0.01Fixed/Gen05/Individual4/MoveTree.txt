@@ -1,0 +1,13 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 768
+	InformationNode function: select_random_rocket
+		DecisionNode action: unitMoveIntoClosestRocket
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 51
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveRandomBehavior
+		InformationNode function: selectWorkerToMoveTowardHarvesting

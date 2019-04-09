@@ -1,0 +1,57 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 2
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 172
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRangers
+				OperandNode Value: 5
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 6
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRangers
+						OperandNode Value: 5
+					DecisionNode action: unitMoveIntoClosestRocket
+					DecisionNode action: unitMoveRandomBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfHealers
+						OperandNode Value: 1
+					DecisionNode action: unitMoveTowardEnemyBehavior
+					DecisionNode action: unitMoveRandomBehavior
+					InformationNode function: selectWorkerToMoveTowardHarvesting
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 5
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getNumberOfRangers
+						OperandNode Value: 2
+					DecisionNode action: unitMoveIntoClosestRocket
+					DecisionNode action: unitMoveRandomBehavior
+					InformationNode function: selectRandomUnitThatCanMove
+				IfNode WithInfo
+					BooleanNode operation: lt
+						InformationNode function: getRoundNumber
+						OperandNode Value: 585
+					DecisionNode action: unitMoveRandomBehavior
+					DecisionNode action: unitMoveTowardAllyBehavior
+					InformationNode function: selectWorkerToMoveTowardHarvesting
+		InformationNode function: select_random_rocket
+			DecisionNode action: launch_rocket_to_mars
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRangers
+			OperandNode Value: 5
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveTowardAllyBehavior
+		InformationNode function: selectUnitThatCanAttackToMove

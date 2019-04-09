@@ -1,0 +1,18 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 345
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 5
+		DecisionNode action: workerBuildBehavior
+		DecisionNode action: workerBuildRocket
+		InformationNode function: selectRandomWorker
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfHealers
+			OperandNode Value: 2
+		DecisionNode action: workerBuildBehavior
+		DecisionNode action: factory_produce_ranger
+		InformationNode function: selectRandomWorker

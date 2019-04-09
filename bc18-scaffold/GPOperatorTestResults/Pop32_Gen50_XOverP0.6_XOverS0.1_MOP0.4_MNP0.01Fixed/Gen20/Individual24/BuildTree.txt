@@ -1,0 +1,18 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfKnights
+		OperandNode Value: 5
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfHealers
+			OperandNode Value: 7
+		DecisionNode action: factory_produce_knight
+		DecisionNode action: factory_produce_worker
+		InformationNode function: selectRandomFactory
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getKarbonite
+			OperandNode Value: 4
+		DecisionNode action: factory_produce_knight
+		DecisionNode action: factory_produce_ranger
+		InformationNode function: selectRandomFactory
