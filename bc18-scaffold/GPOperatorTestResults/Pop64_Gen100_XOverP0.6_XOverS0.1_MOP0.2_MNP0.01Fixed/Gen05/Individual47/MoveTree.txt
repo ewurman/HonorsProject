@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfKnights
-		OperandNode Value: 182
-	DecisionNode action: unitMoveIntoClosestRocket
-	DecisionNode action: unitMoveTowardEnemyBehavior
-	InformationNode function: selectRandomUnitThatCanMove

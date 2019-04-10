@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getRoundNumber
-		OperandNode Value: 0
-	DecisionNode action: launch_rocket_to_mars
-	DecisionNode action: unitMoveIntoClosestRocket
-	InformationNode function: selectUnitThatCanAttackToMove

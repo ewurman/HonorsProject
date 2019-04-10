@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfFactories
-		OperandNode Value: 877
-	DecisionNode action: unitMoveTowardEnemyBehavior
-	DecisionNode action: unitMoveTowardEnemyBehavior
-	InformationNode function: selectWorkerToMoveTowardHarvesting

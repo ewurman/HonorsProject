@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfHealers
-		OperandNode Value: 5
-	DecisionNode action: workerBuildRocket
-	DecisionNode action: factory_produce_knight
-	InformationNode function: selectRandomFactory

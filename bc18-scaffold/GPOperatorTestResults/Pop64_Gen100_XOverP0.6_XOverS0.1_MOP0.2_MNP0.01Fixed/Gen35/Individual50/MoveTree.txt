@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfMages
-		OperandNode Value: 0
-	DecisionNode action: unitMoveRandomBehavior
-	DecisionNode action: launch_rocket_to_mars
-	InformationNode function: selectUnitThatCanAttackToMove

@@ -1,4 +1,0 @@
-IfNode 
-	BooleanNode function: isRanger
-	DecisionNode action: unitAttackClosestPossibleEnemy
-	DecisionNode action: unitAttackClosestPossibleEnemy

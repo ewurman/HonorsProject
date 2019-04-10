@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getKarbonite
-		OperandNode Value: 0
-	DecisionNode action: factory_produce_worker
-	DecisionNode action: factory_produce_random
-	InformationNode function: selectRandomWorker

@@ -17,7 +17,7 @@ WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 POP_SIZE = 32 #must be even -> 32 easy for final tournament
 GENERATIONS = 50 # want 50
-RECORD_PER_GEN = 5
+RECORD_PER_GEN = 1
 
 
 def log(filepath, message):
@@ -72,6 +72,24 @@ def battleRoyale(population):
     finalWinner = population[0]
     return finalWinner
 
+
+def winnerBattleRoyale(resultDirName):
+    finalPop = []
+    directories = os.listdir(resultDirName)
+    for gen in directories:
+        thisPlayerPath = resultDirName + "/" + gen + "/Winner"
+        player = GP.DecisionTreePlayer(None, None, None, None, None, None)
+        player = player.readFromFiles(thisPlayerPath, GP.allFunctionSets)
+        finalPop.append(player)
+
+    #now make population a power of 2
+    indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
+    playersToDouble = [finalPop[i] for i in sorted(indicesToDouble)]
+
+    finalPop += playersToDouble
+    finalWinner = battleRoyale(finalPop)
+    return finalWinner
+        
 
 
 
@@ -355,8 +373,10 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     #now we want a final tournament
     #TODO: This assumes a power of 2 population
-    finalWinner = battleRoyale(population)
+    finalWinner = winnerBattleRoyale(resultDirName)
     finalWinnerDir = resultDirName + '/Winner/'
+    #finalWinner = battleRoyale(population)
+    #finalWinnerDir = resultDirName + '/Winner/'
 
     if not os.path.exists(os.path.dirname(finalWinnerDir)):
         os.makedirs(os.path.dirname(finalWinnerDir), exist_ok=True)
@@ -514,8 +534,10 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
     #now we want a final tournament
     #TODO: This assumes a power of 2 population
-    finalWinner = battleRoyale(population)
+    #finalWinner = battleRoyale(population)
+    finalWinner = winnerBattleRoyale(resultDirName)
     finalWinnerDir = resultDirName + '/Winner/'
+
 
     if not os.path.exists(os.path.dirname(finalWinnerDir)):
         os.makedirs(os.path.dirname(finalWinnerDir), exist_ok=True)

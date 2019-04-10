@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfMages
-		OperandNode Value: 3
-	DecisionNode action: workerBuildBehavior
-	DecisionNode action: workerBuildBehavior
-	InformationNode function: selectRandomWorker

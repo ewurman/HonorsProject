@@ -1,5 +1,0 @@
-IfNode WithInfo
-	BooleanNode function: isRanger
-	DecisionNode action: unitAttackRandomPossibleEnemy
-	DecisionNode action: unitAttackClosestPossibleEnemy
-	InformationNode function: selectRandomUnitThatCanAttack

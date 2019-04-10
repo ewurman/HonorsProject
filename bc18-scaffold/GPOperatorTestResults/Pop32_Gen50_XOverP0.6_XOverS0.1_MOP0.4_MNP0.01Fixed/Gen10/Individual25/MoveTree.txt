@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfFactories
-		OperandNode Value: 8
-	DecisionNode action: unitMoveTowardAllyBehavior
-	DecisionNode action: launch_rocket_to_mars
-	InformationNode function: selectWorkerToMoveTowardHarvesting

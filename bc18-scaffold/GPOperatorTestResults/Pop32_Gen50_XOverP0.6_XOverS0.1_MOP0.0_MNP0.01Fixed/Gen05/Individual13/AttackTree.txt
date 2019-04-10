@@ -1,4 +1,0 @@
-IfNode 
-	BooleanNode function: isHealer
-	DecisionNode action: unitAttackClosestPossibleEnemy
-	DecisionNode action: unitAttackRandomPossibleEnemy

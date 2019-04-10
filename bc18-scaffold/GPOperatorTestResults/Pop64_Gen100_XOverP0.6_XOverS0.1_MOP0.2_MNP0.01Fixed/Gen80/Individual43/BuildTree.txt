@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfWorkers
-		OperandNode Value: 0
-	DecisionNode action: factory_produce_knight
-	DecisionNode action: factory_produce_mage
-	InformationNode function: selectRandomWorker

@@ -16,9 +16,9 @@ TNODES_HEADER = "# Average Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
-POP_SIZE = 64 #must be even -> 32 easy for final tournament
-GENERATIONS = 100 # want 50
-RECORD_PER_GEN = 5
+POP_SIZE = 32 #must be even -> 32 easy for final tournament
+GENERATIONS = 50 # want 50
+RECORD_PER_GEN = 1
 
 IDEAL_PLAYER = None
 gbest = None
@@ -71,6 +71,29 @@ def battleRoyale(population, treeTesting):
     return finalWinner
 
 
+
+def winnerBattleRoyale(resultDirName):
+    finalPop = []
+    directories = os.listdir(resultDirName)
+    for gen in directories:
+        if (os.path.isfile(resultDirName + "/" + gen)):
+            continue;
+        thisPlayerPath = resultDirName + "/" + gen + "/Winner"
+        player = GP.DecisionTreePlayer(None, None, None, None, None, None)
+        player = player.readFromFiles(thisPlayerPath, GP.allFunctionSets)
+        finalPop.append(player)
+
+    print("Len final pop is", len(finalPop))
+    #now make population a power of 2
+    indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
+    playersToDouble = [finalPop[i] for i in sorted(indicesToDouble)]
+    print("Len players to double is", len(playersToDouble))
+
+    finalPop += playersToDouble
+    print("Len final pop is now", len(finalPop))
+    finalWinner = battleRoyale(finalPop, 0)
+    return finalWinner
+        
 
 
 def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate = True):
@@ -204,7 +227,7 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
     elif treeTesting == 4:
         treeString = "BuildTree"    
 
-    resultDirName = "CurriculumTestingResults/" +treeString+ "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
+    resultDirName = "GPOperatorTestResults/" +treeString+ "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
     
     if not os.path.exists(resultDirName):
         print("Creating new folder for test ", resultDirName)
@@ -266,8 +289,9 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
                 individual.writeToFiles(individualDir)
 
             # Now write data to file
-            writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
-            log(resultDirName, "Finished recording individuals and data\n")
+            if i != 0:
+                writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
+                log(resultDirName, "Finished recording individuals and data\n")
 
             log(resultDirName, "################## Begin Battle Royale ##################\n")
             genWinner = battleRoyale(population, treeTesting)
@@ -353,7 +377,9 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
     #now we want a final tournament
     #TODO: This assumes a power of 2 population
-    finalWinner = battleRoyale(population, treeTesting)
+    #finalWinner = battleRoyale(population, treeTesting)
+    #finalWinnerDir = resultDirName + '/Winner/'
+    finalWinner = winnerBattleRoyale(resultDirName)
     finalWinnerDir = resultDirName + '/Winner/'
 
     if not os.path.exists(os.path.dirname(finalWinnerDir)):
@@ -423,8 +449,9 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
                 individual.writeToFiles(individualDir)
 
             # Now write data to file
-            writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
-            log(resultDirName, "Finished recording individuals and data\n")
+            if i != 0:
+                writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
+                log(resultDirName, "Finished recording individuals and data\n")
 
             log(resultDirName, "################## Begin Battle Royale ##################\n")
             genWinner = battleRoyale(population, treeTesting)
@@ -512,8 +539,10 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
 
     #now we want a final tournament
     #TODO: This assumes a power of 2 population
-    finalWinner = battleRoyale(population, treeTesting)
+    finalWinner = winnerBattleRoyale(resultDirName)
     finalWinnerDir = resultDirName + '/Winner/'
+    #finalWinner = battleRoyale(population, treeTesting)
+    #finalWinnerDir = resultDirName + '/Winner/'
 
     if not os.path.exists(os.path.dirname(finalWinnerDir)):
         os.makedirs(os.path.dirname(finalWinnerDir), exist_ok=True)

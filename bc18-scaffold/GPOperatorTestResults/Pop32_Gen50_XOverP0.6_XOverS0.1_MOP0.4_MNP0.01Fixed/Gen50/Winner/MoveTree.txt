@@ -1,7 +1,0 @@
-IfNode WithInfo
-	BooleanNode operation: lt
-		InformationNode function: getNumberOfMages
-		OperandNode Value: 204
-	DecisionNode action: unitMoveIntoClosestRocket
-	DecisionNode action: unitMoveRandomBehavior
-	InformationNode function: select_random_rocket
