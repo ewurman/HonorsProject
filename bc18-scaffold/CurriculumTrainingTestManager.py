@@ -567,7 +567,7 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 3
+    treeTraining = 0
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")
