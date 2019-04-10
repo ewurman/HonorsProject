@@ -286,8 +286,9 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
                 individual.writeToFiles(individualDir)
 
             # Now write data to file
-            writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
-            log(resultDirName, "Finished recording individuals and data\n")
+            if i != 0:
+                writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
+                log(resultDirName, "Finished recording individuals and data\n")
 
             log(resultDirName, "################## Begin Battle Royale ##################\n")
             genWinner = battleRoyale(population)
@@ -445,8 +446,9 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
                 individual.writeToFiles(individualDir)
 
             # Now write data to file
-            writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
-            log(resultDirName, "Finished recording individuals and data\n")
+            if i != 0:
+                writeDataToFile(genDir, crossoversPerRound, cHeightsPerRound, mutationsPerRound, tNodesPerRound, winnerDist, isIntermediate=True)
+                log(resultDirName, "Finished recording individuals and data\n")
 
             log(resultDirName, "################## Begin Battle Royale ##################\n")
             genWinner = battleRoyale(population)
