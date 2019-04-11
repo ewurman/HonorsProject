@@ -76,7 +76,9 @@ def battleRoyale(population):
 def winnerBattleRoyale(resultDirName):
     finalPop = []
     directories = os.listdir(resultDirName)
-    for gen in directories:
+    for gen in onlyDir:
+        if (os.path.isfile(resultDirName + "/" + gen)):
+            continue;
         thisPlayerPath = resultDirName + "/" + gen + "/Winner"
         player = GP.DecisionTreePlayer(None, None, None, None, None, None)
         player = player.readFromFiles(thisPlayerPath, GP.allFunctionSets)
@@ -569,7 +571,7 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 3
+    treeTraining = 0
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")
