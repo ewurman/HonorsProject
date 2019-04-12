@@ -76,7 +76,7 @@ def battleRoyale(population):
 def winnerBattleRoyale(resultDirName):
     finalPop = []
     directories = os.listdir(resultDirName)
-    for gen in onlyDir:
+    for gen in directories:
         if (os.path.isfile(resultDirName + "/" + gen)):
             continue;
         thisPlayerPath = resultDirName + "/" + gen + "/Winner"

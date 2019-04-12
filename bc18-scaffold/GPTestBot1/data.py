@@ -4087,12 +4087,47 @@ def createIdealPlayerForTesting(treeTraining, treeHeight) -> DecisionTreePlayer:
     return player
 
 
-def topTreeFitnessEval(topTree) -> int:
+def topTreeFitnessEval(tree) -> int:
     hasHarvest, hasAttack, hasMove, hasBuild = False, False, False, False
     checkForRockets = False
-    fitness = 0
-    stack = []
+    numBranchesWithDuplicateBoolFunctions = 0
+    fitness = 2**tree.height #A perfect score
+    nodes_to_visit = []
+    nodes_to_visit.append(tree.root)
+    branch_functions = []
     # TODO DFS looking at paths to make sure no repeats, and to check above bools
+    while len(nodes_to_visit) != 0:
+        currNode = nodes_to_visit[-1]
+        if type(currNode) is IfNode:
+            # We should look at the bool node's (or info node's) function, add it to a list of this branches functions,
+            #  then add the true and false children to the stack
+            boolNode = currNode.firstChild
+            function = None
+            if boolNode.firstChild is not None:
+                infoNode = BooleanNode.firstChild
+                function = infoNode.function
+                branch_functions.append(function)
+            else:
+                branch_functions.append(boolNode.function)
+
+
+
+        #elif type(currNode) is BooleanNode:
+        #we want to look at the function, Or th infoNode Child's function and
+        # add it to the current functions in the branch
+
+        elif type(currNode) is DecisionNode:
+            action = currNode.typeOfActionToMake
+            if action = ActionType.Harvest:
+                hasHarvest = True
+            elif action = ActionType.Attack:
+                hasAttack = True
+            elif action = ActionType.Move:
+                hasMove = True
+            elif action = ActionType.Build:
+                hasBuild = True
+            #TODO: now we want to pop of this from the stack
+
     return fitness
 
 
