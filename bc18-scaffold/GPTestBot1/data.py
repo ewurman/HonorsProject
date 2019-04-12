@@ -4093,40 +4093,68 @@ def topTreeFitnessEval(tree) -> int:
     numBranchesWithDuplicateBoolFunctions = 0
     fitness = 2**tree.height #A perfect score
     nodes_to_visit = []
-    nodes_to_visit.append(tree.root)
+    nodes_to_visit.append((tree.root,0))
     branch_functions = []
     # TODO DFS looking at paths to make sure no repeats, and to check above bools
     while len(nodes_to_visit) != 0:
-        currNode = nodes_to_visit[-1]
+        currNode,visits = nodes_to_visit.pop()
         if type(currNode) is IfNode:
             # We should look at the bool node's (or info node's) function, add it to a list of this branches functions,
             #  then add the true and false children to the stack
-            boolNode = currNode.firstChild
-            function = None
-            if boolNode.firstChild is not None:
-                infoNode = BooleanNode.firstChild
-                function = infoNode.function
-                branch_functions.append(function)
+            if visits == 1:
+                #we've been here before so now we pop
+                branch_functions.pop() #get rid of this bool function
+
             else:
-                branch_functions.append(boolNode.function)
+                boolNode = currNode.firstChild
+                function = None
+                if boolNode.firstChild is not None:
+                    infoNode = BooleanNode.firstChild
+                    function = infoNode.function
+                    if function == getNumberOfRockets:
+                        checkForRockets = True
+                        print("** found getNumberOfRockets function **")
+                    branch_functions.append(function)
+                else:
+                    branch_functions.append(boolNode.function)
 
+                #now we want to add children to stack, but first us
+                nodes_to_visit.append((currNode, visits + 1))
+                nodes_to_visit.append((currNode.secondChild, 0))
+                nodes_to_visit.append((currNode.thirdChild, 0))
 
-
-        #elif type(currNode) is BooleanNode:
-        #we want to look at the function, Or th infoNode Child's function and
-        # add it to the current functions in the branch
 
         elif type(currNode) is DecisionNode:
             action = currNode.typeOfActionToMake
-            if action = ActionType.Harvest:
+            if action == ActionType.Harvest:
                 hasHarvest = True
-            elif action = ActionType.Attack:
+            elif action == ActionType.Attack:
                 hasAttack = True
-            elif action = ActionType.Move:
+            elif action == ActionType.Move:
                 hasMove = True
-            elif action = ActionType.Build:
+            elif action == ActionType.Build:
                 hasBuild = True
-            #TODO: now we want to pop of this from the stack
+            # now we check for duplicates down the path
+            numDuplicates = 0
+            for i in range(len(branch_functions)):
+                for j in range(i + 1, len(branch_functions)):
+                    if branch_functions[i] == branch_functions[j]:
+                        numDuplicates += 1
+                    #TODO: test this above
+            numBranchesWithDuplicateBoolFunctions += numDuplicates
+            
+    # now we add the penalties
+    fitness -= numBranchesWithDuplicateBoolFunctions
+    if !hasHarvest:
+        fitness -= 1
+    if !hasAttack:
+        fitness -= 2
+    if !hasBuild:
+        fitness -= 4
+    if !hasMove:
+        fitness -= 4
+    if !checkForRockets:
+        fitness -= 4:
 
     return fitness
 
