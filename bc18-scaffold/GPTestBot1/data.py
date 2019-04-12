@@ -4145,15 +4145,15 @@ def topTreeFitnessEval(tree) -> int:
             
     # now we add the penalties
     fitness -= numBranchesWithDuplicateBoolFunctions
-    if !hasHarvest:
+    if not hasHarvest:
         fitness -= 1
-    if !hasAttack:
+    if not hasAttack:
         fitness -= 2
-    if !hasBuild:
+    if not hasBuild:
         fitness -= 4
-    if !hasMove:
+    if not hasMove:
         fitness -= 4
-    if !checkForRockets:
+    if not checkForRockets:
         fitness -= 4:
 
     return fitness
