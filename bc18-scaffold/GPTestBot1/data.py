@@ -4154,7 +4154,7 @@ def topTreeFitnessEval(tree) -> int:
     if not hasMove:
         fitness -= 4
     if not checkForRockets:
-        fitness -= 4:
+        fitness -= 4
 
     return fitness
 
