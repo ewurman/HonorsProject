@@ -2,8 +2,8 @@ IfNode
 	BooleanNode function: canAnyUnitAttack
 	IfNode WithInfo
 		BooleanNode function: isAttacker
-		DecisionNode action: nonWorkerAttackBehavior
-		DecisionNode action: nonWorkerAttackBehavior
+		DecisionNode typeOfActionToMake: 0
+		DecisionNode typeOfActionToMake: 0
 		InformationNode function: selectUnitDealingMostDamageThatCanAttack
 	IfNode WithInfo
 		BooleanNode function: isAttacker

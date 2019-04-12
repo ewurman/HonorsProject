@@ -1,0 +1,76 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfWorkers
+		OperandNode Value: 11
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 5
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfAttackers
+					OperandNode Value: 4
+				DecisionNode typeOfActionToMake: 4
+				DecisionNode typeOfActionToMake: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 7
+				DecisionNode typeOfActionToMake: 3
+				DecisionNode typeOfActionToMake: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getMaxNumberOfUnitsInEarthRocket
+					OperandNode Value: 3
+				DecisionNode typeOfActionToMake: 4
+				DecisionNode typeOfActionToMake: 2
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 3
+				DecisionNode typeOfActionToMake: 3
+				DecisionNode typeOfActionToMake: 1
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 4
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 2
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfAttackers
+					OperandNode Value: 1
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 1
+				DecisionNode typeOfActionToMake: 1
+				DecisionNode typeOfActionToMake: 2
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getRoundNumber
+				OperandNode Value: 450
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfHealers
+					OperandNode Value: 3
+				DecisionNode typeOfActionToMake: 3
+				DecisionNode typeOfActionToMake: 4
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 300
+				DecisionNode typeOfActionToMake: 4
+				DecisionNode typeOfActionToMake: 1

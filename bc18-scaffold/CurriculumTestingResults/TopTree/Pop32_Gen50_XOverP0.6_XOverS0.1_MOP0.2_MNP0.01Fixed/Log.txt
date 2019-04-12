@@ -3,6 +3,8 @@
 
 Generation 0
 
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 0 match 0
 About to run game for Gen 0 match 2
 About to run game for Gen 0 match 4
@@ -26,6 +28,9 @@ Gen 0: Finished Mutations
 
 Generation 1
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 1 match 0
 About to run game for Gen 1 match 2
 About to run game for Gen 1 match 4
@@ -49,6 +54,9 @@ Gen 1: Finished Mutations
 
 Generation 2
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 2 match 0
 About to run game for Gen 2 match 2
 About to run game for Gen 2 match 4
@@ -72,6 +80,9 @@ Gen 2: Finished Mutations
 
 Generation 3
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 3 match 0
 About to run game for Gen 3 match 2
 About to run game for Gen 3 match 4
@@ -121,6 +132,9 @@ Gen 4: Finished Mutations
 
 Generation 5
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 5 match 0
 About to run game for Gen 5 match 2
 About to run game for Gen 5 match 4
@@ -144,6 +158,9 @@ Gen 5: Finished Mutations
 
 Generation 6
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 6 match 0
 About to run game for Gen 6 match 2
 About to run game for Gen 6 match 4
@@ -167,6 +184,9 @@ Gen 6: Finished Mutations
 
 Generation 7
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 7 match 0
 About to run game for Gen 7 match 2
 About to run game for Gen 7 match 4
@@ -190,6 +210,9 @@ Gen 7: Finished Mutations
 
 Generation 8
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 8 match 0
 About to run game for Gen 8 match 2
 About to run game for Gen 8 match 4
@@ -239,6 +262,9 @@ Gen 9: Finished Mutations
 
 Generation 10
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 10 match 0
 About to run game for Gen 10 match 2
 About to run game for Gen 10 match 4
@@ -262,6 +288,9 @@ Gen 10: Finished Mutations
 
 Generation 11
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 11 match 0
 About to run game for Gen 11 match 2
 About to run game for Gen 11 match 4
@@ -285,6 +314,9 @@ Gen 11: Finished Mutations
 
 Generation 12
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 12 match 0
 About to run game for Gen 12 match 2
 About to run game for Gen 12 match 4
@@ -308,6 +340,9 @@ Gen 12: Finished Mutations
 
 Generation 13
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 13 match 0
 About to run game for Gen 13 match 2
 About to run game for Gen 13 match 4
@@ -357,6 +392,9 @@ Gen 14: Finished Mutations
 
 Generation 15
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 15 match 0
 About to run game for Gen 15 match 2
 About to run game for Gen 15 match 4
@@ -380,6 +418,9 @@ Gen 15: Finished Mutations
 
 Generation 16
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 16 match 0
 About to run game for Gen 16 match 2
 About to run game for Gen 16 match 4
@@ -403,6 +444,9 @@ Gen 16: Finished Mutations
 
 Generation 17
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 17 match 0
 About to run game for Gen 17 match 2
 About to run game for Gen 17 match 4
@@ -426,6 +470,9 @@ Gen 17: Finished Mutations
 
 Generation 18
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 18 match 0
 About to run game for Gen 18 match 2
 About to run game for Gen 18 match 4
@@ -475,6 +522,9 @@ Gen 19: Finished Mutations
 
 Generation 20
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 20 match 0
 About to run game for Gen 20 match 2
 About to run game for Gen 20 match 4
@@ -498,6 +548,9 @@ Gen 20: Finished Mutations
 
 Generation 21
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 21 match 0
 About to run game for Gen 21 match 2
 About to run game for Gen 21 match 4
@@ -521,6 +574,9 @@ Gen 21: Finished Mutations
 
 Generation 22
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 22 match 0
 About to run game for Gen 22 match 2
 About to run game for Gen 22 match 4
@@ -544,6 +600,9 @@ Gen 22: Finished Mutations
 
 Generation 23
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 23 match 0
 About to run game for Gen 23 match 2
 About to run game for Gen 23 match 4
@@ -593,6 +652,9 @@ Gen 24: Finished Mutations
 
 Generation 25
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 25 match 0
 About to run game for Gen 25 match 2
 About to run game for Gen 25 match 4
@@ -616,6 +678,9 @@ Gen 25: Finished Mutations
 
 Generation 26
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 26 match 0
 About to run game for Gen 26 match 2
 About to run game for Gen 26 match 4
@@ -639,6 +704,9 @@ Gen 26: Finished Mutations
 
 Generation 27
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 27 match 0
 About to run game for Gen 27 match 2
 About to run game for Gen 27 match 4
@@ -662,6 +730,9 @@ Gen 27: Finished Mutations
 
 Generation 28
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 28 match 0
 About to run game for Gen 28 match 2
 About to run game for Gen 28 match 4
@@ -711,6 +782,9 @@ Gen 29: Finished Mutations
 
 Generation 30
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 30 match 0
 About to run game for Gen 30 match 2
 About to run game for Gen 30 match 4
@@ -734,6 +808,9 @@ Gen 30: Finished Mutations
 
 Generation 31
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 31 match 0
 About to run game for Gen 31 match 2
 About to run game for Gen 31 match 4
@@ -757,6 +834,9 @@ Gen 31: Finished Mutations
 
 Generation 32
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 32 match 0
 About to run game for Gen 32 match 2
 About to run game for Gen 32 match 4
@@ -780,6 +860,9 @@ Gen 32: Finished Mutations
 
 Generation 33
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 33 match 0
 About to run game for Gen 33 match 2
 About to run game for Gen 33 match 4
@@ -829,6 +912,9 @@ Gen 34: Finished Mutations
 
 Generation 35
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 35 match 0
 About to run game for Gen 35 match 2
 About to run game for Gen 35 match 4
@@ -852,6 +938,9 @@ Gen 35: Finished Mutations
 
 Generation 36
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 36 match 0
 About to run game for Gen 36 match 2
 About to run game for Gen 36 match 4
@@ -875,6 +964,9 @@ Gen 36: Finished Mutations
 
 Generation 37
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 37 match 0
 About to run game for Gen 37 match 2
 About to run game for Gen 37 match 4
@@ -898,6 +990,9 @@ Gen 37: Finished Mutations
 
 Generation 38
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 38 match 0
 About to run game for Gen 38 match 2
 About to run game for Gen 38 match 4
@@ -947,6 +1042,9 @@ Gen 39: Finished Mutations
 
 Generation 40
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 40 match 0
 About to run game for Gen 40 match 2
 About to run game for Gen 40 match 4
@@ -970,6 +1068,9 @@ Gen 40: Finished Mutations
 
 Generation 41
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 41 match 0
 About to run game for Gen 41 match 2
 About to run game for Gen 41 match 4
@@ -993,6 +1094,9 @@ Gen 41: Finished Mutations
 
 Generation 42
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 42 match 0
 About to run game for Gen 42 match 2
 About to run game for Gen 42 match 4
@@ -1016,6 +1120,9 @@ Gen 42: Finished Mutations
 
 Generation 43
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 43 match 0
 About to run game for Gen 43 match 2
 About to run game for Gen 43 match 4
@@ -1065,6 +1172,9 @@ Gen 44: Finished Mutations
 
 Generation 45
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 45 match 0
 About to run game for Gen 45 match 2
 About to run game for Gen 45 match 4
@@ -1088,6 +1198,9 @@ Gen 45: Finished Mutations
 
 Generation 46
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 46 match 0
 About to run game for Gen 46 match 2
 About to run game for Gen 46 match 4
@@ -1111,6 +1224,9 @@ Gen 46: Finished Mutations
 
 Generation 47
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 47 match 0
 About to run game for Gen 47 match 2
 About to run game for Gen 47 match 4
@@ -1134,6 +1250,9 @@ Gen 47: Finished Mutations
 
 Generation 48
 
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
 About to run game for Gen 48 match 0
 About to run game for Gen 48 match 2
 About to run game for Gen 48 match 4
@@ -1179,6 +1298,6 @@ About to run game for Gen 49 match 30
 Gen 49: Finished Crossover
 Gen 49: Starting Mutations
 Gen 49: Finished Mutations
+############ Resuming test for Pop32_Gen50_XOverP0.6_XOverS0.1_MOP0.2_MNP0.01 ############
+Resuming test at generation: 50
 Writing Data to a file at CurriculumTestingResults/TopTree/Pop32_Gen50_XOverP0.6_XOverS0.1_MOP0.2_MNP0.01Fixed
-Wrote Data to File!
-Completed All generations and Data recording!
