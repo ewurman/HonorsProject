@@ -414,6 +414,8 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     # initialize population
     for i in range(POP_SIZE):
         player = GP.createRandomFixedSizeDecisionTreePlayer(topTreeHeight, 3)
+        dirBeginName = "CurriculumTestingResults/"
+        dirEndName = "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed/Winner"
         if treeTesting == 0:
             player = GP.createCurriculumTrainingPlayerTop(topTreeHeight)
         elif treeTesting == 1:
@@ -422,11 +424,10 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             player = GP.createCurriculumTrainingPlayerAttack(attackTreeHeight)
         elif treeTesting == 3:
             player = GP.createCurriculumTrainingPlayerMove(moveTreeHeight)
-            dirBeginName = "CurriculumTestingResults/"
-            dirEndName = "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed/Winner"
             player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0])
         elif treeTesting == 4:
             player = GP.createCurriculumTrainingPlayerAttack(buildTreeHeight)
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 3])
         population.append(player)
 
     for i in range(GENERATIONS):
@@ -571,7 +572,8 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 3
+    treeTraining = 4
+
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")
