@@ -1242,7 +1242,9 @@ def selectWorkerToMoveTowardHarvesting(bc, gc):
 def selectWorkerThatCanBuild(bc, gc):
     workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
     earthWorkers = [x for x in workers if x.location.map_location().planet == bc.Planet.Earth]
-    return random.choice(earthWorkers)
+    if len(earthWorkers) != 0:
+        return random.choice(earthWorkers)
+    return None
 
 def selectBuilderThatCanBuild(bc, gc):
     workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
@@ -3373,7 +3375,7 @@ class DecisionTreePlayer:
                 print("read movementTree")
                 self.movementTree = moveTree
 
-        if 1 in treesToReadList:
+        if 4 in treesToReadList:
             directoryPath = directoryBegin + "BuildTree" + directoryEnd
             with open(directoryPath + "/" + fileNames[4], 'r') as f:
                 lines = f.readlines()
