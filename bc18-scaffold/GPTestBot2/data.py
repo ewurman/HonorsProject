@@ -4089,6 +4089,7 @@ def createIdealPlayerForTesting(treeTraining, treeHeight) -> DecisionTreePlayer:
     return player
 
 
+
 def topTreeFitnessEval(tree) -> int:
     hasHarvest, hasAttack, hasMove, hasBuild = False, False, False, False
     checkForRockets = False
@@ -4111,7 +4112,7 @@ def topTreeFitnessEval(tree) -> int:
                 boolNode = currNode.firstChild
                 function = None
                 if boolNode.firstChild is not None:
-                    infoNode = BooleanNode.firstChild
+                    infoNode = boolNode.firstChild
                     function = infoNode.function
                     if function == getNumberOfRockets:
                         checkForRockets = True
@@ -4169,5 +4170,3 @@ def curriculumTrainingPlayerFitness(player, treeTraining) -> int:
         fitness = topTreeFitnessEval(topTree)
 
     return fitness
-
-

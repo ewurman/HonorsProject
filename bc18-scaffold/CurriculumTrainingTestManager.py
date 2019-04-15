@@ -18,7 +18,8 @@ WINNER_DIST_HEADER = "# Winner Distribution\n"
 POP_SIZE = 32 #must be even -> 32 easy for final tournament
 GENERATIONS = 50 # want 50
 RECORD_PER_GEN = 1
-
+USING_ELITISM = False
+ELITISM_NUM = 4
 
 def log(filepath, message):
     print("Logging:", message)
@@ -227,7 +228,9 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
         treeString = "BuildTree"    
 
     resultDirName = "CurriculumTestingResults/" +treeString+ "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
-    
+    if USING_ELITISM:
+        resultDirName += "/Elitist"
+
     if not os.path.exists(resultDirName):
         print("Creating new folder for test ", resultDirName)
         os.makedirs(resultDirName, exist_ok=True)
@@ -332,8 +335,37 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
         #get ready for the new generation
         population.clear() 
+        
+        # ELITISM
+        elitismPop = []
+        minFitnessIndex = 0
+        #add the elitist
+        if USING_ELITISM:
+            for i in range(ELITISM_NUM):
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                elitismPop.append((player, fitness))
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    minFitnessIndex = i
+
+            for i in range(ELITISM_NUM, len(breedingPool)): 
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                #TODO: replace min fitness then recalculate it
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    elitismPop[minFitnessIndex] = (player, fitness)
+                    minFitnessIndex = 0
+                    for j in range(len(elitismPop)):
+                        fit = elitismPop[j][1]
+                        if fit < elitismPop[minFitnessIndex][1]:
+                            minFitnessIndex = j
+                #else continue
+            # Now we should have ELITISM_NUM (people,fitness) tuples in elitismPop
+            population = [x[0] for x in elitismPop]
+
+        # Crossover
         print("Starting Crossover")
-        for j in range(POP_SIZE//2):
+        for j in range((POP_SIZE-len(population))//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
@@ -420,8 +452,10 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             player = GP.createCurriculumTrainingPlayerTop(topTreeHeight)
         elif treeTesting == 1:
             player = GP.createCurriculumTrainingPlayerHarvest() #assumes height of 2
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 2, 3, 4])
         elif treeTesting == 2:
             player = GP.createCurriculumTrainingPlayerAttack(attackTreeHeight)
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 3, 4])
         elif treeTesting == 3:
             player = GP.createCurriculumTrainingPlayerMove(moveTreeHeight)
             player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0])
@@ -489,11 +523,39 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             winnerDist[playerNum] += 1
 
         #now breeding pool should be half POP_SIZE
-
         #get ready for the new generation
         population.clear() 
+
+        # ELITISM
+        elitismPop = []
+        minFitnessIndex = 0
+        #add the elitist
+        if USING_ELITISM:
+            for i in range(ELITISM_NUM):
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                elitismPop.append((player, fitness))
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    minFitnessIndex = i
+
+            for i in range(ELITISM_NUM, len(breedingPool)): 
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                #TODO: replace min fitness then recalculate it
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    elitismPop[minFitnessIndex] = (player, fitness)
+                    minFitnessIndex = 0
+                    for j in range(len(elitismPop)):
+                        fit = elitismPop[j][1]
+                        if fit < elitismPop[minFitnessIndex][1]:
+                            minFitnessIndex = j
+                #else continue
+            # Now we should have ELITISM_NUM (people,fitness) tuples in elitismPop
+            population = [x[0] for x in elitismPop]
+
+        # Crossover
         print("Starting Crossover")
-        for j in range(POP_SIZE//2):
+        for j in range((POP_SIZE-len(population))//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
@@ -572,7 +634,7 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 4
+    treeTraining = 2
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")
