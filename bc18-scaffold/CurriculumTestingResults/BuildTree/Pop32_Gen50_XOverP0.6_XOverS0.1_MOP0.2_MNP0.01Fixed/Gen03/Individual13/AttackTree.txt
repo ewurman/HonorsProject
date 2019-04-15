@@ -1,0 +1,68 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: 3
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfKnights
+			OperandNode Value: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 3
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectUnitDealingMostDamageThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectUnitDealingMostDamageThatCanAttack
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfWorkers
+				OperandNode Value: 4
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackRandomPossibleEnemy
+				InformationNode function: selectUnitDealingMostDamageThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackRandomPossibleEnemy
+				InformationNode function: selectUnitDealingMostDamageThatCanAttack
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 150
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectUnitWithLeastLifeThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getMaxNumberOfUnitsInEarthRocket
+				OperandNode Value: 3
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackRandomPossibleEnemy
+				InformationNode function: selectUnitDealingMostDamageThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack
