@@ -15,8 +15,8 @@ TNODES_HEADER = "# Average Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
-POP_SIZE = 32 #must be even -> 32 easy for final tournament
-GENERATIONS = 50 # want 50
+POP_SIZE = 64 #must be even -> 32 easy for final tournament
+GENERATIONS = 100 # want 50
 RECORD_PER_GEN = 1
 USING_ELITISM = True
 ELITISM_NUM = 4
@@ -86,7 +86,10 @@ def winnerBattleRoyale(resultDirName):
         finalPop.append(player)
 
     #now make population a power of 2
-    indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
+    if GENERATIONS == 100:
+        indicesToDouble = random.sample(range(len(finalPop)), 128-len(finalPop))
+    else:
+        indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
     playersToDouble = [finalPop[i] for i in sorted(indicesToDouble)]
 
     finalPop += playersToDouble
