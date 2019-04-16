@@ -15,10 +15,10 @@ TNODES_HEADER = "# Average Number of Nodes per Tree each Generation\n"
 WINNER_DIST_HEADER = "# Winner Distribution\n"
 
 
-POP_SIZE = 64 #must be even -> 32 easy for final tournament
-GENERATIONS = 100 # want 50
+POP_SIZE = 32 #must be even -> 32 easy for final tournament
+GENERATIONS = 50 # want 50
 RECORD_PER_GEN = 1
-USING_ELITISM = True
+USING_ELITISM = False
 ELITISM_NUM = 4
 
 def log(filepath, message):
@@ -448,6 +448,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     attackTreeHeight = 3
     moveTreeHeight = 5
     buildTreeHeight = 5
+    harvestTreeHeight = 2
 
 
     log(resultDirName, "############ Starting new test ############\n")
@@ -459,7 +460,7 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
         if treeTesting == 0:
             player = GP.createCurriculumTrainingPlayerTop(topTreeHeight)
         elif treeTesting == 1:
-            player = GP.createCurriculumTrainingPlayerHarvest() #assumes height of 2
+            player = GP.createCurriculumTrainingPlayerHarvest(harvestTreeHeight) #assumes height of 2 anyways
             player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 2, 3, 4])
         elif treeTesting == 2:
             player = GP.createCurriculumTrainingPlayerAttack(attackTreeHeight)
