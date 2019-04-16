@@ -18,7 +18,7 @@ WINNER_DIST_HEADER = "# Winner Distribution\n"
 POP_SIZE = 32 #must be even -> 32 easy for final tournament
 GENERATIONS = 50 # want 50
 RECORD_PER_GEN = 1
-USING_ELITISM = False
+USING_ELITISM = True
 ELITISM_NUM = 4
 
 def log(filepath, message):
@@ -634,8 +634,7 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-
-    treeTraining = 2
+    treeTraining = 0
 
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
