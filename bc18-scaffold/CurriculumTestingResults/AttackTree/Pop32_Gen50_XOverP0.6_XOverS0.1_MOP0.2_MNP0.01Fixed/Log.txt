@@ -1,0 +1,1303 @@
+############ Starting new test ############
+
+
+Generation 0
+
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 0 match 0
+About to run game for Gen 0 match 2
+About to run game for Gen 0 match 4
+About to run game for Gen 0 match 6
+About to run game for Gen 0 match 8
+About to run game for Gen 0 match 10
+About to run game for Gen 0 match 12
+About to run game for Gen 0 match 14
+About to run game for Gen 0 match 16
+About to run game for Gen 0 match 18
+About to run game for Gen 0 match 20
+About to run game for Gen 0 match 22
+About to run game for Gen 0 match 24
+About to run game for Gen 0 match 26
+About to run game for Gen 0 match 28
+About to run game for Gen 0 match 30
+Gen 0: Finished Crossover
+Gen 0: Starting Mutations
+Gen 0: Finished Mutations
+
+
+Generation 1
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 1 match 0
+About to run game for Gen 1 match 2
+About to run game for Gen 1 match 4
+About to run game for Gen 1 match 6
+About to run game for Gen 1 match 8
+About to run game for Gen 1 match 10
+About to run game for Gen 1 match 12
+About to run game for Gen 1 match 14
+About to run game for Gen 1 match 16
+About to run game for Gen 1 match 18
+About to run game for Gen 1 match 20
+About to run game for Gen 1 match 22
+About to run game for Gen 1 match 24
+About to run game for Gen 1 match 26
+About to run game for Gen 1 match 28
+About to run game for Gen 1 match 30
+Gen 1: Finished Crossover
+Gen 1: Starting Mutations
+Gen 1: Finished Mutations
+
+
+Generation 2
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 2 match 0
+About to run game for Gen 2 match 2
+About to run game for Gen 2 match 4
+About to run game for Gen 2 match 6
+About to run game for Gen 2 match 8
+About to run game for Gen 2 match 10
+About to run game for Gen 2 match 12
+About to run game for Gen 2 match 14
+About to run game for Gen 2 match 16
+About to run game for Gen 2 match 18
+About to run game for Gen 2 match 20
+About to run game for Gen 2 match 22
+About to run game for Gen 2 match 24
+About to run game for Gen 2 match 26
+About to run game for Gen 2 match 28
+About to run game for Gen 2 match 30
+Gen 2: Finished Crossover
+Gen 2: Starting Mutations
+Gen 2: Finished Mutations
+
+
+Generation 3
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 3 match 0
+About to run game for Gen 3 match 2
+About to run game for Gen 3 match 4
+About to run game for Gen 3 match 6
+About to run game for Gen 3 match 8
+About to run game for Gen 3 match 10
+About to run game for Gen 3 match 12
+About to run game for Gen 3 match 14
+About to run game for Gen 3 match 16
+About to run game for Gen 3 match 18
+About to run game for Gen 3 match 20
+About to run game for Gen 3 match 22
+About to run game for Gen 3 match 24
+About to run game for Gen 3 match 26
+About to run game for Gen 3 match 28
+About to run game for Gen 3 match 30
+Gen 3: Finished Crossover
+Gen 3: Starting Mutations
+Gen 3: Finished Mutations
+
+
+Generation 4
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 4 match 0
+About to run game for Gen 4 match 2
+About to run game for Gen 4 match 4
+About to run game for Gen 4 match 6
+About to run game for Gen 4 match 8
+About to run game for Gen 4 match 10
+About to run game for Gen 4 match 12
+About to run game for Gen 4 match 14
+About to run game for Gen 4 match 16
+About to run game for Gen 4 match 18
+About to run game for Gen 4 match 20
+About to run game for Gen 4 match 22
+About to run game for Gen 4 match 24
+About to run game for Gen 4 match 26
+About to run game for Gen 4 match 28
+About to run game for Gen 4 match 30
+Gen 4: Finished Crossover
+Gen 4: Starting Mutations
+Gen 4: Finished Mutations
+
+
+Generation 5
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 5 match 0
+About to run game for Gen 5 match 2
+About to run game for Gen 5 match 4
+About to run game for Gen 5 match 6
+About to run game for Gen 5 match 8
+About to run game for Gen 5 match 10
+About to run game for Gen 5 match 12
+About to run game for Gen 5 match 14
+About to run game for Gen 5 match 16
+About to run game for Gen 5 match 18
+About to run game for Gen 5 match 20
+About to run game for Gen 5 match 22
+About to run game for Gen 5 match 24
+About to run game for Gen 5 match 26
+About to run game for Gen 5 match 28
+About to run game for Gen 5 match 30
+Gen 5: Finished Crossover
+Gen 5: Starting Mutations
+Gen 5: Finished Mutations
+
+
+Generation 6
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 6 match 0
+About to run game for Gen 6 match 2
+About to run game for Gen 6 match 4
+About to run game for Gen 6 match 6
+About to run game for Gen 6 match 8
+About to run game for Gen 6 match 10
+About to run game for Gen 6 match 12
+About to run game for Gen 6 match 14
+About to run game for Gen 6 match 16
+About to run game for Gen 6 match 18
+About to run game for Gen 6 match 20
+About to run game for Gen 6 match 22
+About to run game for Gen 6 match 24
+About to run game for Gen 6 match 26
+About to run game for Gen 6 match 28
+About to run game for Gen 6 match 30
+Gen 6: Finished Crossover
+Gen 6: Starting Mutations
+Gen 6: Finished Mutations
+
+
+Generation 7
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 7 match 0
+About to run game for Gen 7 match 2
+About to run game for Gen 7 match 4
+About to run game for Gen 7 match 6
+About to run game for Gen 7 match 8
+About to run game for Gen 7 match 10
+About to run game for Gen 7 match 12
+About to run game for Gen 7 match 14
+About to run game for Gen 7 match 16
+About to run game for Gen 7 match 18
+About to run game for Gen 7 match 20
+About to run game for Gen 7 match 22
+About to run game for Gen 7 match 24
+About to run game for Gen 7 match 26
+About to run game for Gen 7 match 28
+About to run game for Gen 7 match 30
+Gen 7: Finished Crossover
+Gen 7: Starting Mutations
+Gen 7: Finished Mutations
+
+
+Generation 8
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 8 match 0
+About to run game for Gen 8 match 2
+About to run game for Gen 8 match 4
+About to run game for Gen 8 match 6
+About to run game for Gen 8 match 8
+About to run game for Gen 8 match 10
+About to run game for Gen 8 match 12
+About to run game for Gen 8 match 14
+About to run game for Gen 8 match 16
+About to run game for Gen 8 match 18
+About to run game for Gen 8 match 20
+About to run game for Gen 8 match 22
+About to run game for Gen 8 match 24
+About to run game for Gen 8 match 26
+About to run game for Gen 8 match 28
+About to run game for Gen 8 match 30
+Gen 8: Finished Crossover
+Gen 8: Starting Mutations
+Gen 8: Finished Mutations
+
+
+Generation 9
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 9 match 0
+About to run game for Gen 9 match 2
+About to run game for Gen 9 match 4
+About to run game for Gen 9 match 6
+About to run game for Gen 9 match 8
+About to run game for Gen 9 match 10
+About to run game for Gen 9 match 12
+About to run game for Gen 9 match 14
+About to run game for Gen 9 match 16
+About to run game for Gen 9 match 18
+About to run game for Gen 9 match 20
+About to run game for Gen 9 match 22
+About to run game for Gen 9 match 24
+About to run game for Gen 9 match 26
+About to run game for Gen 9 match 28
+About to run game for Gen 9 match 30
+Gen 9: Finished Crossover
+Gen 9: Starting Mutations
+Gen 9: Finished Mutations
+
+
+Generation 10
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 10 match 0
+About to run game for Gen 10 match 2
+About to run game for Gen 10 match 4
+About to run game for Gen 10 match 6
+About to run game for Gen 10 match 8
+About to run game for Gen 10 match 10
+About to run game for Gen 10 match 12
+About to run game for Gen 10 match 14
+About to run game for Gen 10 match 16
+About to run game for Gen 10 match 18
+About to run game for Gen 10 match 20
+About to run game for Gen 10 match 22
+About to run game for Gen 10 match 24
+About to run game for Gen 10 match 26
+About to run game for Gen 10 match 28
+About to run game for Gen 10 match 30
+Gen 10: Finished Crossover
+Gen 10: Starting Mutations
+Gen 10: Finished Mutations
+
+
+Generation 11
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 11 match 0
+About to run game for Gen 11 match 2
+About to run game for Gen 11 match 4
+About to run game for Gen 11 match 6
+About to run game for Gen 11 match 8
+About to run game for Gen 11 match 10
+About to run game for Gen 11 match 12
+About to run game for Gen 11 match 14
+About to run game for Gen 11 match 16
+About to run game for Gen 11 match 18
+About to run game for Gen 11 match 20
+About to run game for Gen 11 match 22
+About to run game for Gen 11 match 24
+About to run game for Gen 11 match 26
+About to run game for Gen 11 match 28
+About to run game for Gen 11 match 30
+Gen 11: Finished Crossover
+Gen 11: Starting Mutations
+Gen 11: Finished Mutations
+
+
+Generation 12
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 12 match 0
+About to run game for Gen 12 match 2
+About to run game for Gen 12 match 4
+About to run game for Gen 12 match 6
+About to run game for Gen 12 match 8
+About to run game for Gen 12 match 10
+About to run game for Gen 12 match 12
+About to run game for Gen 12 match 14
+About to run game for Gen 12 match 16
+About to run game for Gen 12 match 18
+About to run game for Gen 12 match 20
+About to run game for Gen 12 match 22
+About to run game for Gen 12 match 24
+About to run game for Gen 12 match 26
+About to run game for Gen 12 match 28
+About to run game for Gen 12 match 30
+Gen 12: Finished Crossover
+Gen 12: Starting Mutations
+Gen 12: Finished Mutations
+
+
+Generation 13
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 13 match 0
+About to run game for Gen 13 match 2
+About to run game for Gen 13 match 4
+About to run game for Gen 13 match 6
+About to run game for Gen 13 match 8
+About to run game for Gen 13 match 10
+About to run game for Gen 13 match 12
+About to run game for Gen 13 match 14
+About to run game for Gen 13 match 16
+About to run game for Gen 13 match 18
+About to run game for Gen 13 match 20
+About to run game for Gen 13 match 22
+About to run game for Gen 13 match 24
+About to run game for Gen 13 match 26
+About to run game for Gen 13 match 28
+About to run game for Gen 13 match 30
+Gen 13: Finished Crossover
+Gen 13: Starting Mutations
+Gen 13: Finished Mutations
+
+
+Generation 14
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 14 match 0
+About to run game for Gen 14 match 2
+About to run game for Gen 14 match 4
+About to run game for Gen 14 match 6
+About to run game for Gen 14 match 8
+About to run game for Gen 14 match 10
+About to run game for Gen 14 match 12
+About to run game for Gen 14 match 14
+About to run game for Gen 14 match 16
+About to run game for Gen 14 match 18
+About to run game for Gen 14 match 20
+About to run game for Gen 14 match 22
+About to run game for Gen 14 match 24
+About to run game for Gen 14 match 26
+About to run game for Gen 14 match 28
+About to run game for Gen 14 match 30
+Gen 14: Finished Crossover
+Gen 14: Starting Mutations
+Gen 14: Finished Mutations
+
+
+Generation 15
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 15 match 0
+About to run game for Gen 15 match 2
+About to run game for Gen 15 match 4
+About to run game for Gen 15 match 6
+About to run game for Gen 15 match 8
+About to run game for Gen 15 match 10
+About to run game for Gen 15 match 12
+About to run game for Gen 15 match 14
+About to run game for Gen 15 match 16
+About to run game for Gen 15 match 18
+About to run game for Gen 15 match 20
+About to run game for Gen 15 match 22
+About to run game for Gen 15 match 24
+About to run game for Gen 15 match 26
+About to run game for Gen 15 match 28
+About to run game for Gen 15 match 30
+Gen 15: Finished Crossover
+Gen 15: Starting Mutations
+Gen 15: Finished Mutations
+
+
+Generation 16
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 16 match 0
+About to run game for Gen 16 match 2
+About to run game for Gen 16 match 4
+About to run game for Gen 16 match 6
+About to run game for Gen 16 match 8
+About to run game for Gen 16 match 10
+About to run game for Gen 16 match 12
+About to run game for Gen 16 match 14
+About to run game for Gen 16 match 16
+About to run game for Gen 16 match 18
+About to run game for Gen 16 match 20
+About to run game for Gen 16 match 22
+About to run game for Gen 16 match 24
+About to run game for Gen 16 match 26
+About to run game for Gen 16 match 28
+About to run game for Gen 16 match 30
+Gen 16: Finished Crossover
+Gen 16: Starting Mutations
+Gen 16: Finished Mutations
+
+
+Generation 17
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 17 match 0
+About to run game for Gen 17 match 2
+About to run game for Gen 17 match 4
+About to run game for Gen 17 match 6
+About to run game for Gen 17 match 8
+About to run game for Gen 17 match 10
+About to run game for Gen 17 match 12
+About to run game for Gen 17 match 14
+About to run game for Gen 17 match 16
+About to run game for Gen 17 match 18
+About to run game for Gen 17 match 20
+About to run game for Gen 17 match 22
+About to run game for Gen 17 match 24
+About to run game for Gen 17 match 26
+About to run game for Gen 17 match 28
+About to run game for Gen 17 match 30
+Gen 17: Finished Crossover
+Gen 17: Starting Mutations
+Gen 17: Finished Mutations
+
+
+Generation 18
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 18 match 0
+About to run game for Gen 18 match 2
+About to run game for Gen 18 match 4
+About to run game for Gen 18 match 6
+About to run game for Gen 18 match 8
+About to run game for Gen 18 match 10
+About to run game for Gen 18 match 12
+About to run game for Gen 18 match 14
+About to run game for Gen 18 match 16
+About to run game for Gen 18 match 18
+About to run game for Gen 18 match 20
+About to run game for Gen 18 match 22
+About to run game for Gen 18 match 24
+About to run game for Gen 18 match 26
+About to run game for Gen 18 match 28
+About to run game for Gen 18 match 30
+Gen 18: Finished Crossover
+Gen 18: Starting Mutations
+Gen 18: Finished Mutations
+
+
+Generation 19
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 19 match 0
+About to run game for Gen 19 match 2
+About to run game for Gen 19 match 4
+About to run game for Gen 19 match 6
+About to run game for Gen 19 match 8
+About to run game for Gen 19 match 10
+About to run game for Gen 19 match 12
+About to run game for Gen 19 match 14
+About to run game for Gen 19 match 16
+About to run game for Gen 19 match 18
+About to run game for Gen 19 match 20
+About to run game for Gen 19 match 22
+About to run game for Gen 19 match 24
+About to run game for Gen 19 match 26
+About to run game for Gen 19 match 28
+About to run game for Gen 19 match 30
+Gen 19: Finished Crossover
+Gen 19: Starting Mutations
+Gen 19: Finished Mutations
+
+
+Generation 20
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 20 match 0
+About to run game for Gen 20 match 2
+About to run game for Gen 20 match 4
+About to run game for Gen 20 match 6
+About to run game for Gen 20 match 8
+About to run game for Gen 20 match 10
+About to run game for Gen 20 match 12
+About to run game for Gen 20 match 14
+About to run game for Gen 20 match 16
+About to run game for Gen 20 match 18
+About to run game for Gen 20 match 20
+About to run game for Gen 20 match 22
+About to run game for Gen 20 match 24
+About to run game for Gen 20 match 26
+About to run game for Gen 20 match 28
+About to run game for Gen 20 match 30
+Gen 20: Finished Crossover
+Gen 20: Starting Mutations
+Gen 20: Finished Mutations
+
+
+Generation 21
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 21 match 0
+About to run game for Gen 21 match 2
+About to run game for Gen 21 match 4
+About to run game for Gen 21 match 6
+About to run game for Gen 21 match 8
+About to run game for Gen 21 match 10
+About to run game for Gen 21 match 12
+About to run game for Gen 21 match 14
+About to run game for Gen 21 match 16
+About to run game for Gen 21 match 18
+About to run game for Gen 21 match 20
+About to run game for Gen 21 match 22
+About to run game for Gen 21 match 24
+About to run game for Gen 21 match 26
+About to run game for Gen 21 match 28
+About to run game for Gen 21 match 30
+Gen 21: Finished Crossover
+Gen 21: Starting Mutations
+Gen 21: Finished Mutations
+
+
+Generation 22
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 22 match 0
+About to run game for Gen 22 match 2
+About to run game for Gen 22 match 4
+About to run game for Gen 22 match 6
+About to run game for Gen 22 match 8
+About to run game for Gen 22 match 10
+About to run game for Gen 22 match 12
+About to run game for Gen 22 match 14
+About to run game for Gen 22 match 16
+About to run game for Gen 22 match 18
+About to run game for Gen 22 match 20
+About to run game for Gen 22 match 22
+About to run game for Gen 22 match 24
+About to run game for Gen 22 match 26
+About to run game for Gen 22 match 28
+About to run game for Gen 22 match 30
+Gen 22: Finished Crossover
+Gen 22: Starting Mutations
+Gen 22: Finished Mutations
+
+
+Generation 23
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 23 match 0
+About to run game for Gen 23 match 2
+About to run game for Gen 23 match 4
+About to run game for Gen 23 match 6
+About to run game for Gen 23 match 8
+About to run game for Gen 23 match 10
+About to run game for Gen 23 match 12
+About to run game for Gen 23 match 14
+About to run game for Gen 23 match 16
+About to run game for Gen 23 match 18
+About to run game for Gen 23 match 20
+About to run game for Gen 23 match 22
+About to run game for Gen 23 match 24
+About to run game for Gen 23 match 26
+About to run game for Gen 23 match 28
+About to run game for Gen 23 match 30
+Gen 23: Finished Crossover
+Gen 23: Starting Mutations
+Gen 23: Finished Mutations
+
+
+Generation 24
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 24 match 0
+About to run game for Gen 24 match 2
+About to run game for Gen 24 match 4
+About to run game for Gen 24 match 6
+About to run game for Gen 24 match 8
+About to run game for Gen 24 match 10
+About to run game for Gen 24 match 12
+About to run game for Gen 24 match 14
+About to run game for Gen 24 match 16
+About to run game for Gen 24 match 18
+About to run game for Gen 24 match 20
+About to run game for Gen 24 match 22
+About to run game for Gen 24 match 24
+About to run game for Gen 24 match 26
+About to run game for Gen 24 match 28
+About to run game for Gen 24 match 30
+Gen 24: Finished Crossover
+Gen 24: Starting Mutations
+Gen 24: Finished Mutations
+
+
+Generation 25
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 25 match 0
+About to run game for Gen 25 match 2
+About to run game for Gen 25 match 4
+About to run game for Gen 25 match 6
+About to run game for Gen 25 match 8
+About to run game for Gen 25 match 10
+About to run game for Gen 25 match 12
+About to run game for Gen 25 match 14
+About to run game for Gen 25 match 16
+About to run game for Gen 25 match 18
+About to run game for Gen 25 match 20
+About to run game for Gen 25 match 22
+About to run game for Gen 25 match 24
+About to run game for Gen 25 match 26
+About to run game for Gen 25 match 28
+About to run game for Gen 25 match 30
+Gen 25: Finished Crossover
+Gen 25: Starting Mutations
+Gen 25: Finished Mutations
+
+
+Generation 26
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 26 match 0
+About to run game for Gen 26 match 2
+About to run game for Gen 26 match 4
+About to run game for Gen 26 match 6
+About to run game for Gen 26 match 8
+About to run game for Gen 26 match 10
+About to run game for Gen 26 match 12
+About to run game for Gen 26 match 14
+About to run game for Gen 26 match 16
+About to run game for Gen 26 match 18
+About to run game for Gen 26 match 20
+About to run game for Gen 26 match 22
+About to run game for Gen 26 match 24
+About to run game for Gen 26 match 26
+About to run game for Gen 26 match 28
+About to run game for Gen 26 match 30
+Gen 26: Finished Crossover
+Gen 26: Starting Mutations
+Gen 26: Finished Mutations
+
+
+Generation 27
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 27 match 0
+About to run game for Gen 27 match 2
+About to run game for Gen 27 match 4
+About to run game for Gen 27 match 6
+About to run game for Gen 27 match 8
+About to run game for Gen 27 match 10
+About to run game for Gen 27 match 12
+About to run game for Gen 27 match 14
+About to run game for Gen 27 match 16
+About to run game for Gen 27 match 18
+About to run game for Gen 27 match 20
+About to run game for Gen 27 match 22
+About to run game for Gen 27 match 24
+About to run game for Gen 27 match 26
+About to run game for Gen 27 match 28
+About to run game for Gen 27 match 30
+Gen 27: Finished Crossover
+Gen 27: Starting Mutations
+Gen 27: Finished Mutations
+
+
+Generation 28
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 28 match 0
+About to run game for Gen 28 match 2
+About to run game for Gen 28 match 4
+About to run game for Gen 28 match 6
+About to run game for Gen 28 match 8
+About to run game for Gen 28 match 10
+About to run game for Gen 28 match 12
+About to run game for Gen 28 match 14
+About to run game for Gen 28 match 16
+About to run game for Gen 28 match 18
+About to run game for Gen 28 match 20
+About to run game for Gen 28 match 22
+About to run game for Gen 28 match 24
+About to run game for Gen 28 match 26
+About to run game for Gen 28 match 28
+About to run game for Gen 28 match 30
+Gen 28: Finished Crossover
+Gen 28: Starting Mutations
+Gen 28: Finished Mutations
+
+
+Generation 29
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 29 match 0
+About to run game for Gen 29 match 2
+About to run game for Gen 29 match 4
+About to run game for Gen 29 match 6
+About to run game for Gen 29 match 8
+About to run game for Gen 29 match 10
+About to run game for Gen 29 match 12
+About to run game for Gen 29 match 14
+About to run game for Gen 29 match 16
+About to run game for Gen 29 match 18
+About to run game for Gen 29 match 20
+About to run game for Gen 29 match 22
+About to run game for Gen 29 match 24
+About to run game for Gen 29 match 26
+About to run game for Gen 29 match 28
+About to run game for Gen 29 match 30
+Gen 29: Finished Crossover
+Gen 29: Starting Mutations
+Gen 29: Finished Mutations
+
+
+Generation 30
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 30 match 0
+About to run game for Gen 30 match 2
+About to run game for Gen 30 match 4
+About to run game for Gen 30 match 6
+About to run game for Gen 30 match 8
+About to run game for Gen 30 match 10
+About to run game for Gen 30 match 12
+About to run game for Gen 30 match 14
+About to run game for Gen 30 match 16
+About to run game for Gen 30 match 18
+About to run game for Gen 30 match 20
+About to run game for Gen 30 match 22
+About to run game for Gen 30 match 24
+About to run game for Gen 30 match 26
+About to run game for Gen 30 match 28
+About to run game for Gen 30 match 30
+Gen 30: Finished Crossover
+Gen 30: Starting Mutations
+Gen 30: Finished Mutations
+
+
+Generation 31
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 31 match 0
+About to run game for Gen 31 match 2
+About to run game for Gen 31 match 4
+About to run game for Gen 31 match 6
+About to run game for Gen 31 match 8
+About to run game for Gen 31 match 10
+About to run game for Gen 31 match 12
+About to run game for Gen 31 match 14
+About to run game for Gen 31 match 16
+About to run game for Gen 31 match 18
+About to run game for Gen 31 match 20
+About to run game for Gen 31 match 22
+About to run game for Gen 31 match 24
+About to run game for Gen 31 match 26
+About to run game for Gen 31 match 28
+About to run game for Gen 31 match 30
+Gen 31: Finished Crossover
+Gen 31: Starting Mutations
+Gen 31: Finished Mutations
+
+
+Generation 32
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 32 match 0
+About to run game for Gen 32 match 2
+About to run game for Gen 32 match 4
+About to run game for Gen 32 match 6
+About to run game for Gen 32 match 8
+About to run game for Gen 32 match 10
+About to run game for Gen 32 match 12
+About to run game for Gen 32 match 14
+About to run game for Gen 32 match 16
+About to run game for Gen 32 match 18
+About to run game for Gen 32 match 20
+About to run game for Gen 32 match 22
+About to run game for Gen 32 match 24
+About to run game for Gen 32 match 26
+About to run game for Gen 32 match 28
+About to run game for Gen 32 match 30
+Gen 32: Finished Crossover
+Gen 32: Starting Mutations
+Gen 32: Finished Mutations
+
+
+Generation 33
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 33 match 0
+About to run game for Gen 33 match 2
+About to run game for Gen 33 match 4
+About to run game for Gen 33 match 6
+About to run game for Gen 33 match 8
+About to run game for Gen 33 match 10
+About to run game for Gen 33 match 12
+About to run game for Gen 33 match 14
+About to run game for Gen 33 match 16
+About to run game for Gen 33 match 18
+About to run game for Gen 33 match 20
+About to run game for Gen 33 match 22
+About to run game for Gen 33 match 24
+About to run game for Gen 33 match 26
+About to run game for Gen 33 match 28
+About to run game for Gen 33 match 30
+Gen 33: Finished Crossover
+Gen 33: Starting Mutations
+Gen 33: Finished Mutations
+
+
+Generation 34
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 34 match 0
+About to run game for Gen 34 match 2
+About to run game for Gen 34 match 4
+About to run game for Gen 34 match 6
+About to run game for Gen 34 match 8
+About to run game for Gen 34 match 10
+About to run game for Gen 34 match 12
+About to run game for Gen 34 match 14
+About to run game for Gen 34 match 16
+About to run game for Gen 34 match 18
+About to run game for Gen 34 match 20
+About to run game for Gen 34 match 22
+About to run game for Gen 34 match 24
+About to run game for Gen 34 match 26
+About to run game for Gen 34 match 28
+About to run game for Gen 34 match 30
+Gen 34: Finished Crossover
+Gen 34: Starting Mutations
+Gen 34: Finished Mutations
+
+
+Generation 35
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 35 match 0
+About to run game for Gen 35 match 2
+About to run game for Gen 35 match 4
+About to run game for Gen 35 match 6
+About to run game for Gen 35 match 8
+About to run game for Gen 35 match 10
+About to run game for Gen 35 match 12
+About to run game for Gen 35 match 14
+About to run game for Gen 35 match 16
+About to run game for Gen 35 match 18
+About to run game for Gen 35 match 20
+About to run game for Gen 35 match 22
+About to run game for Gen 35 match 24
+About to run game for Gen 35 match 26
+About to run game for Gen 35 match 28
+About to run game for Gen 35 match 30
+Gen 35: Finished Crossover
+Gen 35: Starting Mutations
+Gen 35: Finished Mutations
+
+
+Generation 36
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 36 match 0
+About to run game for Gen 36 match 2
+About to run game for Gen 36 match 4
+About to run game for Gen 36 match 6
+About to run game for Gen 36 match 8
+About to run game for Gen 36 match 10
+About to run game for Gen 36 match 12
+About to run game for Gen 36 match 14
+About to run game for Gen 36 match 16
+About to run game for Gen 36 match 18
+About to run game for Gen 36 match 20
+About to run game for Gen 36 match 22
+About to run game for Gen 36 match 24
+About to run game for Gen 36 match 26
+About to run game for Gen 36 match 28
+About to run game for Gen 36 match 30
+Gen 36: Finished Crossover
+Gen 36: Starting Mutations
+Gen 36: Finished Mutations
+
+
+Generation 37
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 37 match 0
+About to run game for Gen 37 match 2
+About to run game for Gen 37 match 4
+About to run game for Gen 37 match 6
+About to run game for Gen 37 match 8
+About to run game for Gen 37 match 10
+About to run game for Gen 37 match 12
+About to run game for Gen 37 match 14
+About to run game for Gen 37 match 16
+About to run game for Gen 37 match 18
+About to run game for Gen 37 match 20
+About to run game for Gen 37 match 22
+About to run game for Gen 37 match 24
+About to run game for Gen 37 match 26
+About to run game for Gen 37 match 28
+About to run game for Gen 37 match 30
+Gen 37: Finished Crossover
+Gen 37: Starting Mutations
+Gen 37: Finished Mutations
+
+
+Generation 38
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 38 match 0
+About to run game for Gen 38 match 2
+About to run game for Gen 38 match 4
+About to run game for Gen 38 match 6
+About to run game for Gen 38 match 8
+About to run game for Gen 38 match 10
+About to run game for Gen 38 match 12
+About to run game for Gen 38 match 14
+About to run game for Gen 38 match 16
+About to run game for Gen 38 match 18
+About to run game for Gen 38 match 20
+About to run game for Gen 38 match 22
+About to run game for Gen 38 match 24
+About to run game for Gen 38 match 26
+About to run game for Gen 38 match 28
+About to run game for Gen 38 match 30
+Gen 38: Finished Crossover
+Gen 38: Starting Mutations
+Gen 38: Finished Mutations
+
+
+Generation 39
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 39 match 0
+About to run game for Gen 39 match 2
+About to run game for Gen 39 match 4
+About to run game for Gen 39 match 6
+About to run game for Gen 39 match 8
+About to run game for Gen 39 match 10
+About to run game for Gen 39 match 12
+About to run game for Gen 39 match 14
+About to run game for Gen 39 match 16
+About to run game for Gen 39 match 18
+About to run game for Gen 39 match 20
+About to run game for Gen 39 match 22
+About to run game for Gen 39 match 24
+About to run game for Gen 39 match 26
+About to run game for Gen 39 match 28
+About to run game for Gen 39 match 30
+Gen 39: Finished Crossover
+Gen 39: Starting Mutations
+Gen 39: Finished Mutations
+
+
+Generation 40
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 40 match 0
+About to run game for Gen 40 match 2
+About to run game for Gen 40 match 4
+About to run game for Gen 40 match 6
+About to run game for Gen 40 match 8
+About to run game for Gen 40 match 10
+About to run game for Gen 40 match 12
+About to run game for Gen 40 match 14
+About to run game for Gen 40 match 16
+About to run game for Gen 40 match 18
+About to run game for Gen 40 match 20
+About to run game for Gen 40 match 22
+About to run game for Gen 40 match 24
+About to run game for Gen 40 match 26
+About to run game for Gen 40 match 28
+About to run game for Gen 40 match 30
+Gen 40: Finished Crossover
+Gen 40: Starting Mutations
+Gen 40: Finished Mutations
+
+
+Generation 41
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 41 match 0
+About to run game for Gen 41 match 2
+About to run game for Gen 41 match 4
+About to run game for Gen 41 match 6
+About to run game for Gen 41 match 8
+About to run game for Gen 41 match 10
+About to run game for Gen 41 match 12
+About to run game for Gen 41 match 14
+About to run game for Gen 41 match 16
+About to run game for Gen 41 match 18
+About to run game for Gen 41 match 20
+About to run game for Gen 41 match 22
+About to run game for Gen 41 match 24
+About to run game for Gen 41 match 26
+About to run game for Gen 41 match 28
+About to run game for Gen 41 match 30
+Gen 41: Finished Crossover
+Gen 41: Starting Mutations
+Gen 41: Finished Mutations
+
+
+Generation 42
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 42 match 0
+About to run game for Gen 42 match 2
+About to run game for Gen 42 match 4
+About to run game for Gen 42 match 6
+About to run game for Gen 42 match 8
+About to run game for Gen 42 match 10
+About to run game for Gen 42 match 12
+About to run game for Gen 42 match 14
+About to run game for Gen 42 match 16
+About to run game for Gen 42 match 18
+About to run game for Gen 42 match 20
+About to run game for Gen 42 match 22
+About to run game for Gen 42 match 24
+About to run game for Gen 42 match 26
+About to run game for Gen 42 match 28
+About to run game for Gen 42 match 30
+Gen 42: Finished Crossover
+Gen 42: Starting Mutations
+Gen 42: Finished Mutations
+
+
+Generation 43
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 43 match 0
+About to run game for Gen 43 match 2
+About to run game for Gen 43 match 4
+About to run game for Gen 43 match 6
+About to run game for Gen 43 match 8
+About to run game for Gen 43 match 10
+About to run game for Gen 43 match 12
+About to run game for Gen 43 match 14
+About to run game for Gen 43 match 16
+About to run game for Gen 43 match 18
+About to run game for Gen 43 match 20
+About to run game for Gen 43 match 22
+About to run game for Gen 43 match 24
+About to run game for Gen 43 match 26
+About to run game for Gen 43 match 28
+About to run game for Gen 43 match 30
+Gen 43: Finished Crossover
+Gen 43: Starting Mutations
+Gen 43: Finished Mutations
+
+
+Generation 44
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 44 match 0
+About to run game for Gen 44 match 2
+About to run game for Gen 44 match 4
+About to run game for Gen 44 match 6
+About to run game for Gen 44 match 8
+About to run game for Gen 44 match 10
+About to run game for Gen 44 match 12
+About to run game for Gen 44 match 14
+About to run game for Gen 44 match 16
+About to run game for Gen 44 match 18
+About to run game for Gen 44 match 20
+About to run game for Gen 44 match 22
+About to run game for Gen 44 match 24
+About to run game for Gen 44 match 26
+About to run game for Gen 44 match 28
+About to run game for Gen 44 match 30
+Gen 44: Finished Crossover
+Gen 44: Starting Mutations
+Gen 44: Finished Mutations
+
+
+Generation 45
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 45 match 0
+About to run game for Gen 45 match 2
+About to run game for Gen 45 match 4
+About to run game for Gen 45 match 6
+About to run game for Gen 45 match 8
+About to run game for Gen 45 match 10
+About to run game for Gen 45 match 12
+About to run game for Gen 45 match 14
+About to run game for Gen 45 match 16
+About to run game for Gen 45 match 18
+About to run game for Gen 45 match 20
+About to run game for Gen 45 match 22
+About to run game for Gen 45 match 24
+About to run game for Gen 45 match 26
+About to run game for Gen 45 match 28
+About to run game for Gen 45 match 30
+Gen 45: Finished Crossover
+Gen 45: Starting Mutations
+Gen 45: Finished Mutations
+
+
+Generation 46
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 46 match 0
+About to run game for Gen 46 match 2
+About to run game for Gen 46 match 4
+About to run game for Gen 46 match 6
+About to run game for Gen 46 match 8
+About to run game for Gen 46 match 10
+About to run game for Gen 46 match 12
+About to run game for Gen 46 match 14
+About to run game for Gen 46 match 16
+About to run game for Gen 46 match 18
+About to run game for Gen 46 match 20
+About to run game for Gen 46 match 22
+About to run game for Gen 46 match 24
+About to run game for Gen 46 match 26
+About to run game for Gen 46 match 28
+About to run game for Gen 46 match 30
+Gen 46: Finished Crossover
+Gen 46: Starting Mutations
+Gen 46: Finished Mutations
+
+
+Generation 47
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 47 match 0
+About to run game for Gen 47 match 2
+About to run game for Gen 47 match 4
+About to run game for Gen 47 match 6
+About to run game for Gen 47 match 8
+About to run game for Gen 47 match 10
+About to run game for Gen 47 match 12
+About to run game for Gen 47 match 14
+About to run game for Gen 47 match 16
+About to run game for Gen 47 match 18
+About to run game for Gen 47 match 20
+About to run game for Gen 47 match 22
+About to run game for Gen 47 match 24
+About to run game for Gen 47 match 26
+About to run game for Gen 47 match 28
+About to run game for Gen 47 match 30
+Gen 47: Finished Crossover
+Gen 47: Starting Mutations
+Gen 47: Finished Mutations
+
+
+Generation 48
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 48 match 0
+About to run game for Gen 48 match 2
+About to run game for Gen 48 match 4
+About to run game for Gen 48 match 6
+About to run game for Gen 48 match 8
+About to run game for Gen 48 match 10
+About to run game for Gen 48 match 12
+About to run game for Gen 48 match 14
+About to run game for Gen 48 match 16
+About to run game for Gen 48 match 18
+About to run game for Gen 48 match 20
+About to run game for Gen 48 match 22
+About to run game for Gen 48 match 24
+About to run game for Gen 48 match 26
+About to run game for Gen 48 match 28
+About to run game for Gen 48 match 30
+Gen 48: Finished Crossover
+Gen 48: Starting Mutations
+Gen 48: Finished Mutations
+
+
+Generation 49
+
+Finished recording individuals and data
+################## Begin Battle Royale ##################
+################## End Battle Royale ##################
+About to run game for Gen 49 match 0
+About to run game for Gen 49 match 2
+About to run game for Gen 49 match 4
+About to run game for Gen 49 match 6
+About to run game for Gen 49 match 8
+About to run game for Gen 49 match 10
+About to run game for Gen 49 match 12
+About to run game for Gen 49 match 14
+About to run game for Gen 49 match 16
+About to run game for Gen 49 match 18
+About to run game for Gen 49 match 20
+About to run game for Gen 49 match 22
+About to run game for Gen 49 match 24
+About to run game for Gen 49 match 26
+About to run game for Gen 49 match 28
+About to run game for Gen 49 match 30
+Gen 49: Finished Crossover
+Gen 49: Starting Mutations
+Gen 49: Finished Mutations
+Writing Data to a file at CurriculumTestingResults/AttackTree/Pop32_Gen50_XOverP0.6_XOverS0.1_MOP0.2_MNP0.01Fixed
+Wrote Data to File!
+Completed All generations and Data recording!
