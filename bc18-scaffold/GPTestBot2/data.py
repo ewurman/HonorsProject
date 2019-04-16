@@ -290,7 +290,7 @@ class InformationNode(Node):
             return super().getWriteString(indent)
 
     def evaluate(self, battleCode, gameController, params = []):
-        print("function name", self.function.__name__)
+        #print("function name", self.function.__name__)
         if params != []:
             return self.function(battleCode, gameController, *params)
         else:
@@ -1242,7 +1242,9 @@ def selectWorkerToMoveTowardHarvesting(bc, gc):
 def selectWorkerThatCanBuild(bc, gc):
     workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
     earthWorkers = [x for x in workers if x.location.map_location().planet == bc.Planet.Earth]
-    return random.choice(earthWorkers)
+    if len(earthWorkers) != 0:
+        return random.choice(earthWorkers)
+    return None
 
 def selectBuilderThatCanBuild(bc, gc):
     workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
@@ -2783,6 +2785,7 @@ def createRandomFixedSizeMoveTree(height):
         infoFunc = random.choice(game_number_info_functions)  #TODO: not game info functions, use isUnit() functions
         infoNode = InformationNode(infoFunc)
         opVal = random.choice(game_number_info_functions_number_mappings[infoFunc])
+        opNode = OperandNode(opVal)
         boolNode = BooleanNode(None, operation = operator.lt, firstChild = infoNode, secondChild = opNode, isGCFunction = False) 
 
         lChildNode, rChildNode, selectUnitNode = None,None,None
@@ -3224,6 +3227,162 @@ class DecisionTreePlayer:
         player = DecisionTreePlayer(topTree, harvestTree, attackTree, moveTree, buildTree, None)
         return player
         
+
+    def readTrainedTreesFromFiles(self, directoryBegin, directoryEnd, allFunctionSets, treesToReadList):
+        fileNames = ["TopTree.txt", "HarvestTree.txt", "AttackTree.txt", "MoveTree.txt", "BuildTree.txt"]
+
+
+        def recursiveBuildTree(lines, lineNum, numTabs) -> (Node, int):
+            line = lines[lineNum]
+            elements = line.split()
+            nodeType = elements[0]
+
+
+            if nodeType == "DecisionNode":
+                if elements[1].lower() == "action:":
+                    func = None
+                    functionName = elements[2]
+                    found = False
+                    for functionLists in allFunctionSets:
+                        for function in functionLists:
+                            if function.__name__ == functionName:
+                                func = function
+                                found = True
+                                break
+                        if found:
+                            break
+
+                    node = DecisionNode(func)
+                
+                else: #top tree
+                    print(elements[1])
+                    node = DecisionNode(None, int(elements[2]))
+                return node, lineNum + 1
+
+
+            if nodeType == "IfNode":
+                firstChild, nextLineNum = recursiveBuildTree(lines, lineNum + 1, numTabs + 1)
+                secondChild, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
+                thirdChild, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
+                #check if nextLine is infoNode with correct tabs
+                if len(elements) == 2 and elements[1] == "WithInfo":
+                    infoChild, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
+                else:
+                    infoChild = None
+                node = IfNode(firstChild, secondChild, thirdChild, infoChild)
+                return node, nextLineNum
+
+
+            if nodeType == "InformationNode":
+                functionName = elements[2]
+                func = None
+                found = False
+                for functionLists in allFunctionSets:
+                    for function in functionLists:
+                        if function.__name__ == functionName:
+                            func = function
+                            found = True
+                            break
+                    if found:
+                        break
+
+                nextLineNum = lineNum + 1
+                child = None
+                #now check if nextline is one indent in
+                if nextLineNum < len(lines) and lines[nextLineNum].startswith("\t"*(numTabs+1)):
+                #if line[lineNum + 1][numTabs] ==  '\t': #one more mean after numTabs (but 0 indexed so good here)
+                    #then its a child
+                    child, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
+                
+                if func == None:
+                    print("** building infoNode with no function! **", functionName)
+                node = InformationNode(func, child)
+                return node, nextLineNum
+
+
+            if nodeType == "OperandNode":
+                value = int(elements[2])
+                node = OperandNode(value)
+                return node, lineNum + 1
+
+
+            if nodeType == "BooleanNode":
+
+                if elements[1] == "function:":
+                    functionName = elements[2]
+                    func = None
+                    found = False
+                    for functionLists in allFunctionSets:
+                        for function in functionLists:
+                            if function.__name__ == functionName:
+                                func = function
+                                found = True
+                                break
+                        if found:
+                            break
+
+                    nextLineNum = lineNum + 1
+                    node = BooleanNode(func)
+                    return node, nextLineNum
+
+                else:
+                    #its an operation and has children
+                    operation = operator.lt # TODO: rn we only do less than
+                    nextLineNum = lineNum + 1
+                    firstChild, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
+                    secondChild, nextLineNum = recursiveBuildTree(lines, nextLineNum, numTabs + 1)
+
+                    node = BooleanNode(None, operation = operation, firstChild = firstChild, secondChild = secondChild, isGCFunction = False)
+                    return node, nextLineNum
+
+            print("Returning None Node in recursiveBuildTree")
+            return None, lineNum
+
+
+        if 0 in treesToReadList:
+            directoryPath = directoryBegin + "TopTree" + directoryEnd
+            with open(directoryPath + "/" + fileNames[0], 'r') as f:
+                lines = f.readlines()
+                root, x = recursiveBuildTree(lines, 0, 0)
+                topTree = FixedSizeDecisionTree(root, 0)
+                print("read topTree")
+                self.topTree = topTree
+
+        if 1 in treesToReadList:
+            directoryPath = directoryBegin + "HarvestTree" + directoryEnd
+            with open(directoryPath + "/" + fileNames[1], 'r') as f:
+                lines = f.readlines()
+                root, x = recursiveBuildTree(lines, 0, 0)
+                harvestTree = FixedSizeDecisionTree(root, 1)
+                print("read harvestTree")
+                self.harvestTree = harvestTree
+
+        if 2 in treesToReadList:
+            directoryPath = directoryBegin + "AttackTree" + directoryEnd
+            with open(directoryPath + "/" + fileNames[2], 'r') as f:
+                lines = f.readlines()
+                root, x = recursiveBuildTree(lines, 0, 0)
+                attackTree = FixedSizeDecisionTree(root, 2)
+                print("read attackTree")
+                self.attackTree = attackTree
+
+        if 3 in treesToReadList:
+            directoryPath = directoryBegin + "MoveTree" + directoryEnd
+            with open(directoryPath + "/" + fileNames[3], 'r') as f:
+                lines = f.readlines()
+                root, x = recursiveBuildTree(lines, 0, 0)
+                moveTree = FixedSizeDecisionTree(root, 3)
+                print("read movementTree")
+                self.movementTree = moveTree
+
+        if 4 in treesToReadList:
+            directoryPath = directoryBegin + "BuildTree" + directoryEnd
+            with open(directoryPath + "/" + fileNames[4], 'r') as f:
+                lines = f.readlines()
+                root, x = recursiveBuildTree(lines, 0, 0)
+                buildTree = FixedSizeDecisionTree(root, 4)
+                print("read buildTree")
+                self.buildTree = buildTree
 
 
 
@@ -3928,3 +4087,86 @@ def createIdealPlayerForTesting(treeTraining, treeHeight) -> DecisionTreePlayer:
         player = createCurriculumTrainingPlayerBuild(treeHeight)
     
     return player
+
+
+
+def topTreeFitnessEval(tree) -> int:
+    hasHarvest, hasAttack, hasMove, hasBuild = False, False, False, False
+    checkForRockets = False
+    numBranchesWithDuplicateBoolFunctions = 0
+    fitness = 2**tree.height #A perfect score
+    nodes_to_visit = []
+    nodes_to_visit.append((tree.root,0))
+    branch_functions = []
+    # TODO DFS looking at paths to make sure no repeats, and to check above bools
+    while len(nodes_to_visit) != 0:
+        currNode,visits = nodes_to_visit.pop()
+        if type(currNode) is IfNode:
+            # We should look at the bool node's (or info node's) function, add it to a list of this branches functions,
+            #  then add the true and false children to the stack
+            if visits == 1:
+                #we've been here before so now we pop
+                branch_functions.pop() #get rid of this bool function
+
+            else:
+                boolNode = currNode.firstChild
+                function = None
+                if boolNode.firstChild is not None:
+                    infoNode = boolNode.firstChild
+                    function = infoNode.function
+                    if function == getNumberOfRockets:
+                        checkForRockets = True
+                        print("** found getNumberOfRockets function **")
+                    branch_functions.append(function)
+                else:
+                    branch_functions.append(boolNode.function)
+
+                #now we want to add children to stack, but first us
+                nodes_to_visit.append((currNode, visits + 1))
+                nodes_to_visit.append((currNode.secondChild, 0))
+                nodes_to_visit.append((currNode.thirdChild, 0))
+
+
+        elif type(currNode) is DecisionNode:
+            action = currNode.typeOfActionToMake
+            if action == ActionType.Harvest:
+                hasHarvest = True
+            elif action == ActionType.Attack:
+                hasAttack = True
+            elif action == ActionType.Move:
+                hasMove = True
+            elif action == ActionType.Build:
+                hasBuild = True
+            # now we check for duplicates down the path
+            numDuplicates = 0
+            for i in range(len(branch_functions)):
+                for j in range(i + 1, len(branch_functions)):
+                    if branch_functions[i] == branch_functions[j]:
+                        numDuplicates += 1
+                    #TODO: test this above
+            numBranchesWithDuplicateBoolFunctions += numDuplicates
+            
+    # now we add the penalties
+    fitness -= numBranchesWithDuplicateBoolFunctions
+    if not hasHarvest:
+        fitness -= 1
+    if not hasAttack:
+        fitness -= 2
+    if not hasBuild:
+        fitness -= 4
+    if not hasMove:
+        fitness -= 4
+    if not checkForRockets:
+        fitness -= 4
+
+    return fitness
+
+
+
+def curriculumTrainingPlayerFitness(player, treeTraining) -> int:
+    topTree, harvestTree, attackTree, movementTree, buildTree = player.topTree, player.harvestTree, player.attackTree, player.movementTree, player.buildTree
+    fitness = 0
+    if treeTraining == 0:
+        fitness = topTreeFitnessEval(topTree)
+
+    return fitness

@@ -18,7 +18,8 @@ WINNER_DIST_HEADER = "# Winner Distribution\n"
 POP_SIZE = 64 #must be even -> 32 easy for final tournament
 GENERATIONS = 100 # want 50
 RECORD_PER_GEN = 1
-
+USING_ELITISM = True
+ELITISM_NUM = 4
 
 def log(filepath, message):
     print("Logging:", message)
@@ -85,7 +86,11 @@ def winnerBattleRoyale(resultDirName):
         finalPop.append(player)
 
     #now make population a power of 2
-    indicesToDouble = random.sample(range(len(finalPop)), 128-len(finalPop))
+    if GENERATIONS == 100:
+        indicesToDouble = random.sample(range(len(finalPop)), 128-len(finalPop))
+    else:
+        indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
+
     playersToDouble = [finalPop[i] for i in sorted(indicesToDouble)]
 
     finalPop += playersToDouble
@@ -101,62 +106,67 @@ def writeDataToFile(filepath, crossoversPerRound, cHeightsPerRound, mutationsPer
     with open(fullPath, 'a+') as f:
         f.seek(0)
         f.truncate()
-        f.write(NUM_CROSSOVER_HEADER)
-        last = crossoversPerRound.pop()
-        total = last
-        for x in crossoversPerRound:
-            total += x
-            f.write(str(x)+',')
-        f.write(str(last)+ '\n# Average Number of Avg Crossovers Across Generations\n')
-        f.write(str( total / GENERATIONS) + '\n\n')
+        if len(crossoversPerRound) != 0:
+            f.write(NUM_CROSSOVER_HEADER)
+            last = crossoversPerRound.pop()
+            total = last
+            for x in crossoversPerRound:
+                total += x
+                f.write(str(x)+',')
+            f.write(str(last)+ '\n# Average Number of Avg Crossovers Across Generations\n')
+            f.write(str( total / GENERATIONS) + '\n\n')
 
-        f.write(CHEIGHTS_HEADER)
-        avgHeights = [0,0,0,0,0]
-        for h in cHeightsPerRound:
-            h0 = str(h[0])
-            h1 = str(h[1])
-            h2 = str(h[2])
-            h3 = str(h[3])
-            h4 = str(h[4])
-            if isIntermediate:
-                f.write(h0 + ',' + h1 + ',' + h2 + ',' + h3 + ',' + h4 + ';') #easier to read in as one line
-            else: 
-                f.write(h0 + ',' + h1 + ',' + h2 + ',' + h3 + ',' + h4 + '\n')
-            avgHeights = [sum(x) for x in zip(avgHeights, h)] #add component wise
+        if len(cHeightsPerRound) != 0:
+            f.write(CHEIGHTS_HEADER)
+            avgHeights = [0,0,0,0,0]
+            for h in cHeightsPerRound:
+                h0 = str(h[0])
+                h1 = str(h[1])
+                h2 = str(h[2])
+                h3 = str(h[3])
+                h4 = str(h[4])
+                if isIntermediate:
+                    f.write(h0 + ',' + h1 + ',' + h2 + ',' + h3 + ',' + h4 + ';') #easier to read in as one line
+                else: 
+                    f.write(h0 + ',' + h1 + ',' + h2 + ',' + h3 + ',' + h4 + '\n')
+                avgHeights = [sum(x) for x in zip(avgHeights, h)] #add component wise
 
-        avgHeights = [str(x / len(cHeightsPerRound)) for x in avgHeights]
-        f.write("\n# Average height of tree A of Crossovers Across Generations\n")
-        f.write(avgHeights[0] + ',' + avgHeights[1] + ',' + avgHeights[2] + ',' + avgHeights[3] + ',' + avgHeights[4] + '\n\n')
+            avgHeights = [str(x / len(cHeightsPerRound)) for x in avgHeights]
+            f.write("\n# Average height of tree A of Crossovers Across Generations\n")
+            f.write(avgHeights[0] + ',' + avgHeights[1] + ',' + avgHeights[2] + ',' + avgHeights[3] + ',' + avgHeights[4] + '\n\n')
 
-        f.write(MUTATIONS_HEADER)
-        lastM = mutationsPerRound.pop()
-        totalM = lastM
-        for x in mutationsPerRound:
-            totalM += x
-            f.write(str(x)+',')
-        f.write(str(lastM)+ '\n# Average Number of Avg Mutations Across Generations\n')
-        f.write(str( totalM / GENERATIONS) + '\n')
+        if len(mutationsPerRound) != 0:
+            f.write(MUTATIONS_HEADER)
+            lastM = mutationsPerRound.pop()
+            totalM = lastM
+            for x in mutationsPerRound:
+                totalM += x
+                f.write(str(x)+',')
+            f.write(str(lastM)+ '\n# Average Number of Avg Mutations Across Generations\n')
+            f.write(str( totalM / GENERATIONS) + '\n')
 
         #node numbers
-        f.write("\n"+ TNODES_HEADER)
-        avgNodes = [0,0,0,0,0]
-        for nodeDist in tNodesPerRound:
-            n0 = str(nodeDist[0])
-            n1 = str(nodeDist[1])
-            n2 = str(nodeDist[2])
-            n3 = str(nodeDist[3])
-            n4 = str(nodeDist[4])
-            if isIntermediate:
-                f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + ';')
-            else:
-                f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + '\n')
-            avgNodes = [sum(x) for x in zip(avgNodes, nodeDist)]
-        f.write("\n# Mean number of nodes \n")
-        avgNodes = [str(x/GENERATIONS) for x in avgNodes]
-        f.write(avgNodes[0] + ',' + avgNodes[1] + ',' + avgNodes[2] + ',' + avgNodes[3] + ',' + avgNodes[4] + '\n\n')
+        if len(tNodesPerRound) != 0:
+            f.write("\n"+ TNODES_HEADER)
+            avgNodes = [0,0,0,0,0]
+            for nodeDist in tNodesPerRound:
+                n0 = str(nodeDist[0])
+                n1 = str(nodeDist[1])
+                n2 = str(nodeDist[2])
+                n3 = str(nodeDist[3])
+                n4 = str(nodeDist[4])
+                if isIntermediate:
+                    f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + ';')
+                else:
+                    f.write(n0 + ',' + n1 + ',' + n2 + ',' + n3 + ',' + n4 + '\n')
+                avgNodes = [sum(x) for x in zip(avgNodes, nodeDist)]
+            f.write("\n# Mean number of nodes \n")
+            avgNodes = [str(x/GENERATIONS) for x in avgNodes]
+            f.write(avgNodes[0] + ',' + avgNodes[1] + ',' + avgNodes[2] + ',' + avgNodes[3] + ',' + avgNodes[4] + '\n\n')
 
-        f.write(WINNER_DIST_HEADER)
-        f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
+        if len(winnerDist) == 2:
+            f.write(WINNER_DIST_HEADER)
+            f.write(str(winnerDist[0]) + ", " + str(winnerDist[1]) + "\n")
 
     log(filepath, "Wrote Data to File!\n")
 
@@ -227,7 +237,9 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
         treeString = "BuildTree"    
 
     resultDirName = "CurriculumTestingResults/" +treeString+ "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed"
-    
+    if USING_ELITISM:
+        resultDirName += "/Elitist"
+
     if not os.path.exists(resultDirName):
         print("Creating new folder for test ", resultDirName)
         os.makedirs(resultDirName, exist_ok=True)
@@ -332,8 +344,37 @@ def doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly
 
         #get ready for the new generation
         population.clear() 
+        
+        # ELITISM
+        elitismPop = []
+        minFitnessIndex = 0
+        #add the elitist
+        if USING_ELITISM:
+            for i in range(ELITISM_NUM):
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                elitismPop.append((player, fitness))
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    minFitnessIndex = i
+
+            for i in range(ELITISM_NUM, len(breedingPool)): 
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                #TODO: replace min fitness then recalculate it
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    elitismPop[minFitnessIndex] = (player, fitness)
+                    minFitnessIndex = 0
+                    for j in range(len(elitismPop)):
+                        fit = elitismPop[j][1]
+                        if fit < elitismPop[minFitnessIndex][1]:
+                            minFitnessIndex = j
+                #else continue
+            # Now we should have ELITISM_NUM (people,fitness) tuples in elitismPop
+            population = [x[0] for x in elitismPop]
+
+        # Crossover
         print("Starting Crossover")
-        for j in range(POP_SIZE//2):
+        for j in range((POP_SIZE-len(population))//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
@@ -414,19 +455,22 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
     # initialize population
     for i in range(POP_SIZE):
         player = GP.createRandomFixedSizeDecisionTreePlayer(topTreeHeight, 3)
+        dirBeginName = "CurriculumTestingResults/"
+        dirEndName = "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed/Winner"
         if treeTesting == 0:
             player = GP.createCurriculumTrainingPlayerTop(topTreeHeight)
         elif treeTesting == 1:
             player = GP.createCurriculumTrainingPlayerHarvest() #assumes height of 2
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 2, 3, 4])
         elif treeTesting == 2:
             player = GP.createCurriculumTrainingPlayerAttack(attackTreeHeight)
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 3, 4])
         elif treeTesting == 3:
             player = GP.createCurriculumTrainingPlayerMove(moveTreeHeight)
-            dirBeginName = "CurriculumTestingResults/"
-            dirEndName = "/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"+str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)+"Fixed/Winner"
             player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0])
         elif treeTesting == 4:
             player = GP.createCurriculumTrainingPlayerAttack(buildTreeHeight)
+            player.readTrainedTreesFromFiles(dirBeginName, dirEndName, GP.allFunctionSets, [0, 3])
         population.append(player)
 
     for i in range(GENERATIONS):
@@ -488,11 +532,39 @@ def newTest(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, 
             winnerDist[playerNum] += 1
 
         #now breeding pool should be half POP_SIZE
-
         #get ready for the new generation
         population.clear() 
+
+        # ELITISM
+        elitismPop = []
+        minFitnessIndex = 0
+        #add the elitist
+        if USING_ELITISM:
+            for i in range(ELITISM_NUM):
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                elitismPop.append((player, fitness))
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    minFitnessIndex = i
+
+            for i in range(ELITISM_NUM, len(breedingPool)): 
+                player = breedingPool[i]
+                fitness = GP.curriculumTrainingPlayerFitness(player, treeTesting)
+                #TODO: replace min fitness then recalculate it
+                if fitness < elitismPop[minFitnessIndex][1]:
+                    elitismPop[minFitnessIndex] = (player, fitness)
+                    minFitnessIndex = 0
+                    for j in range(len(elitismPop)):
+                        fit = elitismPop[j][1]
+                        if fit < elitismPop[minFitnessIndex][1]:
+                            minFitnessIndex = j
+                #else continue
+            # Now we should have ELITISM_NUM (people,fitness) tuples in elitismPop
+            population = [x[0] for x in elitismPop]
+
+        # Crossover
         print("Starting Crossover")
-        for j in range(POP_SIZE//2):
+        for j in range((POP_SIZE-len(population))//2):
             mates = random.sample(breedingPool, 2)
             m1 = mates[0]
             m2 = mates[1]
@@ -571,7 +643,8 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 0
+    treeTraining = 1
+
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     
     print("Completed All generations and recording!")

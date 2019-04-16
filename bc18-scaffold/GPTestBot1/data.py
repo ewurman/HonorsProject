@@ -1242,7 +1242,9 @@ def selectWorkerToMoveTowardHarvesting(bc, gc):
 def selectWorkerThatCanBuild(bc, gc):
     workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
     earthWorkers = [x for x in workers if x.location.map_location().planet == bc.Planet.Earth]
-    return random.choice(earthWorkers)
+    if len(earthWorkers) != 0:
+        return random.choice(earthWorkers)
+    return None
 
 def selectBuilderThatCanBuild(bc, gc):
     workers = [x for x in gc.my_units() if x.unit_type == bc.UnitType.Worker]
@@ -3373,7 +3375,7 @@ class DecisionTreePlayer:
                 print("read movementTree")
                 self.movementTree = moveTree
 
-        if 1 in treesToReadList:
+        if 4 in treesToReadList:
             directoryPath = directoryBegin + "BuildTree" + directoryEnd
             with open(directoryPath + "/" + fileNames[4], 'r') as f:
                 lines = f.readlines()
@@ -4087,12 +4089,76 @@ def createIdealPlayerForTesting(treeTraining, treeHeight) -> DecisionTreePlayer:
     return player
 
 
-def topTreeFitnessEval(topTree) -> int:
+
+def topTreeFitnessEval(tree) -> int:
     hasHarvest, hasAttack, hasMove, hasBuild = False, False, False, False
     checkForRockets = False
-    fitness = 0
-    stack = []
+    numBranchesWithDuplicateBoolFunctions = 0
+    fitness = 2**tree.height #A perfect score
+    nodes_to_visit = []
+    nodes_to_visit.append((tree.root,0))
+    branch_functions = []
     # TODO DFS looking at paths to make sure no repeats, and to check above bools
+    while len(nodes_to_visit) != 0:
+        currNode,visits = nodes_to_visit.pop()
+        if type(currNode) is IfNode:
+            # We should look at the bool node's (or info node's) function, add it to a list of this branches functions,
+            #  then add the true and false children to the stack
+            if visits == 1:
+                #we've been here before so now we pop
+                branch_functions.pop() #get rid of this bool function
+
+            else:
+                boolNode = currNode.firstChild
+                function = None
+                if boolNode.firstChild is not None:
+                    infoNode = boolNode.firstChild
+                    function = infoNode.function
+                    if function == getNumberOfRockets:
+                        checkForRockets = True
+                        print("** found getNumberOfRockets function **")
+                    branch_functions.append(function)
+                else:
+                    branch_functions.append(boolNode.function)
+
+                #now we want to add children to stack, but first us
+                nodes_to_visit.append((currNode, visits + 1))
+                nodes_to_visit.append((currNode.secondChild, 0))
+                nodes_to_visit.append((currNode.thirdChild, 0))
+
+
+        elif type(currNode) is DecisionNode:
+            action = currNode.typeOfActionToMake
+            if action == ActionType.Harvest:
+                hasHarvest = True
+            elif action == ActionType.Attack:
+                hasAttack = True
+            elif action == ActionType.Move:
+                hasMove = True
+            elif action == ActionType.Build:
+                hasBuild = True
+            # now we check for duplicates down the path
+            numDuplicates = 0
+            for i in range(len(branch_functions)):
+                for j in range(i + 1, len(branch_functions)):
+                    if branch_functions[i] == branch_functions[j]:
+                        numDuplicates += 1
+                    #TODO: test this above
+            numBranchesWithDuplicateBoolFunctions += numDuplicates
+            
+    # now we add the penalties
+    fitness -= numBranchesWithDuplicateBoolFunctions
+    if not hasHarvest:
+        fitness -= 1
+    if not hasAttack:
+        fitness -= 2
+    if not hasBuild:
+        fitness -= 4
+    if not hasMove:
+        fitness -= 4
+    if not checkForRockets:
+        fitness -= 4
+
     return fitness
 
 
