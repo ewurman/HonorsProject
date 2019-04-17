@@ -80,6 +80,8 @@ def winnerBattleRoyale(resultDirName):
     for gen in directories:
         if (os.path.isfile(resultDirName + "/" + gen)):
             continue;
+        if (gen == "Elitist"):
+            continue
         thisPlayerPath = resultDirName + "/" + gen + "/Winner"
         player = GP.DecisionTreePlayer(None, None, None, None, None, None)
         player = player.readFromFiles(thisPlayerPath, GP.allFunctionSets)
@@ -90,6 +92,7 @@ def winnerBattleRoyale(resultDirName):
         indicesToDouble = random.sample(range(len(finalPop)), 128-len(finalPop))
     else:
         indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
+
     playersToDouble = [finalPop[i] for i in sorted(indicesToDouble)]
 
     finalPop += playersToDouble
@@ -643,7 +646,7 @@ if __name__ == '__main__':
 
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeTraining = 1
+    treeTraining = 3
 
     doTesting(mutateNodeProb, mutateOccurProb, crossoverProb, crossoverStopEarly, treeTraining)
     

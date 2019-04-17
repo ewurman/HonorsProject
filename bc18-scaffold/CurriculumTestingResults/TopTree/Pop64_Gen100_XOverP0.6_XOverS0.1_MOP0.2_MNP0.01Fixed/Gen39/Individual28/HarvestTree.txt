@@ -1,0 +1,16 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getKarbonite
+		OperandNode Value: 300
+	IfNode WithInfo
+		BooleanNode function: worker_unit_can_harvest
+		DecisionNode action: workerHarvestBehavior
+		DecisionNode action: workerCantHarvestBehavior
+		InformationNode function: selectWorkerToMoveTowardHarvesting
+	IfNode WithInfo
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfWorkers
+			OperandNode Value: 4
+		DecisionNode action: workerReplicate
+		DecisionNode action: workerHarvestBehavior
+		InformationNode function: selectRandomWorker
