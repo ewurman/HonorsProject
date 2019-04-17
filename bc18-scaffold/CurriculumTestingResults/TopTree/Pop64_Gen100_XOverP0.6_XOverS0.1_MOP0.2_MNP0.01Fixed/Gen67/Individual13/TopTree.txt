@@ -1,0 +1,76 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRockets
+		OperandNode Value: 2
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getRoundNumber
+			OperandNode Value: 750
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 1
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRockets
+					OperandNode Value: 1
+				DecisionNode typeOfActionToMake: 4
+				DecisionNode typeOfActionToMake: 1
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getMaxNumberOfUnitsInEarthRocket
+					OperandNode Value: 3
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 1
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getKarbonite
+				OperandNode Value: 50
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 7
+				DecisionNode typeOfActionToMake: 3
+				DecisionNode typeOfActionToMake: 1
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRangers
+					OperandNode Value: 5
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 3
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 1
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRangers
+					OperandNode Value: 1
+				DecisionNode typeOfActionToMake: 2
+				DecisionNode typeOfActionToMake: 3
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 50
+				DecisionNode typeOfActionToMake: 4
+				DecisionNode typeOfActionToMake: 1
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getRoundNumber
+				OperandNode Value: 450
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 1
+				DecisionNode typeOfActionToMake: 4
+				DecisionNode typeOfActionToMake: 2
+			IfNode 
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 1
+				DecisionNode typeOfActionToMake: 3
+				DecisionNode typeOfActionToMake: 1

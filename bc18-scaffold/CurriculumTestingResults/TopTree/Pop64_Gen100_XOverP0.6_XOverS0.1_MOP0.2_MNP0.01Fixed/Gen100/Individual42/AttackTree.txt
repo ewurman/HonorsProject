@@ -1,0 +1,12 @@
+IfNode 
+	BooleanNode function: canAnyUnitAttack
+	IfNode WithInfo
+		BooleanNode function: isAttacker
+		DecisionNode typeOfActionToMake: 0
+		DecisionNode typeOfActionToMake: 0
+		InformationNode function: selectUnitDealingMostDamageThatCanAttack
+	IfNode WithInfo
+		BooleanNode function: isAttacker
+		DecisionNode action: unitMoveTowardEnemyBehavior
+		DecisionNode action: unitMoveAwayFromEnemy
+		InformationNode function: selectRandomUnitThatCanMove

@@ -18,7 +18,7 @@ WINNER_DIST_HEADER = "# Winner Distribution\n"
 POP_SIZE = 32 #must be even -> 32 easy for final tournament
 GENERATIONS = 50 # want 50
 RECORD_PER_GEN = 1
-USING_ELITISM = True
+USING_ELITISM = False
 ELITISM_NUM = 4
 
 def log(filepath, message):
@@ -92,6 +92,7 @@ def winnerBattleRoyale(resultDirName):
         indicesToDouble = random.sample(range(len(finalPop)), 128-len(finalPop))
     else:
         indicesToDouble = random.sample(range(len(finalPop)), 64-len(finalPop))
+
     playersToDouble = [finalPop[i] for i in sorted(indicesToDouble)]
 
     finalPop += playersToDouble
