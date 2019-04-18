@@ -1,0 +1,2 @@
+Writing Data to a file at CurriculumTestingResults/BuildTree/Pop32_Gen50_XOverP0.6_XOverS0.1_MOP0.2_MNP0.01Fixed/Elitist/Gen16
+Wrote Data to File!
