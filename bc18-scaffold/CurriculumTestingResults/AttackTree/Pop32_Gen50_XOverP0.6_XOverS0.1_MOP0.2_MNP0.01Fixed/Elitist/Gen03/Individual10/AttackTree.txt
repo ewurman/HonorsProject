@@ -1,0 +1,14 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfFactories
+		OperandNode Value: 3
+	IfNode WithInfo
+		BooleanNode function: isHealer
+		DecisionNode action: healer_action
+		DecisionNode action: unitAttackRandomPossibleEnemy
+		InformationNode function: selectUnitDealingMostDamageThatCanAttack
+	IfNode WithInfo
+		BooleanNode function: isHealer
+		DecisionNode action: healer_action
+		DecisionNode action: unitAttackRandomPossibleEnemy
+		InformationNode function: selectUnitDealingMostDamageThatCanAttack
