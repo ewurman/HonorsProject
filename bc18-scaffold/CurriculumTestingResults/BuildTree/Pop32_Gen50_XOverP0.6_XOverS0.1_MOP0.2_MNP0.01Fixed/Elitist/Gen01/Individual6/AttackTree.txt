@@ -1,0 +1,68 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfRangers
+		OperandNode Value: 3
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 8
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfAttackers
+				OperandNode Value: 4
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectUnitWithLeastLifeThatCanAttack
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getMaxNumberOfUnitsInEarthRocket
+				OperandNode Value: 3
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackRandomPossibleEnemy
+				InformationNode function: selectUnitWithLeastLifeThatCanAttack
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfHealers
+			OperandNode Value: 2
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 3
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectUnitWithLeastLifeThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackRandomPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 1
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack
+			IfNode WithInfo
+				BooleanNode function: isHealer
+				DecisionNode action: healer_action
+				DecisionNode action: unitAttackClosestPossibleEnemy
+				InformationNode function: selectRandomUnitThatCanAttack

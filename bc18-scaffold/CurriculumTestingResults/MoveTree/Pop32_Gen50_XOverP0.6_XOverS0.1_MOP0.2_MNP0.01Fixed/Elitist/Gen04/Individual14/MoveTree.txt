@@ -1,0 +1,84 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfHealers
+		OperandNode Value: 1
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 3
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getRoundNumber
+				OperandNode Value: 600
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 700
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 5
+				DecisionNode action: launch_rocket_to_mars
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: select_random_rocket
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 200
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				DecisionNode action: unitMoveTowardAllyBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 300
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfFactories
+			OperandNode Value: 2
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 100
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: unitMoveTowardAllyBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfMages
+					OperandNode Value: 3
+				DecisionNode action: unitMoveAwayFromEnemy
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: selectRandomUnitThatCanMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 700
+				DecisionNode action: unitMoveAwayFromEnemy
+				DecisionNode action: unitMoveAwayFromEnemy
+				InformationNode function: selectRandomUnitThatCanMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getMaxNumberOfUnitsInEarthRocket
+					OperandNode Value: 1
+				DecisionNode action: launch_rocket_to_mars
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: selectRandomUnitThatCanMove
