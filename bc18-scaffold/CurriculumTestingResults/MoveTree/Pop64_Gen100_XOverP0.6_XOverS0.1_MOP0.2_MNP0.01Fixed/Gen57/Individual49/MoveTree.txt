@@ -1,0 +1,84 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfKnights
+		OperandNode Value: 5
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 8
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfWorkers
+				OperandNode Value: 11
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfKnights
+					OperandNode Value: 1
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				DecisionNode action: unitMoveIntoClosestRocket
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRockets
+					OperandNode Value: 1
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectUnitThatCanAttackToMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfFactories
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 350
+				DecisionNode action: unitMoveAwayFromEnemy
+				DecisionNode action: unitMoveAwayFromEnemy
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRangers
+					OperandNode Value: 1
+				DecisionNode action: launch_rocket_to_mars
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: select_rocket_with_most_units_garrisoned
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfAttackers
+			OperandNode Value: 8
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfKnights
+				OperandNode Value: 5
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getKarbonite
+					OperandNode Value: 150
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: unitMoveRandomBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 1
+				DecisionNode action: unitMoveAwayFromEnemy
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectRandomUnitThatCanMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 2
+				DecisionNode action: unitMoveRandomBehavior
+				DecisionNode action: unitMoveRandomBehavior
+				InformationNode function: selectRandomUnitThatCanMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRockets
+					OperandNode Value: 2
+				DecisionNode action: unitMoveIntoClosestRocket
+				DecisionNode action: unitMoveAwayFromEnemy
+				InformationNode function: selectRandomUnitThatCanMove

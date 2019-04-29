@@ -1,0 +1,2 @@
+Writing Data to a file at CurriculumTestingResults/MoveTree/Pop64_Gen100_XOverP0.6_XOverS0.1_MOP0.2_MNP0.01Fixed/Gen02
+Wrote Data to File!
