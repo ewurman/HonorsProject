@@ -1,0 +1,68 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getNumberOfWorkers
+		OperandNode Value: 7
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfAttackers
+			OperandNode Value: 12
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getRoundNumber
+				OperandNode Value: 50
+			IfNode WithInfo
+				BooleanNode function: isWorker
+				DecisionNode action: workerReplicate
+				DecisionNode action: factory_produce_ranger
+				InformationNode function: selectBuilderThatCanBuild
+			IfNode WithInfo
+				BooleanNode function: isWorker
+				DecisionNode action: workerBuildRocket
+				DecisionNode action: factory_produce_random
+				InformationNode function: selectBuilderThatCanBuild
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 5
+			IfNode WithInfo
+				BooleanNode function: isFactory
+				DecisionNode action: factory_produce_ranger
+				DecisionNode action: factory_produce_ranger
+				InformationNode function: selectRandomFactory
+			IfNode WithInfo
+				BooleanNode function: isWorker
+				DecisionNode action: workerBuildRocket
+				DecisionNode action: workerBuildBehavior
+				InformationNode function: selectWorkerThatCanBuild
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfAttackers
+			OperandNode Value: 12
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfWorkers
+				OperandNode Value: 4
+			IfNode WithInfo
+				BooleanNode function: isFactory
+				DecisionNode action: factory_produce_ranger
+				DecisionNode action: factory_produce_healer
+				InformationNode function: selectRandomFactory
+			IfNode WithInfo
+				BooleanNode function: isWorker
+				DecisionNode action: workerReplicate
+				DecisionNode action: factory_produce_healer
+				InformationNode function: selectBuilderThatCanBuild
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfRockets
+				OperandNode Value: 2
+			IfNode WithInfo
+				BooleanNode function: isFactory
+				DecisionNode action: factory_produce_random
+				DecisionNode action: factory_produce_knight
+				InformationNode function: selectRandomFactory
+			IfNode WithInfo
+				BooleanNode function: isWorker
+				DecisionNode action: workerReplicate
+				DecisionNode action: factory_produce_ranger
+				InformationNode function: selectBuilderThatCanBuild
