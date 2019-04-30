@@ -1,0 +1,288 @@
+\documentclass[12pt]{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[labelsep=none]{caption}
+\usepackage{float}
+\usepackage{titlesec}
+
+
+\usetikzlibrary{automata,positioning}
+%
+% Basic Document Settings
+%
+
+\topmargin=-.4in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=8.5in
+\headsep=0.5in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkTitle}
+\rhead{\hmwkDueDate}
+
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{\textit{Building a Better Bot}}
+\newcommand{\hmwkDueDate}{Fall 2018}
+\newcommand{\ClassName}{}
+\newcommand{\hmwkAuthorName}{\textbf{Erik Wurman}}
+
+
+%
+%Helper functions
+%
+\newcommand{\separate}{\bigskip}
+\newcommand{\smallseparate}{\medskip}
+\newcommand{\separateprobs}{\vspace{.25in}}
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+   \hskip -\arraycolsep
+   \let\@ifnextchar\new@ifnextchar
+   \array{#1}}
+\makeatother
+
+%Math Functions:
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\F}{\mathbb{F}}
+
+\setlength\parindent{0pt}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+
+\newtheoremstyle{dotless}{}{}{}{}{\bfseries}{}{ }{}
+\theoremstyle{dotless}
+\newtheorem*{definition*}{Definition:\\}
+\newtheorem{definition}{Definition}
+\newtheorem*{theorem*}{Theorem:}
+\newtheorem*{proofs*}{Proof\\}
+\newtheorem*{proof2*}{\textit{Proof}}
+\newtheorem{example}{Example}
+\newtheorem*{example*}{Example:\\}
+\newtheorem*{example2*}{Example: } %for named examples
+\newtheorem*{lemma*}{Lemma:\\}
+
+\begin{document}
+
+\begin{titlepage} % Suppresses displaying the page number on the title page and the subsequent page counts as page 1
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for horizontal lines, change thickness here
+	
+	\center % Centre everything on the page
+	%------------------------------------------------
+	%	Headings
+	%------------------------------------------------
+	\textsc{\LARGE }\\[1.5cm] % Main heading such as the name of your university/college
+	\textsc{\Large }\\[0.5cm] % Major heading such as course name
+	\textsc{\large Bowdoin College Computer Science}\\[0.5cm] % Minor heading such as course title
+	%------------------------------------------------
+	%	Title
+	%------------------------------------------------
+	\HRule\\[0.8cm]
+	{\huge\bfseries Building a Better Bot:}\\[0.4cm] % Title of your document
+	{\large\bfseries Evolving Game AI through Genetic Programming of Decision Trees}\\[0.4cm] % Title of your document
+	\HRule\\[1.5cm]
+	%------------------------------------------------
+	%	Author(s)
+	%------------------------------------------------
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft}
+			\large
+			\textit{Author}\\
+			Erik Wurman % Your name
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushright}
+			\large
+			\textit{Advisor}\\
+			Stephen Majercik% Supervisor's name
+		\end{flushright}
+	\end{minipage}
+	%------------------------------------------------
+	%	Date
+	%------------------------------------------------
+	\vfill\vfill\vfill % Position the date 3/4 down the remaining page
+	{\large\today} % Date, change the \today to a set date if you want to be precise
+	\vfill % Push the date up 1/4 of the remaining page
+\end{titlepage}
+
+\tableofcontents {}
+
+\newpage
+
+\section*{Abstract} %Abstract
+TODO
+%This project explores the effectiveness of using genetic programming on decision trees to evolve a player for MIT's \textit{Battlecode 2018} AI Challenge. \textit{Battlecode 2018} is a time-limited turn based strategy game in which two AI bots compete to conquer the world. Genetic Programming is an evolution-inspired optimization algorithm that works by breeding higher fitness individuals in a population over many generations to create a near optimal individual by the end of the algorithm.
+
+
+%TODO: rewrote from here
+\section{Introduction} % Introduction
+This Honors Project seeks to create an Artificial Intelligence Player for a time-limited Turned Based Strategy Game. The game is \textit{BattleCode: Escape to Mars}, which was created by MIT for its 2018 AI challenge. The goals of this project are twofold: to determine if genetic programming can develop a player from a randomly generated initial population, and if not, then to determine if genetic programming is a valid mechanism to improve a hand-crafted decision tree to play this game. \\
+
+Genetic programming is a nature inspired algorithm under the umbrella of genetic algorithms that are based on evolution. A genetic algorithm is an optimization algorithm that begins with a population of individuals. Each generation, the individuals of this population are evaluated and rated by their fitness. Then, the algorithm selects a certain number of these individuals to breed. This selection process is created in a way that makes it more likely to pick better fit individuals. Once the breeding pool is selected, two individuals undergo a crossover operation to create new individuals for the successive generation. These individuals then undergo mutation. The crossover and mutation operations allow the algorithm to make large and small steps around the solution space as it searches for more optimal solutions. 
+
+
+
+\section{Battlecode 2018} %Battlecode 2018
+\subsection{Overview: } \textit{Battlecode 2018: Escape to Mars} is a time-limited Turned Based Strategy Game created for MIT's AI Challenge where two teams compete for resources and fight for control of both Earth and Mars. The competition was held in January of 2018. In the game, there is one resource, karbonite, that is dispersed across the maps of Earth and Mars. There are 1000 rounds per game with each round consisting of 4 turns per player. Each player has 10 seconds plus an additional 50 milliseconds per round to complete all four moves. The winner of the game is the team that destroys all the other team's units or, in the case that neither team is completely eliminated, the team with the highest value of units at the end of the game. On round 750, Earth floods and everything on it is destroyed. If both teams die in the flood, then the team that was winning before the flood wins the game. If only one team is destroyed, the surviving team wins. Otherwise, the two teams play the remaining 250 turns exclusively on Mars.
+
+\subsection{Maps} The two planets, Earth and Mars, have different maps and karbonite deposits. Each game map is a 2 dimensional grid filled with locations. Each grid location is part of the map, meaning units can exist there, or they are blocked, creating obstacles for units to avoid. Each valid location has a fixed karbonite amount that can be harvested over the course of the game. Both teams start exclusively on Earth. The Earth map is always symmetric to avoid giving one team an unfair starting advantage. Mars is not symmetric since players can choose where on Mars they wish to land. Structures cannot be built on Mars.
+
+\subsection{Units and Buildings: } There are 5 types of units and 2 types of buildings in \textit{Battlecode 2018}. There are workers, which can mine karbonite, construct buildings, and clone themselves. There are knights, which have high health but can only attack adjacent squares. There are rangers, which have low health but can attack from a distance. There are mages, which have very low health, can attack from a medium range, and have splash damage. There are also healers, which can heal nearby friendly units. The buildings are factories, which construct units, and rockets. Units can be garrisoned in a rocket, and the rocket can take off to Mars, effectively transporting units to Mars. All buildings and units cost karbonite to create. 
+
+\subsection{Actions and Cooldowns: } Each turn, a player can perform 4 actions. Possible actions for workers include moving, harvesting, replicating, and building or repairing structures. Possible actions for military units include moving and attacking or healing. All units have a movement cooldown and an attack cooldown that limit how often a single unit can move and attack over a given number of turns. Factories can construct each type of unit for a karbonite price. Rockets can takeoff from Earth and land on Mars.
+
+\subsection{Common Strategies: } MIT videotaped and publicized the day of the competition. In this video, MIT's commentators outline some basic strategies that many of the contestants follow. On small maps, teams rarely make it to Mars, so the strategy seems to be to build and army and attack early in the game. These armies are a small group of military units, usually knights with some mages or rangers. An early military advantage generally leads to success on these small maps. \\
+
+On larger maps, some teams take the same approach, although there is more coherency with the attack strategies. Instead of a few units, there are many. Armies are made up almost entirely of either mages or rangers. The abilities of these groups tend to stack together. For example, a large group of mages with splash damage can take out a large group of enemies while an army of rangers can surround and corner an opposing army by continually attacking the closest enemy until the rangers reach the buildings of the enemy. It seemed that a ranger army is more effective earlier in the match while the mage army is more effective in the later part due to a researchable upgrade to the mages that allows for local teleportation, called blink, that allows them to move easily around obstacles and avoid danger. \\
+
+In addition to the armies, when playing on a bigger map a player spends more time developing the economic side of their team. This includes creating more factories for building units, creating more workers for getting more resources, and building rockets to get their units to mars. The player that gets to mars first tends to have an advantage since moving troops out of a rocket costs a turn each, and the opposing team can then attack the units coming out of the rockets without the full army in the rocket being able to fight back. Therefore players tend to try and move their army to mars earlier that the other team, but doing so comes at a cost to resources on Earth and that development.
+
+
+%Rewrote to here, now on editing above and rewriting below
+
+\section{Decision Tree Players} %Decision Trees
+\subsection{Decision Tree Overview: }
+A decision tree is a tree structure that takes an input and evaluates the input through a series of if statements to determine the course of action. Most linear programs can be represented as decision trees in one form or another. For this project, the decision trees will take the game as input and output the desired action. However, due to the crossover operation in genetic programming that combines two trees, a grammar for these decision trees had to be carefully constructed. Otherwise, crossover between trees could construct non-functioning trees. 
+
+
+% Player Structure
+\subsection{Player Structure: } A player can make one of four possible actions each round. These actions are move, build, attack, and harvest. Each player has a decision tree for each of these actions, which is responsible for determining what specific movement, attack, building, or harvesting should be done. For example, a rocket taking off would be under the Move category while a healer healing a nearby unit could fall under the Attack category, and a factory constructing units would be a Build action. An additional tree, the Top Tree, will determine which of the four action types the player should perform. Therefore, each player will contain five separate decision trees. In order to decide what move to make for its turn, the player will first evaluate the Top Tree and then evaluate the corresponding action tree to make its move. 
+
+
+\subsection{Tree Structure: } % Tree Structure
+Each decision tree is made up of different types of nodes. These nodes are responsible representing different information in order for the decision tree to operate and evaluate to a decision. Each node is one of the following node types: DecisionNode, IfNode, BooleanNode, InformationNode, OperandNode.
+
+\subsubsection{Decision Nodes:} Decision Nodes hold a function to evaluate. In the case of the Top Tree, this function tells which action tree to evaluate. Otherwise, this function is a function that performs an action in the game. Some examples of these types of functions are \textit{unitAttackClosestPossibleEnemy}, \textit{factoryProduceWorker}, and \textit{unitMoveIntoClosestRocket}. 
+
+\subsubsection{Boolean Nodes:}
+
+The leaves of the trees are Decision Nodes. These nodes contain the function to run that determines the move the player makes. There are also Information Nodes. These nodes are used to gather information about the game that might be parameters to the functions called on the game. For example, many functions require a unit as a parameter, so an information node can be used to select the unit that will be used by the Decision Node. Another Node type is a Boolean Node. As expected, these nodes return a boolean value when evaluated. They can do this by either calling a boolean function on the game, or acting as boolean operator like $<$ on a left and right Operand Node. Each Operand Node returns a number, an example of which might be the number of rockets the player has.\\
+
+The most important Node in the decision tree is the If Node. The If Node consists of three children with an optional fourth child Node. The fourth child node, if it exists, must be an Information Node. The first child is a Boolean Node. The second child is the true subtree and the third is the false subtree. When evaluating these trees, if the current node is an If Node, the evaluation first checks if there is a fourth child. If so, it evaluates that Information Node and passes the result as a parameter to the first child Boolean Node. Otherwise it evaluates the Boolean node with no parameters. If the Boolean Node then evaluates as true, the tree evaluate function continues to the second child. Otherwise, it continues evaluating at the third child.  These If Nodes are the main drivers of the decision making process of the decision trees. The evaluation of the decision tree continues until it terminates at a Decision Node. \\
+
+
+
+\section{Genetic Programming} %Genetic Programming
+Genetic programming is an evolution-inspired algorithm that evolves programs to work more effectively. Programs evolved by a genetic programming algorithm are often represented by trees as they are in this project. The algorithm has three main operators: Selection, Crossover, and Mutation. The algorithm begins with a randomly generated population of individual programs. In this project, I randomly generate the decision tree players, which each have the 5 randomly generated decision trees. Each generation, I evaluate the fitness of each individual and use Selection to select the better fit trees for breeding. Breeding is conducted by selecting two individuals from the breeding pool and having them undergo Crossover to create a new individual for the following generation. Before continuing to the next generation, each of the new individuals undergo Mutation. The pseudocode for the genetic programming algorithm is below: \\
+
+\begin{algorithm}
+\caption{Genetic Programming}\label{alg:euclid}
+\begin{algorithmic}[1]
+\State initialize random population $P$ of size $s$
+\For{each generation}
+    \For{each idividual $p \in P$}
+        \State evaluate fitness of $p$
+    \EndFor
+    \State Breeding Pool $B$ = Selection($P$)
+    \State Next Population $P'$ = Crossover($B$)
+    \State Mutate($P'$)
+    \State $P = P'$
+    \EndFor
+\end{algorithmic}
+\end{algorithm}
+
+% Selection
+\subsection{Selection: } There a many ways of selecting the individuals for the breeding pool. Some draw probabilistically with replacement based on the fitness of each individual. This method has the drawbacks that the fitness must be a score, that a high fitness individual will be chosen often, and that the population can converge prematurely to a suboptimal individual. Other methods rank the individuals by fitness and then draws probabilistically from the population with replacement based on the fitness rank of each individual. This again requires a numeric score for an individuals fitness. Due to the variable nature of games in \textit{Battlecode 2018}, it is difficult to construct a fitness evaluation with a numeric score. Instead, fitness is evaluated during Selection by using a selection method called Tournament Selection. \\
+
+Tournament Selection selects two individuals from the population and has them compete. In this project, these two individual will go head to head in a best of 3 match in \textit{BattleCode 2018} across 3 different maps. The winner of the best of 3 competition is selected for breeding. Tournament Selection guarantees the worst fit individual will not be in the breeding pool because it will lose against any other individual in the population. It also is a natural selection method for a binary outcome of winner and loser in a game like \textit{Battlecode 2018}. \\
+
+%Crossover
+\subsection{Crossover: } The goal of Crossover is to create individuals that take relatively large steps around the solution space in search of better solutions. It is the operator that allows for the most exploration of the solution space. Crossover works by selecting two individuals in the breeding pool and swapping subtrees between them to create new individuals. This swapping works better on smaller subtrees because it produces less radical changes. Therefore, I increase the probability of swapping subtrees as the depth of the tree increases. \\
+
+Occasionally, however, swapping subtrees will invalidate a tree. Therefore, each tree created by Crossover is checked to be legal before it is placed in the next population set $P'$. In order to make it more likely that Crossover will produce legal trees, swapping subtrees only occurs on like nodes. For example, if the Crossover function decides to swap at an If Node in tree A, then it can only select an If Node in tree B to swap with. This requirement helps ensure that decision nodes have the correct parameters for their functions and avoid errors in decision tree evaluations. \\
+
+\subsection{Mutation: } While Crossover allows the genetic programming algorithm to search the solution space, Mutation allows for local search around an individual in that solution space. In order to perform local search, Mutation must only affect small subtrees in a given decision tree. Therefore, the probability of mutation on a given node is very small and increases only slightly with the depth of the node in the tree. Ideally, Mutation would change the value of an Operand Node, or may change the function in a Decision Node to a similar function. For example, if a Decision Node represents the function attackClosestEnemy(unit), it could be replaced with a function attackEnemyWithLeastHealthInAttackRange(unit) during Mutation.
+ 
+ 
+\section{Related Works} %Related works
+Creating AI players for complex games is nothing new. Much of research in artificial intelligence begins with games. However, less research has been done with Real Time Strategy (RTS) or time-limited Turn-Based Strategy games. In 2005, JinHyuk Hong and Sung-Bae Cho created a RTS game and developed a reactive model to make decisions with limited information. They used co-evolution and genetic algorithms to develop these reactive models. To evaluate the fitness of their agents, Hong and Cho evaluated three separate measures of a game; winning, economic development, and opponent units killed. This let them rank each individual model in their populations. They had success with their model on simple maps, but it struggled on maps with obstacles. \cite{Hong and Cho} \\
+
+More recently, a group of researchers compared genetic programming to a genetic algorithm for playing Planet Wars, a simple RTS game about conquering opponents planets using ships. Each conquered planet produces ships for the team. They evaluated fitness by winning and time required to win. The results showed that the bots created through genetic programming was superior to the genetic algorithm bot. The genetic programming bot also performed well against opponents it wasn't trained against. This work was instrumental in the decision to use genetic programming \cite{Fernandez-Ares}. This Planet Wars game is a much simpler game than \textit{Battlecode 2018}, but it is still useful for gauging strategies to creating a an AI bot for playing a game. \\
+
+Kahn and Okada researched how genetic programming could be used to create separate families of individuals where individuals within a family share characteristics. They did this for generating NPC faces in games with different clans of a given race. Their approach was successful at randomly generating alike faces while saving memory \cite{Kahn}. This idea of separate families of individuals in the population is an interesting one, but it is not immediately clear if it would be effective.\\
+
+In 2016, a group of researchers created a method they dubbed 'Online Evolution' for the multi-action turned-based strategy game \textit{Hero Academy}. Each turn, they create a population of move combinations and use a genetic algorithm to find the best series of moves. They evaluated individual sets of moves by evaluating the board as if the moves were played. Their results showed this method outperformed Monte Carlo Search and two separate greedy algorithms \cite{Justesen}. This is an interesting work because \textit{Hero Academy} has a similar strategy as \textit{Battlecode 2018}. However, because \textit{Battlecode 2018} has a much shorter time limit, the strategy of running a genetic algorithm each turn is not feasible.
+
+
+
+\section{Experiments} % Experiments
+The initial setup of this project has the genetic program competing against itself by using Tournament Selection. However, the end goal of this project is to create a competitive bot, so the players created by the genetic programming algorithm have to be tested against real players. I have downloaded some of the entrants' players from the tournament, so it should be possible to test our output against these players.\\
+
+However, in order to create great players, the algorithm must first create better than random players, then medium players, then good players. Therefore, I would ideally run the algorithm for a set number of generations starting with a randomly generated population of players. Then, I would repeat this process but add some of the players created by the first process to the initial population to give the algorithm a head start in finding decent players. This process would repeat, but at the end of each run of the genetic programming algorithm, the players created would be tested against the next benchmark player. That is, the first players created would be tested against a random player. Once there are players that consistently beat a random player, the players would be tested against the medium player. Medium players can be created by modifying \textit{Battlecode 2018} applicants' code and changing weights and removing nuances in the code. Once the players beat the medium players they  applicant's unmodified bots.
+
+
+\section{Timeline} %Timeline
+By the return to campus for the spring semester, I want to be able to run the genetic program to produce results. This goal is not too far away as I only need to finish and test the genetic operators and then script games for running multiple games against each opponent. \\
+
+By March, it would be nice to be able to experiment with elitism or possibly seeding the population with better than random individuals. Elitism is an amendment to the Selection process where the best few individuals are added to the next population without having to undergo crossover with another individual. Elitism helps the genetic program converge more quickly, but may also make the program converge prematurely.\\
+
+By the end of April, I want to be getting my best results of the project and comparing the bots created to bots that were submitted to the tournament.\\
+ 
+ 
+\section{Future Work}
+1. fixed size tree from scratch
+Many of the competitors in the original 2018 competition organized their decision making by phase of the game.
+
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{Hong and Cho}
+	JinHyuk Hong and Sung-Bae Cho.
+	\emph{Evolving Reactive NPCs for the Real-Time Simulation Game}.
+	 IEEE Symposium on Computational Intelligence and Games, 2005.
+	
+\bibitem{Fernandez-Ares}
+	A. Fernández-Ares, P. Garcia-Sanchez, A.M. Mora, P.A. Castillo, and J.J. Merelo.
+	\emph{Designing Competitive Bots for a Real Time Strategy Game using Genetic Programming}.
+	Dept. of Computer Architecture and Computer Technology, CITIC-UGR, University of Granada, Spain, 2014.
+	
+\bibitem{Kahn}
+	Umair Azfar Khan and Yoshihiro Okada.
+	\textit{Genetic Algorithm (GA)-Based NPC Making.}  In: Lee N. (eds) Encyclopedia of Computer Graphics and Games. Springer, Cham.  2015.
+	
+\bibitem{Justesen}
+	Niels Justesen, Tobias Mahlmann, and Julian Togelius.
+	\emph{Online Evolution for Multi-action Adversarial Games}.  In: Squillero G., Burelli P. (eds) Applications of Evolutionary Computation. EvoApplications 2016. Lecture Notes in Computer Science, vol 9597. Springer, Cham
+	
+	
+
+
+	
+
+\end{thebibliography}
+
+\end{document}
