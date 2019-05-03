@@ -1,0 +1,14 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 150
+	IfNode WithInfo
+		BooleanNode function: isHealer
+		DecisionNode action: healer_action
+		DecisionNode action: unitAttackRandomPossibleEnemy
+		InformationNode function: selectRandomUnitThatCanAttack
+	IfNode WithInfo
+		BooleanNode function: isHealer
+		DecisionNode action: healer_action
+		DecisionNode action: unitAttackRandomPossibleEnemy
+		InformationNode function: selectUnitWithLeastLifeThatCanAttack
