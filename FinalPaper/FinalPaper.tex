@@ -13,7 +13,8 @@
 \usepackage{float}
 \usepackage{titlesec}
 \usepackage{graphicx}
-
+\usepackage{adjustbox}
+\usepackage{hhline}
 
 \usetikzlibrary{automata,positioning}
 %
@@ -294,7 +295,7 @@ In 2016, a group of researchers created a method they dubbed 'Online Evolution' 
 
 %Experimental Challenges
 \section{Experimental Challenges: } 
-For genetic programming to work effectively, it needs a large population and many generations. Because each game of \textit{Battlecode 2018} takes about one minute to complete, completing the genetic programming algorithm with a population of 32 and 50 generations takes around a day. This makes extensive testing of parameters take a very long time. Additionally, the game was unable to run on Bowdoin's High Performance Cluster despite the administrator of the cluster's best efforts in finding and installing the required dependencies. Therefore, testing was limited to a couple Searles 224 Lab computers, which makes extensive testing rather time consuming.
+For genetic programming to work effectively, it needs a large population and many generations. Because each game of \textit{Battlecode 2018} takes about one minute to complete, completing the genetic programming algorithm with a population of 32 and 50 generations takes around a day. This makes extensive testing of parameters take a very long time. Additionally, the game was unable to run on Bowdoin's High Performance Cluster despite the administrator of the cluster's best efforts in finding and installing the required dependencies. Therefore, testing was limited to a couple Searles 224 Lab computers, which makes extensive testing rather time consuming. \\
 
 
 % Preliminary Experiments
@@ -400,42 +401,134 @@ This led me to measure the average size of the trees as a function of the genera
 \end{figure}
 
 
-%Rewrote to here, now on editing above and rewriting below
 
 \subsection{Preliminary analysis} %Preliminary Analysis
 It was clear from these figures that changes to my genetic operators must occur for this project to produce any reasonable behaviors. Coincidentally though, there were two rather successful players from this bunch of tests. The first player's top tree only had build outcomes, so the player would build constantly, getting the necessary resources from the automatic income. This resulted in a very large economic score at the end of each game. Since the bot was not playing against any bots with functional militaries, the player just kept growing. Because the tiebreaker for winning if both players die in the flood is the economic score, this player turned out to be successful without exhibiting the desired intelligent behavior, since units couldn't move or attack, just spawn outwards like an amoeba. The other successful player was similar, only had one build decision, with the other decision as harvest. However, the If Node's Boolean Node child examined if the current round was less than round 3. If it was past round 3, the player would build. Thus, these two behaviors exhibited the same success when playing other bad players.\\
 
-These players could be beaten, however, by a player that successfully gets to Mars, or a player that successfully attacks. I decided that as I fixed the genetic operators to avoid losing tree depth I would focus on constructing the genetic programming structure to encourage getting to Mars. Because testing takes so long, I had to pick one of developing an army or getting to Mars. \\
+These players could be beaten, however, by a player that successfully gets to Mars, or a player that successfully attacks. I decided that as I fixed the genetic operators to avoid losing tree depth I would focus on constructing the genetic programming structure to encourage getting to Mars. Because testing takes so long, I had to pick only one focus of developing an army or getting to Mars. \\
 
 
-% Curriculum Training
+% Fixed Size Tree Experiments
  \section{Fixed Size Tree Experiments}
  
  \subsection{Fixed Size Trees}% Fixed Size Trees
  In order to avoid converging into small trees, I decided to keep each tree in a player a constant size. While this restriction made it so that the genetic programming process may not find the optimal tree configuration, if it exists, the restricted size does greatly shrink the solution space that the process must search. This makes it easier for the process to develop semi-intelligent behavior. Because the tree structure is fixed, I could impose stricter limits on the types of nodes that show up. For example, Boolean nodes only have the less than operation and are not chained while Information Nodes are only found as children to If Nodes on the lowest layer and Boolean Nodes. Previously, If Nodes were able to have a Decision Node child if they were part of an asymmetric If Node when one child was a decision and the other another If Node. This was because the Decision Node whose parent was the Information Node needed to evaluate with a unit, provided by the Information Node. \\
  
  
- For all the following tests, I set the following structure for each tree:
+ For all the following tests, the size of each tree for any individual can be found in Table \ref{fixedTreeSizes}.
  
 \begin{center}
-Top Tree: 4 If Layers,\\
-Harvest Tree: 1 If Layer,\\
-Attack Tree: 2 If Layers,\\
-Move Tree: 4 If Layers,\\
-Build Tree: 4 If Layers
+\begin{table}[!ht]
+	%\begin{adjustbox}{max width=\textwidth}
+	\centering
+	\begin{tabular}{|cc|}
+		\hline
+		Top Tree & 4 If Layers \\
+		Harvest Tree & 1 If Layer\\
+		Attack Tree & 2 If Layers\\
+		Move Tree & 4 If Layers\\
+		Build Tree & 4 If Layers\\
+		\hline
+	\end{tabular}
+	%\end{adjustbox}
+	\caption{Player Fixed Tree Sizes}
+	\label{fixedTreeSizes}
+\end{table}
+
 \end{center}
 
 Each tree is balanced, and I didn't want to create too much available expression because all I wanted to produce was a player that arrived on Mars. However, changes to the tree structure limits necessitated changes to the genetic operators of Crossover and Mutation.By examining the raw data on mutations and crossovers from the preliminary tests, I was also able to gauge how often mutation occurred and where in the tree crossover occurred. These numbers helped shape the changes I made to the fixed size genetic operators. \\
+
 
 
 \subsection{Fixed Size Genetic Operators} % Fixed Size Genetic Operators
 
 \subsubsection{Fixed Size Crossover} Before we fixed the size of a tree, the crossover operator would take two trees and find like nodes in each tree and crossover at these two unrelated instances. Now, in order to keep the tree heights the same before and after Crossover, the operator must do Crossover at the same location in both trees. By swapping nodes at the same location, the crossover operation can introduce new paths down a tree without changing the overall tree structure. Over generations, this maintains the depth of the tree so that a later generation individuals can still be complex enough to have multiple actions for an action type. That is, when completing a Build action, the player should be able to differentiate when to build a unit, factory, or a rocket rather that always building one.
 
+\subsubsection{Fixed Size Mutations} One of the challenges of the mutation operator is to be able to make small but meaningful changes to a tree. The operator is totally ineffective if the changes it makes are minuscule.  For example, if the mutation process is trying to mutate a Boolean Node that compares the round number with an Information Node holding the \textit{getRoundNumber} function to number 100 in an Operand Node, and all mutation does is alter the number 100 to 101, then there is no effective change in the tree's behavior. The preliminary Mutation function picked numbers randomly, which, in the case of round number, gave 1000 possible values that the tree had to explore. Now if we consider the scales of all other information functions like how much karbonite a player has (0-400 at least) and others, the solution space of all these factors grows tremendously. Therefore, I decided to add more structure to the mutation operator for these Fixed Size Trees. \\
 
-\subsection{Generating Initial Fixed Size Population}
+In order to add a solution-space-limiting structure to the mutation operation, I mapped each possible function that can be held in a Boolean Node's Information Node child to a list of legal values that could be held by the Boolean Node's other child, an Operand Node. All mutations to a tree must keep any Boolean Node comparisons matching these legal values. The mapping can be found in Table \ref{functionNumMappings}.
 
+%Game Information Functions' Legal Values
+\begin{center}
+\begin{table}
+	\begin{adjustbox}{max width=\textwidth}
+	\centering
+	\begin{tabular}{|c|c|}
+		\hline
+		\textit{getRoundNumber} & 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 750\\
+		\hline
+		\textit{getNumberOfWorkers} & 1, 2, 4, 7, 11 \\
+		\hline
+		\textit{getNumberOfFactories} & 1, 2, 3 \\
+		\hline
+		\textit{getNumberOfKnights} & 1, 2, 3, 5 \\
+		\hline
+		\textit{getNumberOfRangers} & 1, 3, 5, 8 \\
+		\hline
+		\textit{getNumberOfMages} & 1, 2, 3 \\
+		\hline
+		\textit{getNumberOfHealers} & 1, 2, 4, 7, 11 \\
+		\hline
+		\textit{getNumberOfRockets} & 1, 2 \\
+		\hline
+		\textit{getKarbonite} & 50, 100, 150, 200, 250, 300, 350, 400 \\
+		\hline
+		\textit{getNumberOfAttackers} & 1, 4, 8, 12 \\
+		\hline
+		\textit{getMaxNumberOfUnitsInEarthRocket} & 1, 3, 5 \\
+		\hline
+	\end{tabular}
+	\end{adjustbox}
+	\caption{Game Information Functions' Legal Values}
+	\label{functionNumMappings}
+\end{table}
+\end{center}
+
+Additionally, the Mutation function itself changed to only operate on Boolean Nodes, Decision Nodes, and Information Nodes on the lowest Layer. I also changed it to only perform once on a tree, given that it occurs according to the mutation occurrence probability. To do this, this new Mutation function traverses the whole tree and stores references to all eligible nodes in the tree that it may mutate. It then picks one of these nodes randomly. Note that this has a built-in bias toward mutating nodes lower in the tree since there are twice as many nodes in the next layer as the current layer at any point in the tree. If a Boolean Node is chosen from an upper layer, Mutate picks a new game information function and associated legal value randomly. If it is a bottom layer Boolean Node and carries a function such as \textit{isKnight} or \textit{isWorker}, then it will replace them with like functions. If the node chosen is a Decision Node or an Information Node, then they live on the lowest layer and their functions are replaced by random functions in their unique similarity group. In the case that a Decision Node is chosen while mutating the Top Tree, the type of action is changed to a random type. \\
+
+
+\subsection{Generating Initial Fixed Size Population} % Generating Initial Fixed Size Population
+In order to generate the initial population for genetic programming, I first must be able to generate a random player. This is done by creating the appropriate number of If Nodes for all layers for each Tree. The number of layers for each tree can be found in Table \ref{fixedTreeSizes}. We build each tree from the bottom up, so half the If nodes are used to create the bottom layer. The Boolean Nodes for these are made from the \textit{isUnitType} function group and each If Node has an Information Node as a fourth child that selects a unit such as \textit{selectRandomAttacker} or \textit{selectRandomBuilder}. The next layer up takes two If Nodes from the lower layer and has a Boolean Node that has a random game information function in the Information Node child and a corresponding legal value for that function in the Operand Node child. This process continues until all layers have been created. However, during the iterative building process, I make sure not to repeat game information functions that are lower in the tree. This helps diversify the population by allowing more of the available functions to be represented by some individuals in the starting population.
+
+%Rewrote to here, now on editing above and rewriting below
  \subsection{Curriculum Training Overview}
+ Due to this project's time constraints, the experiments I was able to run with fixed size trees were limited. I therefore prioritized demonstrating whether genetic programming could be used to improve upon an existing player, rather than the more challenging task of evolving AI from scratch. To attempt to demonstrate improvement, I used a technique called Curriculum Training common in AI training. Curriculum Training works by learning steps of a process one at a time rather than all at once. It mirrors how a child might learn from the school curriculum. In this project, I used curriculum training to evolve one tree of a player at a time.\\
+ 
+ The first step in beginning curriculum training is to have a curriculum to train on. I therefore wrote a player in this decision tree structure that builds a rocket and launches it if the rocket fills with units. However, the player could not fill the rockets with units before Earth floods, and subsequently dies in the flood. This player is the base of my curriculum training, so if the genetic programming could evolve a player that can fill the rocket, or decide to launch when partially filled and fill to the threshold, I would have clearly demonstrated the improvement through genetic programming that I sought. \\
+ 
+ Curriculum training began with evolving the Top Tree. Every player in the population had the same lower trees that come from my hand-crafted player, and the genetic programming only acted on the Top Tree each generation. After all generations have completed, the training begins again on the next tree. However, each successive round, we use the evolved tree's from the winners of the previous generations. So in the second round of curriculum training, each individual in the population has three trees that come from the hand-crafted player, a Top Tree that was evolved and comes from the previous round's winner, and a tree they are currently evolving. The progression of tree evolution in my curriculum training can be found in Table \ref{curriculumTraining}.\\
+ 
+ %Curriculum Training
+\begin{center}
+\begin{table} [!ht]
+	\begin{adjustbox}{max width=\textwidth}
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		Curriculum Round & Top Tree & Move Tree & Build Tree & Attack Tree & Harvest Tree\\
+		\hhline{|=||=|=|=|=|=|}
+		1 & \textit{evolving} & Hand-Crafted  & Hand-Crafted  & Hand-Crafted  & Hand-Crafted \\
+		\hline
+		2 & \textbf{evolved} & \textit{evolving}  & Hand-Crafted  & Hand-Crafted  & Hand-Crafted \\
+		\hline
+		3 & \textbf{evolved} &  \textbf{evolved} & \textit{evolving}  & Hand-Crafted  & Hand-Crafted \\
+		\hline
+		4 &  \textbf{evolved} &  \textbf{evolved}  &  \textbf{evolved} & \textit{evolving}   & Hand-Crafted \\
+		\hline
+		5 &  \textbf{evolved} &  \textbf{evolved} &  \textbf{evolved}  &  \textbf{evolved}  & \textit{evolving} \\
+		\hline
+		
+	\end{tabular}
+	\end{adjustbox}
+	\caption{Curriculum Training Tree Progression}
+	\label{curriculumTraining}
+\end{table}
+\end{center}
+ 
+ 
+\subsection{Curriculum Training Results} %Curriculum Training Results
+ 
  
  
 \section{Future Work}
@@ -476,9 +569,7 @@ Each tree is balanced, and I didn't want to create too much available expression
 	\emph{Online Evolution for Multi-action Adversarial Games}.  In: Squillero G., Burelli P. (eds) Applications of Evolutionary Computation. EvoApplications 2016. Lecture Notes in Computer Science, vol 9597. Springer, Cham
 	
 \bibitem{battlecode}
-	MIT's AI Challenge.
-	\emph{Battlecode 2018 Gameplay Specifications v1.2.0}
-	%https://s3.amazonaws.com/battlecode-2018/specs/battlecode-specs-2018.html
+	(2019, May 3) \emph{Battlecode 2018 Gameplay Specifications v1.2.0} [Online]. Available: https://s3.amazonaws.com/battlecode-2018/specs/battlecode-specs-2018.html
 
 
 	
