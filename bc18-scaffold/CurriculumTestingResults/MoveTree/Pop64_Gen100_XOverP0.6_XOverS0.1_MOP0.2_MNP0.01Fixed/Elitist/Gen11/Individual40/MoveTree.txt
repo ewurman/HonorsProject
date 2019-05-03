@@ -1,0 +1,84 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 350
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfMages
+			OperandNode Value: 5
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 5
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 750
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: selectRandomUnitThatCanMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getMaxNumberOfUnitsInEarthRocket
+					OperandNode Value: 5
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				DecisionNode action: unitMoveRandomBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 5
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 100
+				DecisionNode action: launch_rocket_to_mars
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: select_rocket_with_most_units_garrisoned
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 1
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectWorkerToMoveTowardHarvesting
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getMaxNumberOfUnitsInEarthRocket
+			OperandNode Value: 5
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfWorkers
+				OperandNode Value: 7
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfKnights
+					OperandNode Value: 2
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: selectRandomUnitThatCanMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 1
+				DecisionNode action: unitMoveAwayFromEnemy
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectRandomUnitThatCanMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 5
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getMaxNumberOfUnitsInEarthRocket
+					OperandNode Value: 5
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 50
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectWorkerToMoveTowardHarvesting

@@ -1,0 +1,84 @@
+IfNode 
+	BooleanNode operation: lt
+		InformationNode function: getRoundNumber
+		OperandNode Value: 500
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getNumberOfRangers
+			OperandNode Value: 1
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfMages
+				OperandNode Value: 5
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 750
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: selectRandomUnitThatCanMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 11
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveTowardAllyBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfAttackers
+				OperandNode Value: 1
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfRockets
+					OperandNode Value: 1
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: select_rocket_with_most_units_garrisoned
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 200
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: unitMoveAwayFromBuilding
+				InformationNode function: selectWorkerToMoveTowardHarvesting
+	IfNode 
+		BooleanNode operation: lt
+			InformationNode function: getMaxNumberOfUnitsInEarthRocket
+			OperandNode Value: 1
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfHealers
+				OperandNode Value: 1
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getRoundNumber
+					OperandNode Value: 200
+				DecisionNode action: unitMoveAwayFromBuilding
+				DecisionNode action: launch_rocket_to_mars
+				InformationNode function: select_earth_rocket_with_most_units_garrisoned
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfFactories
+					OperandNode Value: 1
+				DecisionNode action: launch_rocket_to_mars
+				DecisionNode action: unitMoveTowardAllyBehavior
+				InformationNode function: selectRandomUnitThatCanMove
+		IfNode 
+			BooleanNode operation: lt
+				InformationNode function: getNumberOfAttackers
+				OperandNode Value: 1
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfAttackers
+					OperandNode Value: 4
+				DecisionNode action: unitMoveIntoClosestRocket
+				DecisionNode action: unitMoveRandomBehavior
+				InformationNode function: selectUnitThatCanAttackToMove
+			IfNode WithInfo
+				BooleanNode operation: lt
+					InformationNode function: getNumberOfWorkers
+					OperandNode Value: 4
+				DecisionNode action: unitMoveTowardAllyBehavior
+				DecisionNode action: unitMoveTowardEnemyBehavior
+				InformationNode function: selectWorkerToMoveTowardHarvesting
