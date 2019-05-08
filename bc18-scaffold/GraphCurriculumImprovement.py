@@ -72,7 +72,7 @@ def doImprovementTesting(resultDirName)->dict:
         for j in range(NUM_TESTS):
             if TEST_GRAPHING:
                 winner = random.getrandbits(1) #testing this graphing
-            else
+            else:
                 winningPlayer, winner = runGame(opponent, player) #1s are wins
             playerResults.append(winner)
 
