@@ -115,11 +115,14 @@ def graphImprovement(resultDirName):
     #std = df.groupby('x')['record'].std()
 
     #plt.errorbar(mean.index, mean, xerr=0, yerr=2*std, linestyle='')
+    opponentTitle = "Random"
+    if (PLAYING_IDEAL_PLAYER):
+        opponentTitle = "Hand-Crafted"
 
     plt.legend()
     plt.xlabel("Generation")
     plt.ylabel("Win Percentage")
-    plt.title("Win Percentage of GP Player vs. Random Player")
+    plt.title("Win Percentage of GP Player vs. {0} Player".format(opponentTitle))
     plt.show()
 
     plt.show()
