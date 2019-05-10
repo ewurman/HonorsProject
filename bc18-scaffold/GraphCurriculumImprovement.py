@@ -119,7 +119,7 @@ def graphImprovement(resultDirName):
     plt.legend()
     plt.xlabel("Generation")
     plt.ylabel("Win Percentage")
-    plt.title("Win Percentage of GP Player vs. Hand-Crafted Player")
+    plt.title("Win Percentage of GP Player vs. Random Player")
     plt.show()
 
     plt.show()
