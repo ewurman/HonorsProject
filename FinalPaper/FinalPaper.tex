@@ -147,9 +147,9 @@
 
 \newpage
 
-\section*{Abstract} %Abstract
-TODO
-%This project explores the effectiveness of using genetic programming on decision trees to evolve a player for MIT's \textit{Battlecode 2018} AI Challenge. \textit{Battlecode 2018} is a time-limited turn based strategy game in which two AI bots compete to conquer the world. Genetic Programming is an evolution-inspired optimization algorithm that works by breeding higher fitness individuals in a population over many generations to create a near optimal individual by the end of the algorithm.
+%Abstract
+\section*{Abstract} 
+This project explores the effectiveness of using genetic programming to evolve decision trees to play MIT's \textit{Battlecode 2018} AI Challenge. \textit{Battlecode 2018} is a time-limited turn based strategy game in which two AI bots compete to conquer the world. Genetic Programming is an evolution-inspired optimization algorithm that works by breeding higher fitness individuals in a population over many generations to create more fit individuals over successive generations. 
 
 
 % Introduction
@@ -527,18 +527,33 @@ In order to generate the initial population for genetic programming, I first mus
 \end{center}
  
  
+ \subsection{Elitism} %Elitism
+In addition to the regular genetic programming I was attempting with my Curriculum Training tests, I though it worthwhile to try the same tests while using elitism. Elitism is a common aspect of Genetic Algorithms that helps the best individuals of a population survive through to the next generation without losing the qualities that make it good through Crossover or Mutation. In order to implement elitism in my genetic programming, I first needed to create a function that evaluated trees for desirable characteristics.\\
+
+I only implemented this function for the Top Tree, since this was the most important tree for a player and the easiest to quantify as desirable or undesirable. A desirable tree had qualities that made it easier for a player to get to mars. That means it would build, move, attack, harvest, check for rockets, and avoid duplicate boolean function checks down the same path. A perfect tree score was $2$ to the power of the number of If Layers. I decided that building and moving are the two most important actions, so a Top Tree that lacked these action types lost $4$ points from their fitness score for each action type missing. Attacking was the next most important action, so players would lose $2$ points for missing the attack action type in a Decision Node. Missing the harvest action type was only a $1$ point penalty since players get a karbonite income each round. A player would lose $1$ point per path with a duplicate boolean function check. Lastly, players would lose 4 more points if they never check the number of Rockets they have. This penalty was meant to encourage the players to think about rockets and get to Mars. \\
+ 
+ % ******TODO******
 \subsection{Curriculum Training Results} %Curriculum Training Results
+ The curriculum training is complete for Populations of 32 and 50 Generations with and without Elitism. I am still waiting on my tests with populations of 64 and 100 generations. I have not graphed the results of the first tests yet. The graphs will track the improvement made by the genetic programming by playing against a random player and counting how often it wins at different generations and graphing the win percentage over time. It will then do the same thing against the hand-crafted player, which will hopefully show improvement.
  
  
- 
+% Future Work
 \section{Future Work}
-1. fixed size tree from scratch
+Due to the time required to run tests, I was unable to test all the processes I planned. The next step of this project, after showing that genetic programming can improve upon existing players, is to try and develop a Fixed Size Tree player from scratch. If such a player could be evolved, then this method would show good promise for the future development of Game AI. I don't expect such a player to be anything more than mediocre, but even achieving mediocrity would be a huge step forward for emergent intelligent behavior. \\
 
-2. Many of the competitors in the original 2018 competition organized their decision making by phase of the game.
+Secondly, there are many avenues that this exploration into genetic programming could have pursued. The first decision I made was to separate a player into the four action types of harvest, move, attack, and build. This helped logically separate the trees and made it easy to understand how the player worked. However, most competitors in the original 2018 competition organized their decision making into phases. That is, if certain requirements were met in the game, the player would enter a new phase and act accordingly. I would be interested to see if organizing the player to act by phase provided better results than by action type. \\
 
-3. Focus on developing military rather than Mars
+Third, I decided to focus my second batch of tests on getting to Mars. Instead I could have focused on military dominance. This could be done by changing the hand-crafted player to focus on attacking rather than building rockets. \\
 
-4. Take a built player and evolve the phases
+Lastly, it is likely to be the case that genetic programming and genetic algorithms are better at parameter optimization rather than this task. Therefore, I would like to see how well it could optimize phases in this game. This future project would take a decent hand-crafted player that separates its behaviors into phases. The player would not have to be in decision tree form either. Then a genetic programming algorithm would evolve the phase definitions to improve the performance of the player.\\
+
+% Conclusion
+\section{Conclusion}
+\textit{Battlecode 2018} lives up to its reputation as a true AI challenge, as I was unable to create an effective player. However, I was able to partake in this educational, and I dare say fun, exploration into genetic programming and decision trees.  I have experimented with different iterations of the crossover and mutation operators, and have come up with methods to avoid some of the pitfalls of my early attempts. After poor results from my first experiments, I had to impose a rigid tree structure to maintain the size of the trees for subsequent generations as my genetic programming algorithm proceeded. I was exposed to curriculum training and its strengths. However, due to the excessive time required to test, I was never able to fully explore the parameter space for any of my Fixed Size experiments. \\
+
+The results of my tests are not promising for the future of genetic programming in game AI. Perhaps with more time, a larger population, and more generations, the results could provide better results. Despite the poor results, I still believe there is a use for genetic programming in game AI. I believe it could be useful in tuning parameters for hand-crafted behaviors. 
+
+
 
 
 \begin{appendix}
