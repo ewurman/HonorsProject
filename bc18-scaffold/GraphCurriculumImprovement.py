@@ -94,7 +94,7 @@ def convertDictToWinningPercentage(mapping):
 #def standardDeviation()
 
 
-def graphImprovement(resultDirName):
+def graphImprovement(resultDirName, treeString):
     improvementResultsByGen = doImprovementTesting(resultDirName)
     improvementWinPercentByGen = convertDictToWinningPercentage(improvementResultsByGen)
 
@@ -115,14 +115,17 @@ def graphImprovement(resultDirName):
     #std = df.groupby('x')['record'].std()
 
     #plt.errorbar(mean.index, mean, xerr=0, yerr=2*std, linestyle='')
+    opponentTitle = "Random"
+    if (PLAYING_IDEAL_PLAYER):
+        opponentTitle = "Hand-Crafted"
 
     plt.legend()
     plt.xlabel("Generation")
-    plt.ylabel("Win Percentage")
-    plt.title("Win Percentage of GP Player vs. Random Player")
+    plt.ylabel("Win Percentage over 20 games")
+    plt.title("Win Percentage of GP Player while evolving {1} vs. {0} Player".format(opponentTitle, treeString))
     plt.show()
 
-    plt.show()
+    #plt.show()
 
 
     opponent = "Random"
@@ -139,14 +142,14 @@ if __name__ == '__main__':
     crossoverProb = 0.6 #% chance each tree  want it to be one of {0.4, 0.6, 0.8}
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeString = "HarvestTree"
+    treeString = "TopTree"
     resultDirName = "CurriculumTestingResults/"+treeString+"/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"
     resultDirName += str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
     resultDirName += "Fixed"
     if ELITISM:
         resultDirName += "/Elitist"
 
-    graphImprovement(resultDirName)
+    graphImprovement(resultDirName, treeString)
 
 
 
