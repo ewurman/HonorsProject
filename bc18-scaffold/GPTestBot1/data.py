@@ -2265,7 +2265,7 @@ game_number_info_functions_number_mappings = {
     getNumberOfMages : [1,3,5,8],
     getNumberOfHealers : [1,2,3],
     getNumberOfRockets : [1,2],
-    getKarbonite : [50,100,150,200,250,300,350,400,450,500],
+    getKarbonite : [50,100,150,200,250,300,350,400],
     getNumberOfAttackers: [1,4,8,12],
     getMaxNumberOfUnitsInEarthRocket: [1,3,5]
 }
