@@ -94,7 +94,7 @@ def convertDictToWinningPercentage(mapping):
 #def standardDeviation()
 
 
-def graphImprovement(resultDirName):
+def graphImprovement(resultDirName, treeString):
     improvementResultsByGen = doImprovementTesting(resultDirName)
     improvementWinPercentByGen = convertDictToWinningPercentage(improvementResultsByGen)
 
@@ -121,11 +121,11 @@ def graphImprovement(resultDirName):
 
     plt.legend()
     plt.xlabel("Generation")
-    plt.ylabel("Win Percentage")
-    plt.title("Win Percentage of GP Player vs. {0} Player".format(opponentTitle))
+    plt.ylabel("Win Percentage over 20 games")
+    plt.title("Win Percentage of GP Player while evolving {1} vs. {0} Player".format(opponentTitle, treeString))
     plt.show()
 
-    plt.show()
+    #plt.show()
 
 
     opponent = "Random"
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     if ELITISM:
         resultDirName += "/Elitist"
 
-    graphImprovement(resultDirName)
+    graphImprovement(resultDirName, treeString)
 
 
 
