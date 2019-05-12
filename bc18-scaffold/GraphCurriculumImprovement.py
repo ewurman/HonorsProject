@@ -16,9 +16,10 @@ PLAYING_IDEAL_PLAYER = False;
 NUM_TESTS = 20;
 GENS_PER_TESTS = 2;
 
-ELITISM = False;
-POP_SIZE = 32
-GENERATIONS = 50
+
+ELITISM = False
+POP_SIZE = 64
+GENERATIONS = 100
 
 
 def runGame(player1, player2):
