@@ -12,13 +12,13 @@ import pandas as pd
 
 
 TEST_GRAPHING = False;
-PLAYING_IDEAL_PLAYER = True;
+PLAYING_IDEAL_PLAYER = False;
 NUM_TESTS = 20;
 GENS_PER_TESTS = 2;
 
-ELITISM = True
-POP_SIZE = 32
-GENERATIONS = 50
+ELITISM = False
+POP_SIZE = 64
+GENERATIONS = 100
 
 
 def runGame(player1, player2):
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     crossoverProb = 0.6 #% chance each tree  want it to be one of {0.4, 0.6, 0.8}
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeString = "TopTree"
+    treeString = "BuildTree"
     resultDirName = "CurriculumTestingResults/"+treeString+"/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"
     resultDirName += str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
     resultDirName += "Fixed"
