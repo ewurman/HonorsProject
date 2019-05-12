@@ -18,8 +18,8 @@ GENS_PER_TESTS = 2;
 
 
 ELITISM = False
-POP_SIZE = 64
-GENERATIONS = 100
+POP_SIZE = 32
+GENERATIONS = 50
 
 
 def runGame(player1, player2):
