@@ -12,12 +12,12 @@ import pandas as pd
 
 
 TEST_GRAPHING = False;
-PLAYING_IDEAL_PLAYER = False;
+PLAYING_IDEAL_PLAYER = True;
 NUM_TESTS = 20;
 GENS_PER_TESTS = 2;
 
 
-ELITISM = True;
+ELITISM = False;
 POP_SIZE = 32
 GENERATIONS = 50
 
