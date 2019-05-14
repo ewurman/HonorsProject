@@ -45,7 +45,7 @@
 %
 
 \newcommand{\hmwkTitle}{\textit{Building a Better Bot}}
-\newcommand{\hmwkDueDate}{Fall 2018}
+\newcommand{\hmwkDueDate}{Spring 2019}
 \newcommand{\ClassName}{}
 \newcommand{\hmwkAuthorName}{\textbf{Erik Wurman}}
 
@@ -143,55 +143,61 @@
 	\vfill % Push the date up 1/4 of the remaining page
 \end{titlepage}
 
+\pagenumbering{roman}
+\section*{Acknowledgements}
+I would like to thank Professor Stephen Majercik for all the guidance he gave me during this project. His advice and knowledge were a great help to this project and I could not have done this without him. I would also like to thank my reader, Professor Sean Barker, for providing exceptional and timely feedback and advice despite having his plate full with a newborn son. I would like to give another thank you to Bowdoin's IT staff including, but not limited to, DJ Merrill, Samuel Tarr, and Jason Pelletier for their help in setting up the infrastructure to run my experiments. Sue O'Dell and the rest of the library staff deserve gratidute as well for their help in the research and publishing processes. Lastly, I would like to thank MIT and the \textit{BattleCode} staff for answering my many questions and providing such an interesting game with such great documentation.
+
+\newpage
 \tableofcontents {}
 
 \newpage
+\pagenumbering{arabic}
 
 %Abstract
 \section*{Abstract} 
-This project explores the effectiveness of using genetic programming to evolve decision trees to play MIT's \textit{Battlecode 2018} AI Challenge. \textit{Battlecode 2018} is a time-limited turn based strategy game in which two AI bots compete to conquer the world. Genetic Programming is an evolution-inspired optimization algorithm that works by breeding higher fitness individuals in a population over many generations to create more fit individuals over successive generations. 
+This project explores the effectiveness of using genetic programming to evolve decision trees to play MIT's \textit{Battlecode 2018} AI Challenge. \textit{Battlecode 2018} is a time-limited turn based strategy game in which two AI bots compete to conquer the world. Genetic Programming is an evolution-inspired optimization algorithm that works by breeding higher fitness individuals in a population over many generations to create more fit individuals over successive generations. This project created a decision tree grammar to create players for \textit{Battlecode 2018} and showed that while genetic programming may not be the best method for creating players in this grammar, it can be used to successfully improve upon basic players.
 
 
 % Introduction
 \section{Introduction} 
 This Honors Project seeks to create an Artificial Intelligence Player for a time-limited Turned Based Strategy Game. The game is \textit{BattleCode: Escape to Mars}, which was created by MIT for its 2018 AI challenge. The goals of this project are twofold: to determine if genetic programming can develop a player from a randomly generated initial population, and if not, then to determine if genetic programming is a valid mechanism to improve a hand-crafted decision tree to play this game. \\
 
-Genetic programming is a nature inspired algorithm under the umbrella of genetic algorithms that are based on evolution. A genetic algorithm is an optimization algorithm that begins with a population of individuals. Each generation, the individuals of this population are evaluated and rated by their fitness. Then, the algorithm selects a certain number of these individuals to breed. This selection process is created in a way that makes it more likely to pick better fit individuals. Once the breeding pool is selected, two individuals undergo a crossover operation to create new individuals for the successive generation. These individuals then undergo mutation. The crossover and mutation operations allow the algorithm to make large and small steps around the solution space as it searches for more optimal solutions. \\
+Genetic programming is a nature inspired algorithm under the umbrella of genetic algorithms that are based on evolution. A genetic algorithm is an optimization algorithm that begins with a population of individuals. Each generation, the individuals of this population are evaluated and rated by their fitness. Then, the algorithm selects a certain number of these individuals to breed. This selection process is created in a way that makes it more likely to pick better fit individuals. Once the breeding pool is selected, two individuals undergo a crossover operation to create new individuals for the successive generation. To add some random diversity, these individuals then undergo mutation. The crossover and mutation operations allow the algorithm to make large and small steps around the solution space as it searches for more optimal solutions. \\
 
 
 %Battlecode 2018
 \section{Battlecode 2018} 
 
 
-\subsection{Overview: } %Overview
+\subsection{Overview } %Overview
 \textit{Battlecode 2018: Escape to Mars} is a time-limited Turned Based Strategy Game created for MIT's AI Challenge where two teams compete for resources and fight for control of both Earth and Mars. The competition was held in January of 2018. In the game, there is one resource, karbonite, that is dispersed across the maps of Earth and Mars. There are 1000 rounds per game with each round consisting of 4 turns per player. Each player has 10 seconds plus an additional 50 milliseconds per round to complete all four moves. The winner of the game is the team that destroys all the other team's units or, in the case that neither team is completely eliminated, the team with the highest value of units at the end of the game. On round 750, Earth floods and everything on it is destroyed. If both teams die in the flood, then the team that was winning before the flood wins the game. If only one team is destroyed, the surviving team wins. Otherwise, the two teams play the remaining 250 turns exclusively on Mars. A single game take approximately three minutes to complete on my laptop and about one minute on Bowdoin's Searles 224 Lab computers.
 
 \subsection{Karbonite} %Karbonite
 Karbonite is the only resource in \textit{Battlecode 2018}. It can be mined on both Earth and Mars. In addition to mining revenue, each team receives a basic karbonite income each round. This income is inversely related to the team's current store of karbonite. A player gets 10 karbonite per round, decreased by 1 karbonite per 40 karbonite they have in stock to a minimum of 0. Both teams start the game with 100 Karbonite. \cite{battlecode}
 
 \subsection{Maps} %Maps
-The two planets, Earth and Mars, have different maps and karbonite deposits. Each game map is a 2 dimensional grid filled with locations. Each grid location is part of the map, meaning units can exist there, or they are blocked, creating obstacles for units to avoid. Each valid location has a fixed karbonite amount that can be harvested over the course of the game. Both teams start exclusively on Earth. The Earth map is always symmetric to avoid giving one team an unfair starting advantage. Mars is not symmetric since players can choose where on Mars they wish to land. Structures cannot be built on Mars.
+The two planets, Earth and Mars, have different maps and karbonite deposits. Each game map is a 2 dimensional grid filled with locations. Not all grid spaces are valid locations, so units must be able to avoid invalid spaces when traversing the map. Each valid location has a fixed karbonite amount that can be harvested over the course of the game. Both teams start each game exclusively on Earth. The Earth map is always symmetric to avoid giving one team an unfair starting advantage. Mars is not symmetric since players can choose where on Mars they wish to land. Structures cannot be built on Mars.
 
 
-\subsection{Units and Buildings: } %Units and Buildings
-There are 5 types of units and 2 types of buildings in \textit{Battlecode 2018}. There are workers, which can mine karbonite, construct buildings, and clone themselves. There are knights, which have high health but can only attack adjacent squares. There are rangers, which have low health but can attack from a distance. There are mages, which have very low health, can attack from a medium range, and have splash damage. There are also healers, which can heal nearby friendly units. The buildings are factories, which construct units, and rockets. Units can be garrisoned in a rocket, and the rocket can take off to Mars, effectively transporting units to Mars. All buildings and units cost karbonite to create. Figure \ref{UnitStats} outlines the unit statistics for the five unit types in \textit{Battlecode 2018}.
+\subsection{Units and Buildings } %Units and Buildings
+There are 5 types of units and 2 types of buildings in \textit{Battlecode 2018}. There are workers, which can mine karbonite, construct buildings, and clone themselves. There are knights, which have high health but can only attack adjacent squares. There are rangers, which have low health but can attack from a distance. There are mages, which have very low health, can attack from a medium range, and have splash damage. There are also healers, which can heal nearby friendly units. The buildings are factories, which construct units, and rockets. Units can be garrisoned in a rocket, and the rocket can take off to Mars, effectively transporting units to Mars. All buildings and units cost karbonite to create. Table \ref{UnitStats} outlines the unit statistics for the five unit types in \textit{Battlecode 2018}.
 
 
-\begin{figure}
+\begin{table}
 	\includegraphics[width=1\textwidth]{RobotStatistics.png}
 	\captionsetup{justification=centering}
-	\caption{Unit Statistics}
+	\caption{Unit Statistics \cite{battlecode}}
 	\label{UnitStats}
-\end{figure}
+\end{table}
 
 
 
 %https://s3.amazonaws.com/battlecode-2018/specs/battlecode-specs-2018.html
 
-\subsection{Actions and Cooldowns: } %Actions and Cooldowns
+\subsection{Actions and Cooldowns} %Actions and Cooldowns
 Each turn, a player can perform 4 actions. Possible actions for workers include moving, harvesting, replicating, and building or repairing structures. Possible actions for military units include moving and attacking or healing. All units have a movement cooldown and an attack cooldown that limit how often a single unit can move and attack over a given number of turns. Factories can construct each type of unit for a karbonite price. Rockets can takeoff from Earth and land on Mars.
 
-\subsection{Common Strategies: } %Common Strategies
+\subsection{Common Strategies } %Common Strategies
 MIT videotaped and publicized the day of the competition. In this video, MIT's commentators outline some basic strategies that many of the contestants follow. On small maps, teams rarely make it to Mars, so the strategy seems to be to build and army and attack early in the game. These armies are a small group of military units, usually knights with some mages or rangers. An early military advantage generally leads to success on these small maps. \\
 
 On larger maps, some teams take the same approach, although there is more coherency with the attack strategies. Instead of a few units, there are many. Armies are made up almost entirely of either mages or rangers. The abilities of these groups tend to stack together. For example, a large group of mages with splash damage can take out a large group of enemies while an army of rangers can surround and corner an opposing army by continually attacking the closest enemy until the rangers reach the buildings of the enemy. It seemed that a ranger army is more effective earlier in the match while the mage army is more effective in the later part due to a researchable upgrade to the mages that allows for local teleportation, called blink, that allows them to move easily around obstacles and avoid danger. \\
@@ -201,30 +207,30 @@ In addition to the armies, when playing on a bigger map a player spends more tim
 
 %Decision Trees
 \section{Decision Tree Players} 
-\subsection{Decision Tree Overview: } %Overview
+\subsection{Decision Tree Overview } %Overview
 A decision tree is a tree structure that takes an input and evaluates the input through a series of if statements to determine the course of action. Most linear programs can be represented as decision trees in one form or another. For this project, the decision trees will take the game as input and output the desired action. However, due to the crossover operation in genetic programming that combines two trees, a grammar for these decision trees had to be carefully constructed. Otherwise, crossover between trees could construct non-functioning trees. 
 
 
-\subsection{Player Structure: } % Player Structure
+\subsection{Player Structure } % Player Structure
 A player can make one of four possible actions each round. These actions are move, build, attack, and harvest. Each player has a decision tree for each of these actions, which is responsible for determining what specific movement, attack, building, or harvesting should be done. For example, a rocket taking off would be under the Move category while a healer healing a nearby unit could fall under the Attack category, and a factory constructing units would be a Build action. An additional tree, the Top Tree, will determine which of the four action types the player should perform. Therefore, each player will contain five separate decision trees. In order to decide what move to make for its turn, the player will first evaluate the Top Tree and then evaluate the corresponding action tree to make its move. 
 
 
-\subsection{Tree Structure: } % Tree Structure
+\subsection{Tree Structure } % Tree Structure
 Each decision tree is made up of different types of nodes. These nodes are responsible representing different information in order for the decision tree to operate and evaluate to a decision. Each node is one of the following node types: DecisionNode, IfNode, BooleanNode, InformationNode, OperandNode. Each Node inherits from the Node type, which has pointers to three children nodes that help define the tree structure. Figure \ref{treeStructure} shows the structure of a tree with two layers of If Nodes.
 
-\subsubsection{Decision Nodes:}
+\subsubsection{Decision Nodes}
 Decision Nodes hold a function to evaluate. In the case of the Top Tree, this function tells which action tree to evaluate. Otherwise, this function is a function that performs an action in the game. Some examples of these types of functions are \textit{unitAttackClosestPossibleEnemy}, \textit{factoryProduceWorker}, and \textit{unitMoveIntoClosestRocket}. 
 
-\subsubsection{Boolean Nodes:} 
+\subsubsection{Boolean Nodes} 
 Boolean Nodes evaluate as true or false, often by querying information about the game and returning the evaluating of a boolean expression. The Node itself contains either a binary function such as \textit{isRanger} or \textit{isFactory} and takes in a unit as a parameter, or it contains an operation and its children hold the information to query the game for its status. In practice, the operation is a numeric comparison such as the less than operation. However, Boolean Nodes can also be chained such that the top node holds a binary operation and the children are both Boolean Nodes. Almost all  Boolean nodes with binary functions are found on the lowest level of the tree, while those with children are found higher in the tree.
 
-\subsubsection{Operand Nodes:} 
+\subsubsection{Operand Nodes} 
 Operand nodes contain integer values. These nodes have no children of their own, but they are useful as a child to a Boolean Node.
 
-\subsubsection{Information Nodes:} 
+\subsubsection{Information Nodes} 
 Informations Nodes hold functions that take no parameters and return a value about the game or a unit in the game. There are two uses for an Information Node. The first is as a child for a Boolean Node to give information about the game in numeric form. The second is as the optional fourth child of an If Node to select a unit of the evaluation of the If Node. For example, the function \textit{getNumberOfWorkers} returns the number of workers a player has, and would be held by an Information Node that is the child of a Boolean Node. In contrast, the function \textit{selectUnitWithLeastLifeThatCanAttack} returns the unit with the least health that can attack an enemy and would be held by an Information Node that is the fourth child of an If Node.
 
-\subsubsection{If Nodes:} 
+\subsubsection{If Nodes} 
 If nodes are the driving force of decision tree. They hold no data of their own but provide the structure that allows for simple tree evaluation. Each If Node has three children with an optional fourth Information Node child. The first child of each If Node is a Boolean Node. If the If Node is the bottom-most If Node in the tree, then the second and third children are Decision Nodes and it has the optional fourth child Information Node. Otherwise, if the If Node is in the middle of the tree, then its second and third children are If Nodes and it has no optional Information Node. The second child is the true child of the If Node, so if the Boolean Node evaluates true the If Node would evaluate its second child. The third child is the false child and is evaluated similarly for a false Boolean Node evaluation.\\
 
 %Example Tree Structure
@@ -235,7 +241,7 @@ If nodes are the driving force of decision tree. They hold no data of their own 
 	\label{treeStructure}
 \end{figure}
 
-\subsection{Tree evaluation:} %Tree Evaluation
+\subsection{Tree evaluation} %Tree Evaluation
  In order for a decision to be made, a tree must be evaluated. To evaluate these decision trees, the player iterates down the If Nodes of the tree until it gets to a Decision Node. To do this, the tree has each If Node evaluate their Boolean Node and set the current node as the appropriate true or false child. On the lowest level If Node, which has the optional Information Node, the evaluation is slightly different. The If Node first evaluates its fourth child, the Information Node, which gives a unit that it passes as a parameter to the Boolean Node. The If Node then evaluates the appropriate child Decision Node, which executes the function that interfaces with the game. \\
 
 
@@ -244,10 +250,10 @@ If nodes are the driving force of decision tree. They hold no data of their own 
 \section{Genetic Programming} 
 
 \subsection{Overview} %Overview
-Genetic programming is an evolution-inspired optimization algorithm that evolves programs to work more effectively. As in this project, programs evolved by a genetic programming algorithm are often represented by trees. The typical genetic programming algorithm has three main operators: Selection, Crossover, and Mutation. The algorithm begins with a randomly generated population of individual programs. In this project, I randomly generate the decision tree players, which each have the 5 randomly generated decision trees. Each generation, I evaluate the fitness of each individual and use Selection to select the better fit trees for breeding. Breeding is conducted by selecting two individuals from the breeding pool and having them undergo Crossover to create a new individual for the following generation. Before continuing to the next generation, each of the new individuals undergo Mutation. The pseudocode for the typical genetic programming algorithm is below: \\
+Genetic programming is an evolution-inspired optimization algorithm that evolves programs to work more effectively. As in this project, programs evolved by a genetic programming algorithm are often represented by trees. The typical genetic programming algorithm has three main operators: Selection, Crossover, and Mutation. The algorithm begins with a randomly generated population of individual programs. In this project, I randomly generate the decision tree players, which each have the 5 randomly generated decision trees. Each generation, I evaluate the fitness of each individual and use Selection to select the better fit trees for breeding. Breeding is conducted by selecting two individuals from the breeding pool and having them undergo Crossover to create a new individual for the following generation. Before continuing to the next generation, each of the new individuals undergo Mutation. The pseudocode for the typical genetic programming algorithm is in Algorithm \ref{gpalg} \\
 
 \begin{algorithm}
-\caption{Genetic Programming}\label{alg:euclid}
+\caption{Genetic Programming}
 \begin{algorithmic}[1]
 \State initialize random population $P$ of size $s$
 \For{each generation}
@@ -260,24 +266,25 @@ Genetic programming is an evolution-inspired optimization algorithm that evolves
     \State $P = P'$
     \EndFor
 \end{algorithmic}
+\label{gpalg}
 \end{algorithm}
 
 
-\subsection{Selection: } % Selection
+\subsection{Selection } % Selection
 In genetic programming, there are many methods of selecting the individuals for the breeding pool. Some methods will draw probabilistically with replacement from the population based on the fitness of each individual. Drawing probabilistically has the drawback that the fitness must be a numeric score, that a high fitness individual will be chosen often so that duplicate copies of one individual exist in the breeding pool, and that the population can converge prematurely to a suboptimal individual. Other methods rank the individuals by fitness and then draws probabilistically from the population with replacement based on the fitness rank of each individual. This again requires a numeric score for an individuals fitness, but has less bias toward a relatively dominant fitness score. Due to the variable nature of games in \textit{Battlecode 2018}, it is difficult to construct a fitness evaluation with a numeric score based on tree structure or gameplay statistics. Instead, fitness is evaluated during Selection by using a selection method called Tournament Selection. \\
 
 Tournament Selection selects two individuals from the population and has them compete. The winner of the competition is selected for the breeding pool. In this project, these two individual will go head to head playing \textit{BattleCode 2018} against one another. Tournament Selection guarantees the worst fit individual will not be in the breeding pool because it will lose against any other individual in the population. It also is a natural selection method for a binary outcome of winner and loser in a game like \textit{Battlecode 2018}. \\
 
 
-\subsection{Crossover: } %Crossover
+\subsection{Crossover } %Crossover
 The goal of Crossover is to create individuals that take relatively large steps around the solution space in search of better solutions. It is the genetic operator that allows for the most exploration of the solution space. Crossover works by selecting two individuals in the breeding pool and swapping subtrees between them to create new individuals. This swapping works better on smaller subtrees because it produces less radical changes. I execute crossover on two trees by beginning at the roots of each tree with a small probability of crossing over. As I traverse the tree toward the leaves, I increase the probability of stopping to execute crossover at that node. Thus, it is more likely for crossover to occur lower in the tree. \\
 
 However, naïvely swapping subtrees will oftentimes invalidate a tree. Therefore, in order to make it more likely that Crossover will produce legal trees, swapping subtrees only occurs on like nodes. For example, if the Crossover function decides to swap at an If Node in tree A, then it can only select an If Node in tree B to swap with. This requirement ensures that the structure of the tree does not change so that it will still be able to execute, and it helps ensure that decision nodes have the correct parameters for their functions and avoid errors in decision tree evaluations. \\
 
-\subsection{Mutation: } %Mutation
+\subsection{Mutation } %Mutation
 While Crossover allows the genetic programming algorithm to search the solution space, Mutation allows for local search around an individual in that solution space. In order to perform local search, Mutation must only affect small subtrees in a given decision tree. Therefore, the probability of mutation on a given node is very small and increases only slightly with the depth of the node in the tree. Mutation can only affect Boolean Nodes, Operand Nodes, Information Nodes, and Decision Nodes. In order to ensure that Mutation does not break the functionality of the tree, the genetic operator only operates on nodes that contain a function. Mutation acts upon the node by replacing that function with a similar, but not the same, function. For example, in an Information Node that holds \textit{unitMoveTowardAllyBehavior} may mutate to hold \textit{unitMoveTowardEnemyBehavior}. Each function has a unique group of functions that are similar, and no function belongs to more that one group. A list of all these groups allows for easy lookup of similar functions during the mutation operation.\\
  
- \subsection{Genetic Programming to Battlecode Player: } %GP to Battlecode
+ \subsection{Genetic Programming to Battlecode Player} %GP to Battlecode
 Through genetic programming, I wanted to evolve a single player for \textit{Battlecode 2018}. Therefore, I would record the best individual at each generation by having all individuals compete in a tournament. At the end of all the generations, I would have each generation's winner enter the winner's tournament to determine the best individual bot.\\
 
  
@@ -294,14 +301,14 @@ In 2016, a group of researchers created a method they dubbed 'Online Evolution' 
 
 
 %Experimental Challenges
-\section{Experimental Challenges: } 
+\section{Experimental Challenges} 
 For genetic programming to work effectively, it needs a large population and many generations. Because each game of \textit{Battlecode 2018} takes about one minute to complete, completing the genetic programming algorithm with a population of 32 and 50 generations takes around a day. This makes extensive testing of parameters take a very long time. Additionally, the game was unable to run on Bowdoin's High Performance Cluster despite the administrator of the cluster's best efforts in finding and installing the required dependencies. Therefore, testing was limited to a couple Searles 224 Lab computers, which makes extensive testing rather time consuming. \\
 
 
 % Preliminary Experiments
 \section{Preliminary Experiments}
 
-\subsection{Preliminary Setup:} %Preliminary Setup
+\subsection{Preliminary Setup} %Preliminary Setup
 The initial goal of this project was to evolve a player that could compete against a real player. In order to evolve though, the genetic program would have its population play itself and select using Tournament Selection. I downloaded some of the entrants' players from the 2018 tournament to be able to test against should the evolved bots look successful. These players also served as building blocks for the functions I wrote for the decision trees to interface with the game.\\
 
 However, in order to create great players, the algorithm must first create better than random players, then medium players, then good players. Therefore, I originally planned to run the algorithm for a set number of generations starting with a randomly generated population of players. Then, I would repeat this process but add some of the players created by the first process to the initial population to give the algorithm a head start in finding decent players. This process would repeat, but at the end of each run of the genetic programming algorithm, the players created would be tested against the next benchmark player. That is, the first players created would be tested against a random player. Once there are players that consistently beat a random player, the players would be tested against the medium player. Medium players can be created by modifying \textit{Battlecode 2018} applicants' code and changing weights and removing nuances in the code. Once the players beat the medium players they would challenge applicant's unmodified bots.\\
@@ -317,7 +324,7 @@ Mutation probability of mutating this node probability of 0.01\\
 \end{center}
 Nine tests were run in total to explore the basic genetic programming parameters effects on the process.
 
-\subsection{Preliminary results:} %Preliminary results
+\subsection{Preliminary Results} %Preliminary results
 The initial results for this process were mixed. Regardless of the parameters given to the process, each winner was severely limited in its behavior. The best players evolved, that is the best of the winners of each process, acted by replicating the workers and building factories. The factories would occasionally create military units, but these units would not move to attack positioning or attack. The worst players evolved only moved around. A quick glance at the evolved winners' top trees confirmed these behaviors. The top tree for each winner had only one if statement and two decision nodes, so at most the player would only ever do two of the four possible actions. This was clearly not the desired behavior, so I started collecting data about the process to understand why our trees shrank from the original population's top trees with three or four if layers. \\
 
 This led me to measure the average size of the trees as a function of the generation length. The results for all nine preliminary results can be seen in Figures \ref{prelimResultsXO_0.8_MO_0.6}$-$\ref{prelimResultsXO_0.4_MO_0.2}.
@@ -402,7 +409,7 @@ This led me to measure the average size of the trees as a function of the genera
 
 
 
-\subsection{Preliminary analysis} %Preliminary Analysis
+\subsection{Preliminary Analysis} %Preliminary Analysis
 It was clear from these figures that changes to my genetic operators must occur for this project to produce any reasonable behaviors. Coincidentally though, there were two rather successful players from this bunch of tests. The first player's top tree only had build outcomes, so the player would build constantly, getting the necessary resources from the automatic income. This resulted in a very large economic score at the end of each game. Since the bot was not playing against any bots with functional militaries, the player just kept growing. Because the tiebreaker for winning if both players die in the flood is the economic score, this player turned out to be successful without exhibiting the desired intelligent behavior, since units couldn't move or attack, just spawn outwards like an amoeba. The other successful player was similar, only had one build decision, with the other decision as harvest. However, the If Node's Boolean Node child examined if the current round was less than round 3. If it was past round 3, the player would build. Thus, these two behaviors exhibited the same success when playing other bad players.\\
 
 These players could be beaten, however, by a player that successfully gets to Mars, or a player that successfully attacks. I decided that as I fixed the genetic operators to avoid losing tree depth I would focus on constructing the genetic programming structure to encourage getting to Mars. Because testing takes so long, I had to pick only one focus of developing an army or getting to Mars. \\
