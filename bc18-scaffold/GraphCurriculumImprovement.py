@@ -19,8 +19,8 @@ GENS_PER_TESTS = 2;
 
 ELITISM = False;
 
-POP_SIZE = 32
-GENERATIONS = 50
+POP_SIZE = 64
+GENERATIONS = 100
 
 
 def runGame(player1, player2):
@@ -144,8 +144,8 @@ if __name__ == '__main__':
     crossoverProb = 0.6 #% chance each tree  want it to be one of {0.4, 0.6, 0.8}
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
-    treeString = "HarvestTree"
 
+    treeString = "AttackTree"
     resultDirName = "CurriculumTestingResults/"+treeString+"/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"
     resultDirName += str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
     resultDirName += "Fixed"
@@ -153,6 +153,7 @@ if __name__ == '__main__':
         resultDirName += "/Elitist"
 
     graphImprovement(resultDirName, treeString)
+
 
 
 
