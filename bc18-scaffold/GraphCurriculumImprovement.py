@@ -12,7 +12,7 @@ import pandas as pd
 
 
 TEST_GRAPHING = False;
-PLAYING_IDEAL_PLAYER = False;
+PLAYING_IDEAL_PLAYER = True;
 NUM_TESTS = 20;
 GENS_PER_TESTS = 2;
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     crossoverStopEarly = 0.1 #chance to stop higher in tree
 
 
-    treeString = "AttackTree"
+    treeString = "HarvestTree"
     resultDirName = "CurriculumTestingResults/"+treeString+"/Pop"+str(POP_SIZE)+"_Gen"+str(GENERATIONS)+"_XOverP"
     resultDirName += str(crossoverProb)+"_XOverS"+str(crossoverStopEarly)+"_MOP"+str(mutateOccurProb)+"_MNP"+str(mutateNodeProb)
     resultDirName += "Fixed"
